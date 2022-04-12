@@ -1,4 +1,4 @@
-;@Ahk2Exe-SetMainIcon Z:\Documents\AHK\Drozd_net_monitor\Icon-Minimalism-App-Network-Monitor.ico
+;@Ahk2Exe-SetMainIcon %A_ScriptDir%\Icon-Minimalism-App-Network-Monitor.ico
 #SingleInstance force
 #NoEnv
 #NoTrayIcon
@@ -53,7 +53,7 @@ help=
 
 iconSet:=RegExMatch(A_OSVersion,"WIN_VISTA|WIN_7") ? 25 : 18  
 
-Menu, Tray, Icon, Z:\Documents\AHK\Drozd_net_monitor\Icon-Minimalism-App-Network-Monitor.ico
+Menu, Tray, Icon, %A_ScriptDir%\Icon-Minimalism-App-Network-Monitor.ico
 Menu, Tray, NoStandard
 Menu, Tray, Add, Window Spy, WindowSpy 
 Menu, Tray, Add

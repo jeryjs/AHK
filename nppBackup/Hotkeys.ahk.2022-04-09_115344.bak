@@ -14,7 +14,6 @@ SetKeyDelay -1
 SetMouseDelay -1
 SetBatchLines -1
 #UseHook
-#Persistent
 ; #Warn All
 #MaxHotkeysPerInterval 200
 
@@ -33,27 +32,25 @@ menu, tray, Default, Edit This Script
 
 Discord_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Edge"
 WhatsApp_Edge := "C:\Users\Jery\AppData\Local\WhatsApp\WhatsApp.exe"
-WhatsApp := "C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2210.10.0_x64__cv1g1gvanyjgm\app\WhatsApp.exe" 
 Instagram_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Instagram Edge"
 MAL_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MAL Edge"
-StartTime := A_TickCount
 
-; Double click tray icon to edit script 
+
+; Double click tray icon to edit script
 Edit_This_Script:
-If (StartTime > 60000)
-	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
+	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" Z:\Documents\AHK\Hotkeys.ahk
 return
 
 ; Open VLC from Tray
 Open_VLC_Tray()
 {
-WinActivate,  ahk_class NotifyIconOverflowWindow
-ControlFocus, ToolbarWindow321, ahk_class NotifyIconOverflowWindow
-; ControlSend, ToolbarWindow321, {Right}, ahk_class NotifyIconOverflowWindow	;;UnComment this if VLC is the 2nd icon in system tray
-ControlSend, ToolbarWindow321, {Enter}, ahk_class NotifyIconOverflowWindow
-SendEvent, {Click, 1363, 498, 0}
-WinWaitActive, ahk_exe vlc.exe, , 5
-Send, {Space}
+	WinActivate,  ahk_class NotifyIconOverflowWindow
+	ControlFocus, ToolbarWindow321, ahk_class NotifyIconOverflowWindow
+	; ControlSend, ToolbarWindow321, {Right}, ahk_class NotifyIconOverflowWindow	;;UnComment this if VLC is the 2nd icon in system tray
+	ControlSend, ToolbarWindow321, {Enter}, ahk_class NotifyIconOverflowWindow
+	SendEvent, {Click, 1363, 498, 0}
+	WinWaitActive, ahk_exe vlc.exe, , 5
+	Send, {Space}
 }
 
 ; Custom SoundBeep
@@ -64,47 +61,12 @@ SoundBeep(Frequency, Duration, Volume) {
     SoundSet, MasterVolume
 }
 
+
 ; Reload This script once in 10 mins
 SetTimer, ReloadHotKeys, 600000
 Return
 ReloadHotKeys:
-Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart " %A_ScriptFullPath%"
-Return
-
-; shimanov's Read Integer Function
-ReadInteger( p_address, p_offset, p_size, p_hex=true )
-{
-  value = 0
-  old_FormatInteger := a_FormatInteger
-  if ( p_hex )
-    SetFormat, integer, hex
-  else
-    SetFormat, integer, dec
-  loop, %p_size%
-    value := value+( *( ( p_address+p_offset )+( a_Index-1 ) ) << ( 8* ( a_Index-1 ) ) )
-  SetFormat, integer, %old_FormatInteger%
-  return, value
-}
-
-; Battery Alarm
-SetTimer, Battery_Check, 2000
-Return
-Battery_Check:
-msgbox yay
-	; VarSetCapacity(powerstatus, 1+1+1+1+4+4)
-	; success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
-
-	; AC_Status:=ReadInteger(&powerstatus,0,1,false)
-	; Battery_Life:=ReadInteger(&powerstatus,2,1,false)
-	; msgbox, %AC_Status%
-	; If ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40))
-	; {
-		SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Ring06.wav	; Ring06.wav
-		; SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Alarm02.wav
-		; SplashImage, Z:\Documents\AHK\images\Battery-Tan-665x245.jpg,b,
-		; Sleep, 3000
-		; SplashImage, Off
-	; }	
+Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "Z:\Documents\AHK\Hotkeys.ahk"
 Return
 
 
@@ -129,7 +91,13 @@ Return
         {
             SplashTextOn, 200, 25, Discord, Press 'd' to open Discord
 			Input, SplashInput, T1 L1
-			If (SplashInput = "d")
+			if (SplashInput = "d")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, %Discord_Edge%
+				WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
+			If (SplashInput = "e")
 			{
 				SoundBeep(6000, 100, 5)
 				Run, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
@@ -170,25 +138,24 @@ Return
 			if (SplashInput = "w")
 			{
 				SoundBeep(6000, 100, 5)
-				Run, %WhatsApp%
+				Run, %WhatsApp_Edge%
 				WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 			}
             SplashTextOff
         }
-		IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
+		IfWinActive, ;ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
 		{
 			Send, {Alt Down}{w}{Alt Up}
 		}
 	}
     else  ;If exist
     {
-		IfWinNotActive, WhatsApp 
+		IfWinNotActive, WhatsApp
 		{
-			WinClose, WhatsApp Voip
-			WinShow, WhatsApp ahk_exe WhatsApp.exe
-			WinActivate, WhatsApp ahk_exe WhatsApp.exe
+			WinShow, WhatsApp ahk_class Chrome_WidgetWin_1
+			WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1
 		}else  {
-			WinHide, WhatsApp ahk_exe WhatsApp.exe
+			WinHide, WhatsApp ahk_class Chrome_WidgetWin_1
 			Send, {Alt down}{Esc}{Alt up}
 		}
 	}
@@ -268,8 +235,8 @@ Return
 +!m::
 	IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
 	{
-		Click, -25, 740
-		Click, 40, 740
+		Click, -29, 530
+		Click, 40, 742
 	}else  {
 		Send, +!m
 	}
@@ -318,11 +285,11 @@ Return
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
 ^!s::
-    IfWinActive,  %A_ScriptFullPath% - Notepad++
+    IfWinActive, Z:\Documents\AHK\Hotkeys.ahk - Notepad++
 	{
 		Send, ^s
 		SoundBeep(10000, 200, 5)
-		Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "%A_ScriptFullPath%"
+		Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "Z:\Documents\AHK\Hotkeys.ahk"
 	}else {
 		Send, ^!s
 	}
@@ -352,6 +319,16 @@ Return
 	SoundBeep(5000, 110, 20)
 Return
 
+#.::
+	Run, TabTip.exe
+	IfWinExist ahk_exe TabTip.exe
+	{
+		Sleep, 200
+		Click, 414 734, 1
+		Click, 580 730, 1
+	}
+Return
+
 :::lol::😂
 :::sweat::😌
 :::sad::😢
@@ -364,13 +341,18 @@ Return
 F4::
 	IfWinNotExist Drozd_net_monitor ahk_class AutoHotkeyGUI
 	{
-		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
+		MsgBox, 4,, Do you want to start Drozd net monitor?, 4
+		IfMsgBox No
+			Return
+		Else
+			Run, Z:\Documents\AHK\Drozd_net_monitor\Drozd_net_monitor_original.exe
 	}else  {
 		IfWinActive Drozd_net_monitor ahk_class AutoHotkeyGUI
 			Send, !{Esc}
 		Else
 			WinActivate Drozd_net_monitor ahk_class AutoHotkeyGUI
 	}
+	Send, {F4}
 Return
 
 
@@ -382,16 +364,16 @@ Return
 	; WheelDown::Send {Volume_Down}
 	; MButton::Send {Volume_Mute}
 
-	; RButton & WheelUp::Run, C:\Windows\System32\nircmd.exe changebrightness 10
-	; RButton & WheelDown::Run, C:\Windows\System32\nircmd.exe changebrightness -10
+	; RButton & WheelUp::Run, C:\Windows\System32\nircmd.exe changebrightness 5
+	; RButton & WheelDown::Run, C:\Windows\System32\nircmd.exe changebrightness -5
 	; RButton::RButton
 ; #If
 
-; over(class) {
-	 ; MouseGetPos,x,y, uid
-	 ; WinGetClass, thisClass, ahk_id %uid%
-	 ; Return thisClass = class
-; }
+over(class) {
+	 MouseGetPos,x,y, uid
+	 WinGetClass, thisClass, ahk_id %uid%
+	 Return thisClass = class
+}
 
 ; RButton & LButton::
 ; LButton & RButton::Send, {MButton}
@@ -429,23 +411,6 @@ NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
 !t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
 
-#If WinActive("- AniMixPlay")
-NumpadPgDn::Send {/}
-+NumpadPgDn::Send +{/}
-!t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
-
-NumpadHome::
-	Click, 1517 957
-	Sleep, 700
-	Click, 1480 900
-	Sleep, 500
-	Click, 1480 700
-	Sleep, 300
-	Click, 993 631
-	Click, 993 631
-Return
-	
-
 #If WinExist("- VLC media player")
 +NumpadHome::
 !F6::Open_VLC_Tray()
@@ -460,22 +425,21 @@ Return
 
 #If
 NumpadIns::Send {Space}
-#o::Send, #3
-+!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
-
-; PgDn::Send, {End}
-; PgUp::Send, {Home}
-; End::Send, {PgDn}
-; Home::Send, {PgUp}
 
 #c::
-	Run, C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe
-	Sleep, 1200
-	WinActivate, Cortana
-	Click 691, 945
+IfWinActive ahk_class ApplicationFrameWindow
+{
+	Run, "C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe"
+	WinWaitActive ahk_class ApplicationFrameWindow
+	Click, 940 548
+}
 Return
-~Esc::
-	WinClose, Cortana
-	sLeep 1000
-	WinKill, Cortana
+	
+
+
+;Fix cmd 'ctrl+v'
+^v::
+IfWinActive ahk_exe cmd.exe
+	Sendinput, {RButton}
+	Else Send, ^v
 Return

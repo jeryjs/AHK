@@ -14,7 +14,6 @@ SetKeyDelay -1
 SetMouseDelay -1
 SetBatchLines -1
 #UseHook
-#Persistent
 ; #Warn All
 #MaxHotkeysPerInterval 200
 
@@ -36,12 +35,11 @@ WhatsApp_Edge := "C:\Users\Jery\AppData\Local\WhatsApp\WhatsApp.exe"
 WhatsApp := "C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2210.10.0_x64__cv1g1gvanyjgm\app\WhatsApp.exe" 
 Instagram_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Instagram Edge"
 MAL_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MAL Edge"
-StartTime := A_TickCount
 
-; Double click tray icon to edit script 
+
+; Double click tray icon to edit script
 Edit_This_Script:
-If (StartTime > 60000)
-	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
+	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" Z:\Documents\AHK\Hotkeys.ahk
 return
 
 ; Open VLC from Tray
@@ -64,12 +62,14 @@ SoundBeep(Frequency, Duration, Volume) {
     SoundSet, MasterVolume
 }
 
+
 ; Reload This script once in 10 mins
 SetTimer, ReloadHotKeys, 600000
 Return
 ReloadHotKeys:
-Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart " %A_ScriptFullPath%"
+Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "Z:\Documents\AHK\Hotkeys.ahk"
 Return
+
 
 ; shimanov's Read Integer Function
 ReadInteger( p_address, p_offset, p_size, p_hex=true )
@@ -88,24 +88,15 @@ ReadInteger( p_address, p_offset, p_size, p_hex=true )
 
 ; Battery Alarm
 SetTimer, Battery_Check, 2000
-Return
 Battery_Check:
-msgbox yay
-	; VarSetCapacity(powerstatus, 1+1+1+1+4+4)
-	; success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
+VarSetCapacity(powerstatus, 1+1+1+1+4+4)
+success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
 
-	; AC_Status:=ReadInteger(&powerstatus,0,1,false)
-	; Battery_Life:=ReadInteger(&powerstatus,2,1,false)
-	; msgbox, %AC_Status%
-	; If ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40))
-	; {
-		SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Ring06.wav	; Ring06.wav
-		; SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Alarm02.wav
-		; SplashImage, Z:\Documents\AHK\images\Battery-Tan-665x245.jpg,b,
-		; Sleep, 3000
-		; SplashImage, Off
-	; }	
-Return
+AC_Status:=ReadInteger(&powerstatus,0,1,false)
+Battery_Life:=ReadInteger(&powerstatus,2,1,false)
+
+If (Battery_Life = 80) or (Battery_Life = 40) & (AC_Status = 0)
+	MsgBox It'd be good if u connect charger now...
 
 
 #If WinActive("Nox")
@@ -268,8 +259,8 @@ Return
 +!m::
 	IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
 	{
-		Click, -25, 740
-		Click, 40, 740
+		Click, -19, 530
+		Click, 29, 530
 	}else  {
 		Send, +!m
 	}
@@ -318,11 +309,11 @@ Return
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
 ^!s::
-    IfWinActive,  %A_ScriptFullPath% - Notepad++
+    IfWinActive, Z:\Documents\AHK\Hotkeys.ahk - Notepad++
 	{
 		Send, ^s
 		SoundBeep(10000, 200, 5)
-		Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "%A_ScriptFullPath%"
+		Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "Z:\Documents\AHK\Hotkeys.ahk"
 	}else {
 		Send, ^!s
 	}
@@ -364,34 +355,35 @@ Return
 F4::
 	IfWinNotExist Drozd_net_monitor ahk_class AutoHotkeyGUI
 	{
-		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
+		Run, Z:\Documents\AHK\Drozd_net_monitor\Drozd_net_monitor_original.exe
 	}else  {
 		IfWinActive Drozd_net_monitor ahk_class AutoHotkeyGUI
 			Send, !{Esc}
 		Else
 			WinActivate Drozd_net_monitor ahk_class AutoHotkeyGUI
 	}
+	Send, {F4}
 Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Scroll] Adjust Volume & Brightness By Scrolling Over Taskbar
 ;-----------------------------------------------------------------------------------------------------------------------
-; #If over("Shell_TrayWnd")
-	; WheelUp::Send {Volume_Up}
-	; WheelDown::Send {Volume_Down}
-	; MButton::Send {Volume_Mute}
+#If over("Shell_TrayWnd")
+	WheelUp::Send {Volume_Up}
+	WheelDown::Send {Volume_Down}
+	MButton::Send {Volume_Mute}
 
-	; RButton & WheelUp::Run, C:\Windows\System32\nircmd.exe changebrightness 10
-	; RButton & WheelDown::Run, C:\Windows\System32\nircmd.exe changebrightness -10
-	; RButton::RButton
-; #If
+	RButton & WheelUp::Run, C:\Windows\System32\nircmd.exe changebrightness 10
+	RButton & WheelDown::Run, C:\Windows\System32\nircmd.exe changebrightness -10
+	RButton::RButton
+#If
 
-; over(class) {
-	 ; MouseGetPos,x,y, uid
-	 ; WinGetClass, thisClass, ahk_id %uid%
-	 ; Return thisClass = class
-; }
+over(class) {
+	 MouseGetPos,x,y, uid
+	 WinGetClass, thisClass, ahk_id %uid%
+	 Return thisClass = class
+}
 
 ; RButton & LButton::
 ; LButton & RButton::Send, {MButton}
@@ -461,21 +453,15 @@ Return
 #If
 NumpadIns::Send {Space}
 #o::Send, #3
+\::Send, {Enter}
 +!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
 
-; PgDn::Send, {End}
-; PgUp::Send, {Home}
-; End::Send, {PgDn}
-; Home::Send, {PgUp}
+PgDn::Send, {End}
+PgUp::Send, {Home}
+End::Send, {PgDn}
+Home::Send, {PgUp}
+; RCtrl & LCtrL::Send, {RButton}
 
-#c::
-	Run, C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe
-	Sleep, 1200
-	WinActivate, Cortana
-	Click 691, 945
-Return
-~Esc::
-	WinClose, Cortana
-	sLeep 1000
-	WinKill, Cortana
-Return
+
+
+
