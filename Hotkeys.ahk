@@ -361,7 +361,7 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+F4] Network Monitor
 ;-----------------------------------------------------------------------------------------------------------------------
-F4::
+F6::
 	IfWinNotExist Drozd_net_monitor ahk_class AutoHotkeyGUI
 	{
 		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
@@ -463,10 +463,7 @@ NumpadIns::Send {Space}
 #o::Send, #3
 +!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
 
-; PgDn::Send, {End}
-; PgUp::Send, {Home}
-; End::Send, {PgDn}
-; Home::Send, {PgUp}
+; #d::Send, #^{Right}
 
 #c::
 	Run, C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe

@@ -1718,9 +1718,9 @@ bigger:
 return
 
 
-~$F4::
-	Gui 1: Show
-return
+; ~$F4::
+	; Gui 1: Show
+; return
 
 
 
