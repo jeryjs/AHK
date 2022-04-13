@@ -40,7 +40,7 @@ StartTime := A_TickCount
 
 ; Double click tray icon to edit script 
 Edit_This_Script:
-If (StartTime > 60000)
+If (StartTime > 120000)
 	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 return
 
@@ -279,21 +279,35 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[`] Edge
 ;-----------------------------------------------------------------------------------------------------------------------
+; ^`::
+	; IfWinNotActive, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	; {
+		; WinShow, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		; WinActivate, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	; }else  {
+		; WinHide, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		; WinActivate, - SMPlayer
+		; Sleep 100
+		; Click, 27 532
+		; Send, {Space}
+	; }
+	; IfWinNotExist, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	; {
+	; Send, {`}
+	; }
+; Return
 ^`::
-	IfWinNotActive, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	IfWinNotActive, Roblox ahk_class ApplicationFrameWindow
 	{
-		WinShow, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		WinActivate, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		WinShow, Roblox ahk_class ApplicationFrameWindow
+		WinActivate, Roblox ahk_class ApplicationFrameWindow
 	}else  {
-		WinHide, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		WinActivate, - SMPlayer
-		Sleep 100
-		Click, 27 532
-		Send, {Space}
+		WinHide, Roblox ahk_class ApplicationFrameWindow
+		Send, !{Esc}
 	}
-	IfWinNotExist, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	IfWinNotExist, Roblox ahk_class ApplicationFrameWindow
 	{
-	Send, {`}
+	Send, ^{`}
 	}
 Return
 
@@ -361,7 +375,7 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+F4] Network Monitor
 ;-----------------------------------------------------------------------------------------------------------------------
-F6::
+F1::
 	IfWinNotExist Drozd_net_monitor ahk_class AutoHotkeyGUI
 	{
 		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
