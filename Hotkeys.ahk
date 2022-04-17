@@ -118,7 +118,7 @@ MButton::
 	Send, {Space}
 Return
 
-#If !WinActive("Nox")
+#If !WinActive("Nox") OR !WinActive("Genshin Impact")
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+D] Opera - Discord
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ Return
 			If (SplashInput = "d")
 			{
 				SoundBeep(6000, 100, 5)
-				Run, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
+				RunAs, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
 				WinActivate, Discord ahk_exe Discord.exe
 			}
             SplashTextOff
@@ -147,11 +147,12 @@ Return
     {
         IfWinNotActive, Discord
 		{
-            WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+            WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	 
             WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
         }else  {
-            WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+            WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	
 			Send, {Alt down}{Esc}{Alt up}
+			WinActivate, Genshin Impact ahk_class UnityWndClass
         }
     }
 Return
@@ -472,12 +473,35 @@ NumpadEnter::
 	; Click, 580 730, 1
 Return
 
+#If WinActive("Genshin Impact")
+Enter::
+	Send, {Enter}
+	Sleep, 200
+	Click, 800 1000
+Return
+
+
 #If
 NumpadIns::Send {Space}
 #o::Send, #3
 +!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
 
-; #d::Send, #^{Right}
+#d::
+	If (Desktop = 1)
+	{
+		Send, #^{Right}
+		Desktop := 2
+		WinActivate, Genshin Impact ahk_class UnityWndClass
+	}Else {
+		IfWinActive, Genshin Impact ahk_class UnityWndClass
+		{
+			; Send, {Esc}
+			SoundSet, 0
+		}
+		Send, #^{Left}
+		Desktop := 1
+	}
+Return
 
 #c::
 	Run, C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe
