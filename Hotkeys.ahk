@@ -7,7 +7,7 @@ SetTitleMatchMode 2
 SetTitleMatchMode Fast
 DetectHiddenWindows On
 DetectHiddenText On
-#WinActivateForce
+; #WinActivateForce
 SetControlDelay 1
 SetWinDelay 0
 SetKeyDelay -1
@@ -15,32 +15,22 @@ SetMouseDelay -1
 SetBatchLines -1
 #UseHook
 #Persistent
+#InstallKeybdHook
+; KeyHistory
 ; #Warn All
 #MaxHotkeysPerInterval 200
+StartTime := A_TickCount
 
 menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
+SetTimer, Battery_Check, 5000
 
-
-;/*--------------------------------------*\
-;|----------VARIABLE-DEFINITIONS----------|
-;\*--------------------------------------*/
-; Discord_Edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe  --profile-directory=Default --app-id=magkoliahgffibhgfkmoealggombgknl --app-url=https://discord.com/channels/@me"
-; WhatsApp_Edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe  --profile-directory=Default --app-id=hnpfjngllnobngcgfapefoaidbinmjnm --app-url=https://web.whatsapp.com/"
-; Instagram_Edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe --profile-directory=Default --app-id=maonlnecdeecdljpahhnnlmhbmalehlm --app-url=https://www.instagram.com/?theme=dark"
-; MAL_Edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe  --profile-directory=Default --app-id=gkpgichlplhgcfedjgdpjophefobmgag --app-url=https://myanimelist.net/?_location=homescreen"
-
-Discord_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Edge"
-WhatsApp_Edge := "C:\Users\Jery\AppData\Local\WhatsApp\WhatsApp.exe"
-WhatsApp := "C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2210.10.0_x64__cv1g1gvanyjgm\app\WhatsApp.exe" 
-Instagram_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Instagram Edge"
-MAL_Edge := "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MAL Edge"
-StartTime := A_TickCount
 
 ; Double click tray icon to edit script 
 Edit_This_Script:
-If (StartTime > 120000)
+EndTime := A_TickCount
+If ((EndTime - StartTime) > 5000)
 	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 return
 
@@ -60,99 +50,51 @@ Send, {Space}
 SoundBeep(Frequency, Duration, Volume) {
     SoundGet, MasterVolume
     SoundSet, Volume
+	Sleep, 300
     SoundBeep, Frequency, Duration
     SoundSet, MasterVolume
 }
 
-; Reload This script once in 10 mins
-SetTimer, ReloadHotKeys, 600000
-Return
-ReloadHotKeys:
-Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart " %A_ScriptFullPath%"
-Return
 
-; shimanov's Read Integer Function
-ReadInteger( p_address, p_offset, p_size, p_hex=true )
-{
-  value = 0
-  old_FormatInteger := a_FormatInteger
-  if ( p_hex )
-    SetFormat, integer, hex
-  else
-    SetFormat, integer, dec
-  loop, %p_size%
-    value := value+( *( ( p_address+p_offset )+( a_Index-1 ) ) << ( 8* ( a_Index-1 ) ) )
-  SetFormat, integer, %old_FormatInteger%
-  return, value
-}
+; #If WinActive("Nox")
+; `::
+; End::
+; MButton::
+	; Click, 690, 620, 1
+	; Send, !x
+	; WinActivate, SMPlayer
+	; Send, {Space}
+; Return
 
-; Battery Alarm
-SetTimer, Battery_Check, 2000
-Return
-Battery_Check:
-msgbox yay
-	; VarSetCapacity(powerstatus, 1+1+1+1+4+4)
-	; success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
-
-	; AC_Status:=ReadInteger(&powerstatus,0,1,false)
-	; Battery_Life:=ReadInteger(&powerstatus,2,1,false)
-	; msgbox, %AC_Status%
-	; If ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40))
-	; {
-		SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Ring06.wav	; Ring06.wav
-		; SoundPlay, %A_WinDir%\WinSxS\amd64_microsoft-windows-shell-sounds_31bf3856ad364e35_10.0.22593.1_none_7678216cac587112\Alarm02.wav
-		; SplashImage, Z:\Documents\AHK\images\Battery-Tan-665x245.jpg,b,
-		; Sleep, 3000
-		; SplashImage, Off
-	; }	
-Return
-
-
-#If WinActive("Nox")
-`::
-End::
-MButton::
-	Click, 690, 620, 1
-	Send, !x
-	WinActivate, SMPlayer
-	Send, {Space}
-Return
-
-#If !WinActive("Nox") OR !WinActive("Genshin Impact")
+#If !WinActive("Genshin Impact ahk_exe GenshinImpact.exe") ; !WinActive("Nox")
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+D] Opera - Discord
 ;-----------------------------------------------------------------------------------------------------------------------
 !d::
+!d_Discord:
     IfWinNotExist, Discord
     {
-		IfWinNotActive, ahk_exe opera.exe
-        {
-            SplashTextOn, 200, 25, Discord, Press 'd' to open Discord
-			Input, SplashInput, T1 L1
-			If (SplashInput = "d")
-			{
-				SoundBeep(6000, 100, 5)
-				RunAs, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
-				WinActivate, Discord ahk_exe Discord.exe
-			}
-            SplashTextOff
-		}
-        IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
-        {
-            Click, 27 351
-        }
-		Send, !d
-    }
-    else  ; If exist
-    {
-        IfWinNotActive, Discord
+		SplashTextOn, 200, 25, Discord, Press 'd' to open Discord
+		Input, SplashInput, T1 L1
+		If (SplashInput = "d")
 		{
-            WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	 
+			SoundBeep(6000, 100, 5)
+			Run, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
+			WinActivate, Discord ahk_exe Discord.exe
+		}
+		SplashTextOff
+    }
+    Else 
+    {
+        IfWinNotActive, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+		{
+            WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
             WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
-        }else  {
-            WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	
-			Send, {Alt down}{Esc}{Alt up}
-			WinActivate, Genshin Impact ahk_class UnityWndClass
+        }Else  {
+            WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+			Send, !{Tab}
+			; Send, +!{Tab}
+			WinActivate, Genshin Impact
         }
     }
 Return
@@ -164,33 +106,27 @@ Return
 !w::
     IfWinNotExist, WhatsApp
     {
-        IfWinNotActive, ahk_exe opera.exe
-        {
-            SplashTextOn, 200, 25, WhatsApp, Press 'w' to open WhatsApp
-			Input, SplashInput, T1 L1
-			if (SplashInput = "w")
-			{
-				SoundBeep(6000, 100, 5)
-				Run, %WhatsApp%
-				WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			}
-            SplashTextOff
-        }
-		IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
+		SplashTextOn, 200, 25, WhatsApp, Press 'w' to open WhatsApp
+		Input, SplashInput, T1 L1
+		if (SplashInput = "w")
 		{
-			Send, {Alt Down}{w}{Alt Up}
+			SoundBeep(6000, 100, 5)
+			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\WhatsApp"
+			WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 		}
+		SplashTextOff
 	}
-    else  ;If exist
+    Else 
     {
 		IfWinNotActive, WhatsApp 
 		{
 			WinClose, WhatsApp Voip
+			WinClose, call ahk_exe WhatsApp.exe
 			WinShow, WhatsApp ahk_exe WhatsApp.exe
 			WinActivate, WhatsApp ahk_exe WhatsApp.exe
-		}else  {
+		}Else  {
 			WinHide, WhatsApp ahk_exe WhatsApp.exe
-			Send, {Alt down}{Esc}{Alt up}
+			Send, !{Tab}
 		}
 	}
 Return
@@ -202,32 +138,25 @@ Return
 !i::
     IfWinNotExist, Instagram
     {
-        IfWinNotActive, ahk_exe opera.exe
-        {
-            SplashTextOn, 200, 25, Instagram, Press 'i' to open Instagram
-			Input, SplashInput, T1 L1
-			if (SplashInput = "i")
-			{
-				SoundBeep(6000, 100, 5)
-				Run, %Instagram_Edge%
-				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			}
-            SplashTextOff
-        }
-		IfWinActive, ;ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
+		SplashTextOn, 200, 25, Instagram, Press 'i' to open Instagram
+		Input, SplashInput, T1 L1
+		if (SplashInput = "i")
 		{
-			Send, {Alt Down}{i}{Alt Up}
+			SoundBeep(6000, 100, 5)
+			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Instagram Edge"
+			WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 		}
+		SplashTextOff
     }
-    else  ;If exist
+    Else 
     {
 		IfWinNotActive, Instagram
 		{
 			WinShow, Instagram ahk_class Chrome_WidgetWin_1
 			WinActivate, Instagram ahk_class Chrome_WidgetWin_1
-		}else  {
+		}Else  {
 			WinHide, Instagram ahk_class Chrome_WidgetWin_1
-			Send, {Alt down}{Esc}{Alt up}
+			Send, !{Tab}
 		}
 	}
 Return
@@ -237,78 +166,37 @@ Return
 ;[Alt+M] Opera - MAL
 ;-----------------------------------------------------------------------------------------------------------------------
 !m::
-    IfWinNotExist, MAL
+    If !WinExist("MAL")
     {
-        IfWinNotActive, ahk_exe opera.exe
-        {
-            SplashTextOn, 200, 25, MAL, Press 'm' to open MAL
-			Input, SplashInput, T1 L1
-			if (SplashInput = "m")
-			{
-				SoundBeep(6000, 100, 5)
-				Run, %MAL_Edge%
-				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			}
-            SplashTextOff
-        }else  {
-		Send, !m
+		SplashTextOn, 200, 25, MAL, Press 'm' to open MAL
+		Input, SplashInput, T1 L1
+		if (SplashInput = "m")
+		{
+			SoundBeep(6000, 100, 5)
+			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MAL Edge"
+			WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 		}
+		SplashTextOff
     }
-    else  ;If exist
+    Else
     {
 		IfWinNotActive, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 		{
 			WinShow, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 			WinActivate, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		}else  {
+		}Else  {
 			WinHide, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			Send, {Alt down}{Esc}{Alt up}
+			Send, !{Tab}
 		}
     }
 Return
 +!m::
 	IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
 	{
-		Click, -25, 740
-		Click, 40, 740
-	}else  {
+		Click, -22 610		;-25, 740
+		Click, 	32 610		;40, 740
+	}Else  {
 		Send, +!m
-	}
-Return
-
-
-;-----------------------------------------------------------------------------------------------------------------------
-;[`] Edge
-;-----------------------------------------------------------------------------------------------------------------------
-; ^`::
-	; IfWinNotActive, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-	; {
-		; WinShow, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		; WinActivate, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-	; }else  {
-		; WinHide, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		; WinActivate, - SMPlayer
-		; Sleep 100
-		; Click, 27 532
-		; Send, {Space}
-	; }
-	; IfWinNotExist, Profile 1 - Microsoft​ Edge ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-	; {
-	; Send, {`}
-	; }
-; Return
-^`::
-	IfWinNotActive, Roblox ahk_class ApplicationFrameWindow
-	{
-		WinShow, Roblox ahk_class ApplicationFrameWindow
-		WinActivate, Roblox ahk_class ApplicationFrameWindow
-	}else  {
-		WinHide, Roblox ahk_class ApplicationFrameWindow
-		Send, !{Esc}
-	}
-	IfWinNotExist, Roblox ahk_class ApplicationFrameWindow
-	{
-	Send, ^{`}
 	}
 Return
 
@@ -320,8 +208,8 @@ F12::
     IfWinActive, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
 	{
 		WinHide, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
-		Send, {Alt down}{Esc}{Alt up}
-	}else {
+		Send, !{Tab}
+	}Else {
 		WinShow, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
 		WinActivate, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
 		Send, ^k
@@ -337,8 +225,8 @@ Return
 	{
 		Send, ^s
 		SoundBeep(10000, 200, 5)
-		Run, C:\Program Files\AutoHotkey\AutoHotkey.exe /restart "%A_ScriptFullPath%"
-	}else {
+		Reload		; Restart This script
+	}Else {
 		Send, ^!s
 	}
 Return
@@ -347,7 +235,7 @@ Return
 	{
 		IfWinNotExist, Window Spy ahk_exe AutoHotKey.exe
 			Run, C:\Program Files\AutoHotkey\AutoHotkey.exe "C:\Program Files\AutoHotkey\WindowSpy.ahk"
-		else
+		Else
 			WinClose, Window Spy ahk_exe AutoHotKey.exe
 	}
 	Send, ^+!s
@@ -368,7 +256,8 @@ Return
 Return
 
 :::lol::😂
-:::sweat::😌
+:::lmao::🤣
+:::sweat::😅
 :::sad::😢
 :::cry::😭
 
@@ -377,140 +266,226 @@ Return
 ;[Shift+F4] Network Monitor
 ;-----------------------------------------------------------------------------------------------------------------------
 F1::
-	IfWinNotExist Drozd_net_monitor ahk_class AutoHotkeyGUI
+	If !WinExist("Drozd_net_monitor ahk_class AutoHotkeyGUI")
 	{
 		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
-	}else  {
-		IfWinActive Drozd_net_monitor ahk_class AutoHotkeyGUI
-			Send, !{Esc}
-		Else
+	}Else  {
+		If WinActive("Drozd_net_monitor ahk_class AutoHotkeyGUI") and !WinActive("ahk_class Notepad++")
+			Send, !{Tab}
+		Else If !WinActive("Drozd_net_monitor ahk_class AutoHotkeyGUI") and !WinActive("ahk_class Notepad++")
 			WinActivate Drozd_net_monitor ahk_class AutoHotkeyGUI
 	}
+	If WinActive("ahk_exe notepad++.exe")
+		Send, {F1}
 Return
 
 
-;-----------------------------------------------------------------------------------------------------------------------
-;[Scroll] Adjust Volume & Brightness By Scrolling Over Taskbar
-;-----------------------------------------------------------------------------------------------------------------------
-; #If over("Shell_TrayWnd")
-	; WheelUp::Send {Volume_Up}
-	; WheelDown::Send {Volume_Down}
-	; MButton::Send {Volume_Mute}
-
-	; RButton & WheelUp::Run, C:\Windows\System32\nircmd.exe changebrightness 10
-	; RButton & WheelDown::Run, C:\Windows\System32\nircmd.exe changebrightness -10
-	; RButton::RButton
-; #If
-
-; over(class) {
-	 ; MouseGetPos,x,y, uid
-	 ; WinGetClass, thisClass, ahk_id %uid%
-	 ; Return thisClass = class
-; }
-
-; RButton & LButton::
-; LButton & RButton::Send, {MButton}
-
-
 ;-------------------------------------------------------------------------------
-; Change Theme
+; Turn off NumLock & CapsLock
 ;-------------------------------------------------------------------------------
-; #>!PgUp::
-	; RegRead, Current_Theme, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes, CurrentTheme
-	; If (Current_Theme = "C:\Users\Jery\AppData\Local\Microsoft\Windows\Themes\Default Blu.theme")
-		; Run, C:\Windows\Resources\Themes\Windows 11 Dark  ThemeA.theme
-	; Else
-		; Run, C:\Users\Jery\AppData\Local\Microsoft\Windows\Themes\Default Blu.theme
-	; WinWait, Control Panel\Appearance and Personalisation\Personalisation, , 10
-	; Sleep 3000
-	; WinClose
-; Return
+~NumLock::
+	Sleep, 60000	;1 min
+	SetCapsLockState, Off
+	SoundBeep(3000, 100, 5)
+Return
+
+~CapsLock::
+	Sleep, 60000	;1 min
+	SetCapsLockState, Off
+	SoundBeep(3000, 100, 5)
+Return
 
 
 ;-------------------------------------------------------------------------------
 ; Remaps
 ;-------------------------------------------------------------------------------
-#If WinActive(".mp4 - mpv.net")
+
+#If WinActive("ahk_exe mpvnet.exe")	;---------MPV NET-------------------------------------
 NumpadPgUp::Send {PgUp}
 +NumpadPgUp::Send +{PgUp}
 NumpadPgDn::Send {PgDn}
 +NumpadPgDn::Send +{PgDn}
 NumpadClear::Send {Numpad5}
+NumpadRight::Send, {Right}
+NumpadLeft::Send, {Left}
+NumpadUp::Send, {Up}
+NumpadDown::Send, {Down}
+!t::Run, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe" 
 
-#If WinActive("- VLC media player")
+
+#If WinActive("ahk_exe vlc.exe")	;---------VLC MEDIA PLAYER----------------------------------------
 NumpadPgUp::Send +{Right}
 NumpadClear::Send +{Left}
 NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
 !t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
 
-#If WinActive("- AniMixPlay")
+#If WinExist("ahk_exe vlc.exe")
++NumpadHome::
+!F6::Open_VLC_Tray()
+
+
+#If WinActive("- AniMixPlay")	;----------ANIMIXPLAY-----------------------------
 NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
 !t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
 
 NumpadHome::
-	Click, 1517 957
+	Click, 1260 800 ;828		;1517 957
 	Sleep, 700
-	Click, 1480 900
+	Click, 1260 708 ;738		;1480 900
 	Sleep, 500
-	Click, 1480 700
+	Click, 1260 708 ;728		;1480 700
 	Sleep, 300
-	Click, 993 631
-	Click, 993 631
+	Click, 1260	500		;993 631
+	Click, 1260 500		;993 631
 Return
 	
 
-#If WinExist("- VLC media player")
-+NumpadHome::
-!F6::Open_VLC_Tray()
-
-#If WinExist("Taiga ahk_class #32770")
+#If WinActive("Taiga ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
 NumpadEnter::
 	Send, {Enter}
 	Sleep, 300
-	WinActivate, ahk_class Qt5QWindowIcon	;VLC
+	Send, !{Tab}
+	; WinActivate, ahk_class Qt5QWindowIcon	;VLC
 	; Click, 580 730, 1
 Return
+!t::WinClose, Taiga ahk_class TaigaMainW
 
-#If WinActive("Genshin Impact")
-Enter::
-	Send, {Enter}
+#If WinExist("Taiga ahk_exe Taiga.exe") OR WinActive("ahk_class WorkerW ahk_exe explorer.exe")
+!t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
+
+
+#If WinActive("Genshin Impact ahk_exe GenshinImpact.exe")	  ;---------GENSHIN IMPACT-------------------------
+CoordMode, Mouse, Screen
+/::
+	Send, {/}
 	Sleep, 200
-	Click, 800 1000
+	Click, 640, 830		;800, 1000
+	Sleep, 300
+	Click, 640, 830		;800, 1000
 Return
+MButton::
+	Send, {AltDown}
+	Sleep, 200
+	Click, 230, 33		;278, 42
+	Sleep, 200
+	; Send, {Ctrl}
+	Send, {AltUp}
+Return
+!d::GoTo, !d_Discord
+RCtrl::Send, {LButton}
 
 
-#If
+#If WinActive("Search ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
+::A`;::Apps:
+::D`;::Documents:
+::F`;::Folder:
+::P`;::Photos:
+::V`;::Videos:
+::W`;::Web:
+::S`;::Settings:
+
+
+#If	;-------NORMAL-----------------------------------------------------------
 NumpadIns::Send {Space}
 #o::Send, #3
 +!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
+!F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"
 
 #d::
 	If (Desktop = 1)
 	{
 		Send, #^{Right}
 		Desktop := 2
-		WinActivate, Genshin Impact ahk_class UnityWndClass
+		; WinActivate, Genshin Impact ahk_class UnityWndClass
 	}Else {
-		IfWinActive, Genshin Impact ahk_class UnityWndClass
+		IfWinActive, Genshin Impact ahk_class UnityWndClass ahk_exe GenshinImpact.exe
 		{
-			; Send, {Esc}
+			Send, {Esc}
 			SoundSet, 0
 		}
 		Send, #^{Left}
 		Desktop := 1
 	}
 Return
+~#^Left::Desktop := 1
+~#^Right::Desktop := 2
 
-#c::
-	Run, C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe
-	Sleep, 1200
-	WinActivate, Cortana
-	Click 691, 945
+^+!F3::Run, nircmd.exe changebrightness 20
+^+!F2::Run, nircmd.exe changebrightness -20
+
+; #c::	; CORTANA-----------------------------------------------------------
+	; If !WinExist("Cortana ahk_exe ApplicationFrameHost.exe")
+		; Run, "C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe" -ServerName:App.AppX2y379sjp88wjq1y80217mddj3fargf2y.mca
+	; If !WinActive("Cortana ahk_exe ApplicationFrameHost.exe")
+	; {
+		; WinActivate, Cortana ahk_exe ApplicationFrameHost.exe
+		; WinWaitActive, Cortana ahk_exe ApplicationFrameHost.exe
+		; Sleep, 300
+		; Click 513, 805	; 691, 945
+	; }Else 
+		; Click 513, 805	; 691, 945		
+; Return
+; ~Esc::
+	; WinClose, Cortana ahk_exe ApplicationFrameHost.exe
+	; sLeep 1000
+	; WinKill, Cortana
+; Return
+; #f::Send, #g
+
+
+
+
+
+
+
+
+
+
+
+
+; Shimanov's Read Integer Function
+ReadInteger( p_address, p_offset, p_size, p_hex=true )
+{
+  value = 0
+  old_FormatInteger := a_FormatInteger
+  if ( p_hex )
+    SetFormat, integer, hex
+  Else
+    SetFormat, integer, dec
+  loop, %p_size%
+    value := value+( *( ( p_address+p_offset )+( a_Index-1 ) ) << ( 8* ( a_Index-1 ) ) )
+  SetFormat, integer, %old_FormatInteger%
+  return, value
+}
+
+; Battery Alarm
+Battery_Tan_Success := 0
+Battery_Check:
+	VarSetCapacity(powerstatus, 1+1+1+1+4+4)
+	success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
+	
+	AC_Status:=ReadInteger(&powerstatus,0,1,false)
+	Battery_Life:=ReadInteger(&powerstatus,2,1,false)
+	; msgbox, %AC_Status%
+	If ((Battery_Tan_Success < 2) AND ( ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
+	{
+		; SoundGet, currentvolume
+		; SoundSet, 30
+		SoundPlay, %A_ScriptDir%\audios\Alarm02.wav
+		IfWinNotActive, Genshin Impact ahk_class UnityWndClass
+			SplashImage, %A_ScriptDir%\images\Battery-Tan-665x245.jpg,b,
+		Sleep, 3000
+		SplashImage, Off
+		; SoundSet, currentvolume
+		Battery_Tan_Success++
+	}
+	Else If ((Battery_Tan_Success = 2) AND ( ((Battery_Life = 81) OR (Battery_Life = 79)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
+		Battery_Tan_Success := 0
 Return
-~Esc::
-	WinClose, Cortana
-	sLeep 1000
-	WinKill, Cortana
-Return
+
+
+
+
+
