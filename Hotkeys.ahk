@@ -24,7 +24,8 @@ StartTime := A_TickCount
 menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
-SetTimer, Battery_Check, 5000
+SetTimer, Battery_Check, 10000
+SetTimer, Current_Volume, 100
 
 
 ; Double click tray icon to edit script 
@@ -111,7 +112,7 @@ Return
 		if (SplashInput = "w")
 		{
 			SoundBeep(6000, 100, 5)
-			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\WhatsApp"
+			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\WhatsApp\WhatsApp"
 			WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
 		}
 		SplashTextOff
@@ -218,6 +219,45 @@ Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
+;[Ctrl+Shift+S] Spotify
+;-----------------------------------------------------------------------------------------------------------------------
+F6::
+    IfWinActive, ahk_class Chrome_WidgetWin_0 ahk_exe Spotify.exe
+	{
+		WinHide
+		Send, !{Esc}
+	}
+	Else 
+	{
+		Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Spotify.lnk"
+		WinActivate
+	}
+Return
+
+; Pause on Mute
+Current_Volume:
+SoundGet, C_Volume
+If ((C_Volume = 0) AND (c != 1))
+	{
+		Send, {Media_Play_Pause}
+		c := 1
+		; msgbox, %C_volume%, %c%
+	}
+If ((C_Volume > 0) AND (c = 1))
+	{
+		Send, {Media_Play_Pause}
+		c := 0
+		; msgbox, %C_volume%, %c%
+	}
+Return
+
+; L::
+; WinGetTitle, winname, ahk_class Chrome_WidgetWin_0 ahk_exe Spotify.exe
+; Msgbox, %winname%
+; Return
+
+
+;-----------------------------------------------------------------------------------------------------------------------
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
 ^!s::
@@ -245,15 +285,15 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+.] Send ASCII character
 ;-----------------------------------------------------------------------------------------------------------------------
-!.::
-	SoundBeep(6000, 110, 7)
-	Input, key, L6, LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}
-	str := key
-	For letter, number in {j: 1, k: 2, l: 3, u: 4, i: 5, o: 6, m: 0}
-	str := StrReplace(str, letter, number)
-	Send % str ~= "^\d+$" ? Format("{ASC {:0" StrLen(str) "}}", str) : key
-	SoundBeep(5000, 110, 20)
-Return
+; !.::
+	; SoundBeep(6000, 110, 5)
+	; Input, key, L6, LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}
+	; str := key
+	; For letter, number in {j: 1, k: 2, l: 3, u: 4, i: 5, o: 6, m: 0}
+	; str := StrReplace(str, letter, number)
+	; Send % str ~= "^\d+$" ? Format("{ASC {:0" StrLen(str) "}}", str) : key
+	; SoundBeep(5000, 110, 5)
+; Return
 
 :::lol::😂
 :::lmao::🤣
@@ -281,18 +321,25 @@ Return
 
 
 ;-------------------------------------------------------------------------------
-; Turn off NumLock & CapsLock
+; Turn off NumLock & CapsLock & Show Taskbar
 ;-------------------------------------------------------------------------------
 ~NumLock::
 	Sleep, 60000	;1 min
-	SetCapsLockState, Off
-	SoundBeep(3000, 100, 5)
+	SetNumLockState, Off
+	SoundBeep ;(3000, 100, 5)
 Return
 
 ~CapsLock::
 	Sleep, 60000	;1 min
 	SetCapsLockState, Off
-	SoundBeep(3000, 100, 5)
+	SoundBeep ;(3000, 100, 5)
+Return
+
+~RButton::
+	CoordMode, Mouse, Screen
+	MouseGetPos, posx, posy
+	If ((posx > 800) AND (posy > 890))
+		WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
 Return
 
 
@@ -331,16 +378,21 @@ NumpadPgDn::Send {/}
 !t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
 
 NumpadHome::
+	SendEvent, {Click, 1000, 500, 0}{Click, 1260, 500, 0}
 	Click, 1260 800 ;828		;1517 957
 	Sleep, 700
 	Click, 1260 708 ;738		;1480 900
 	Sleep, 500
 	Click, 1260 708 ;728		;1480 700
 	Sleep, 300
+	Click, 1260 735
+	Sleep, 300
+	Click, 1260 590
+	Sleep, 300
 	Click, 1260	500		;993 631
 	Click, 1260 500		;993 631
 Return
-	
+
 
 #If WinActive("Taiga ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
 NumpadEnter::
@@ -365,7 +417,7 @@ CoordMode, Mouse, Screen
 	Sleep, 300
 	Click, 640, 830		;800, 1000
 Return
-MButton::
+~MButton::
 	Send, {AltDown}
 	Sleep, 200
 	Click, 230, 33		;278, 42
@@ -375,6 +427,7 @@ MButton::
 Return
 !d::GoTo, !d_Discord
 RCtrl::Send, {LButton}
++RCtrl::Send, {LButton Down}
 
 
 #If WinActive("Search ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
@@ -392,6 +445,8 @@ NumpadIns::Send {Space}
 #o::Send, #3
 +!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
 !F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"
+#b::WinActivate, ahk_class Shell_TrayWnd
+
 
 #d::
 	If (Desktop = 1)
@@ -469,7 +524,7 @@ Battery_Check:
 	AC_Status:=ReadInteger(&powerstatus,0,1,false)
 	Battery_Life:=ReadInteger(&powerstatus,2,1,false)
 	; msgbox, %AC_Status%
-	If ((Battery_Tan_Success < 2) AND ( ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
+	If ((Battery_Tan_Success < 1) AND ( ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
 	{
 		; SoundGet, currentvolume
 		; SoundSet, 30
@@ -481,7 +536,7 @@ Battery_Check:
 		; SoundSet, currentvolume
 		Battery_Tan_Success++
 	}
-	Else If ((Battery_Tan_Success = 2) AND ( ((Battery_Life = 81) OR (Battery_Life = 79)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
+	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 81) OR (Battery_Life = 79)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
 		Battery_Tan_Success := 0
 Return
 
