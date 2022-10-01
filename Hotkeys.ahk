@@ -7,7 +7,7 @@ SetTitleMatchMode 2
 SetTitleMatchMode Fast
 DetectHiddenWindows On
 DetectHiddenText On
-; #WinActivateForce
+#WinActivateForce
 SetControlDelay 1
 SetWinDelay 0
 SetKeyDelay -1
@@ -16,6 +16,8 @@ SetBatchLines -1
 #UseHook
 #Persistent
 #InstallKeybdHook
+ListLines, Off
+; #Include Anime {Hotkeys}.ahk
 ; KeyHistory
 ; #Warn All
 #MaxHotkeysPerInterval 200
@@ -25,112 +27,196 @@ menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
 SetTimer, Battery_Check, 10000
-SetTimer, Current_Volume, 100
+SetTimer, Current_Volume, 10
+SoundBeep(10000, 200, 5)
 
 
-; Double click tray icon to edit script 
+If not A_IsAdmin
+{
+	MsgBox, This Script needs to run as Admin for best performance... So do that!!
+	Run *RunAs "%A_ScriptFullPath%"
+}
+
+; AHK_Groups
+GroupAdd, game, Genshin Impact ahk_exe GenshinImpact.exe
+GroupAdd, game, Nox ahk_exe nox.exe
+GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
+GroupAdd, game, ahk_exe EXCEL.EXE
+GroupAdd, game, ahk_exe studio64.exe
+GroupAdd, game, ahk_exe VRChat.exe
+
+GroupAdd, teyvat_map, Teyvat Interactive Map
+GroupAdd, teyvat_map, Enkanomiya
+GroupAdd, teyvat_map, The Chasm
+
+GroupAdd, anime, - AniMixPlay
+GroupAdd, anime, 9Anime -
+ListLines, On
+
+; Double click tray icon to edit script
 Edit_This_Script:
 EndTime := A_TickCount
-If ((EndTime - StartTime) > 5000)
+If ((EndTime - StartTime) > 3000)
+If GetKeyState("Shift", "P")
+	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe", A_ScriptFullPath)
+Else
 	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
-return
-
-; Open VLC from Tray
-Open_VLC_Tray()
-{
-WinActivate,  ahk_class NotifyIconOverflowWindow
-ControlFocus, ToolbarWindow321, ahk_class NotifyIconOverflowWindow
-; ControlSend, ToolbarWindow321, {Right}, ahk_class NotifyIconOverflowWindow	;;UnComment this if VLC is the 2nd icon in system tray
-ControlSend, ToolbarWindow321, {Enter}, ahk_class NotifyIconOverflowWindow
-SendEvent, {Click, 1363, 498, 0}
-WinWaitActive, ahk_exe vlc.exe, , 5
-Send, {Space}
-}
+Return
 
 ; Custom SoundBeep
 SoundBeep(Frequency, Duration, Volume) {
     SoundGet, MasterVolume
     SoundSet, Volume
-	Sleep, 300
+	Sleep, 100
     SoundBeep, Frequency, Duration
     SoundSet, MasterVolume
+	Sleep, 100
+}
+
+; Check If fullscreen or not
+Fullscreen() {
+	WinGetPos,,, w, h, A
+	return (w = A_ScreenWidth && h = A_ScreenHeight)
+}
+
+; Boss key
+BossKey(title) {
+	IfWinActive, %title%
+	{
+		WinMinimize, %title%
+		WinHide, %title%
+	}Else {
+		WinShow, %title%
+		WinActivate, %title%
+	}
+}
+
+; Check whether a process is elevated
+ProcessElevated(ProcessID)
+{
+    if !(hProcess := DllCall("OpenProcess", "uint", 0x1000, "int", 0, "uint", ProcessID, "ptr"))
+        throw Exception("OpenProcess failed", -1)
+    if !(DllCall("advapi32\OpenProcessToken", "ptr", hProcess, "uint", 0x0008, "ptr*", hToken))
+        throw Exception("OpenProcessToken failed", -1), DllCall("CloseHandle", "ptr", hProcess)
+    if !(DllCall("advapi32\GetTokenInformation", "ptr", hToken, "int", 20, "uint*", IsElevated, "uint", 4, "uint*", size))
+        throw Exception("GetTokenInformation failed", -1), DllCall("CloseHandle", "ptr", hToken) && DllCall("CloseHandle", "ptr", hProcess)
+    return IsElevated, DllCall("CloseHandle", "ptr", hToken) && DllCall("CloseHandle", "ptr", hProcess)
+}
+
+; Click in all resolutions
+Click(x, y, z:=1) {
+	x1 := x * (A_ScreenWidth / 1600.0)
+	y2 := y * (A_ScreenHeight / 900.0)
+	Click, %x1% %y2% %z%
+}
+ControlClick(x, y, WinTitle, z:="LEFT", c:="1", opt:="") {		; ControlClick(X-Pos, Y-Pos, WinTitle, WhichButton, ClickCount, Options)
+	x1 := x * (A_ScreenWidth / 1600.0)
+	y2 := y * (A_ScreenHeight / 900.0)
+	ControlClick, X%x1% Y%y1%, %WinTitle%,, %z%, %c%, %opt%
 }
 
 
-; #If WinActive("Nox")
-; `::
-; End::
-; MButton::
-	; Click, 690, 620, 1
-	; Send, !x
-	; WinActivate, SMPlayer
-	; Send, {Space}
-; Return
+#If WinExist("ahk_group teyvat_map")
+CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
+#If
 
-#If !WinActive("Genshin Impact ahk_exe GenshinImpact.exe") ; !WinActive("Nox")
+
+
 ;-----------------------------------------------------------------------------------------------------------------------
-;[Alt+D] Opera - Discord
+;[Alt+D] Discord
 ;-----------------------------------------------------------------------------------------------------------------------
 !d::
 !d_Discord:
-    IfWinNotExist, Discord
+	; ControlFocus, Intermediate D3D Window1, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+	; ControlGet, OutputVar1, Hwnd, , Intermediate D3D Window1, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe,,,
+    IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
     {
 		SplashTextOn, 200, 25, Discord, Press 'd' to open Discord
 		Input, SplashInput, T1 L1
 		If (SplashInput = "d")
 		{
 			SoundBeep(6000, 100, 5)
-			Run, C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe
-			WinActivate, Discord ahk_exe Discord.exe
+			Run, "C:\Users\Jery\AppData\Local\Discord\app-1.0.9004\Discord.exe"
+			; WinActivate, Discord ahk_exe Discord.exe
+			WinWait, Discord ahk_exe Discord.exe, ,8 , Discord Updater
+			WinHide, Discord ahk_exe Discord.exe,, Discord Updater
 		}
 		SplashTextOff
     }
-    Else 
-    {
-        IfWinNotActive, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
-		{
-            WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
-            WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
-        }Else  {
-            WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
-			Send, !{Tab}
-			; Send, +!{Tab}
-			WinActivate, Genshin Impact
-        }
-    }
+    Else
+	{
+		; WinGet, Discord_PID, PID, ahk_exe Discord.exe
+		; If ProcessElevated(Discord_PID)		;check whether Discord is Elevated
+		; {
+			; IfWinNotActive, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	; If Discord not in Foreground
+			; {
+				; WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				; WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				; ControlGet, Discord_Visibility, Visible,, Intermediate D3D Window1, ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+				; If Discord_Visibility != 1	; If Discord is not Visible
+				; {
+					; WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+					; Send, !{Esc}
+					; WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+					; WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+				; }
+				; WinGet, Discord_ID, ID, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+			; }Else  {																	; If Discord is in Foreground
+				; WinMinimize, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				; WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+			; }
+		; }
+		; Else									; If Discord is not Elevated
+			BossKey("Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe")
+	}
 Return
 
 
+#If !WinActive("ahk_group game")
 ;-----------------------------------------------------------------------------------------------------------------------
-;[Alt+W] WhatsApp
+;[Alt+W] WhatsApp Beta
 ;-----------------------------------------------------------------------------------------------------------------------
 !w::
-    IfWinNotExist, WhatsApp
+    IfWinNotExist, WhatsApp Beta ahk_exe ApplicationFrameHost.exe
     {
-		SplashTextOn, 200, 25, WhatsApp, Press 'w' to open WhatsApp
-		Input, SplashInput, T1 L1
-		if (SplashInput = "w")
-		{
-			SoundBeep(6000, 100, 5)
-			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\WhatsApp\WhatsApp"
-			WinActivate, WhatsApp ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		IfWinActive, ahk_exe opera.exe
+			Send, !w
+		Else {
+			SplashTextOn, 200, 25, WhatsApp, Press 'w' to open WhatsApp
+			Input, SplashInput, T1 L1
+			if (SplashInput = "w")
+			{
+				SoundBeep(6000, 100, 5)
+				; Run, "C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2222.12.0_x64__cv1g1gvanyjgm\app\WhatsApp.exe"
+				Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\WhatsApp Beta.lnk"
+				WinActivate, WhatsApp
+			}
+			SplashTextOff
 		}
-		SplashTextOff
 	}
-    Else 
+    Else
     {
-		IfWinNotActive, WhatsApp 
+	WA:="WhatsApp Beta ahk_exe ApplicationFrameHost.exe"
+		IfWinNotActive, %WA%
 		{
-			WinClose, WhatsApp Voip
-			WinClose, call ahk_exe WhatsApp.exe
-			WinShow, WhatsApp ahk_exe WhatsApp.exe
-			WinActivate, WhatsApp ahk_exe WhatsApp.exe
+			; WinShow, WhatsApp Voip
+			; WinShow, call ahk_exe WhatsApp.exe
+			WinShow, %WA%
+			WinActivate, %WA%
 		}Else  {
-			WinHide, WhatsApp ahk_exe WhatsApp.exe
-			Send, !{Tab}
+			WinMinimize, %WA%
+            WinHide, %WA%
+			; WinHide, WhatsApp Voip
+			; WinHide, call ahk_exe WhatsApp.exe
 		}
 	}
 Return
+
+; !k::  
+	; WinHide, % "ahk_id " (ID:=WinExist("A"))
+	; WinSet, ExStyle, ^0x80, ahk_id %ID% ; Apply ToolWindow Style
+	; WinShow, ahk_id %ID%
+; Return
 
 
 ;----------------------------------------------------------------------------------------------------------------------
@@ -139,122 +225,68 @@ Return
 !i::
     IfWinNotExist, Instagram
     {
-		SplashTextOn, 200, 25, Instagram, Press 'i' to open Instagram
-		Input, SplashInput, T1 L1
-		if (SplashInput = "i")
-		{
-			SoundBeep(6000, 100, 5)
-			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Instagram Edge"
-			WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		IfWinActive, ahk_exe opera.exe
+			Send, !i
+		Else {
+			SplashTextOn, 200, 25, Instagram, Press 'i' to open Instagram
+			Input, SplashInput, T1 L1
+			if (SplashInput = "i")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"
+				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
+			SplashTextOff
 		}
-		SplashTextOff
     }
-    Else 
-    {
-		IfWinNotActive, Instagram
-		{
-			WinShow, Instagram ahk_class Chrome_WidgetWin_1
-			WinActivate, Instagram ahk_class Chrome_WidgetWin_1
-		}Else  {
-			WinHide, Instagram ahk_class Chrome_WidgetWin_1
-			Send, !{Tab}
-		}
-	}
+	Else
+		BossKey("Instagram ahk_class Chrome_WidgetWin_1")
 Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
-;[Alt+M] Opera - MAL
+;[Alt+M] MAL
 ;-----------------------------------------------------------------------------------------------------------------------
-!m::
+~!m::
+	If WinActive("Mal-Sync - Opera")
+		WinClose, Mal-Sync - Opera
     If !WinExist("MAL")
     {
-		SplashTextOn, 200, 25, MAL, Press 'm' to open MAL
-		Input, SplashInput, T1 L1
-		if (SplashInput = "m")
+		If (!WinActive("Your Default Browser's Title") AND !WinActive("Opera"))	;just detect whether ur browser or anime page is ActiveX
 		{
-			SoundBeep(6000, 100, 5)
-			Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MAL Edge"
-			WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			SplashTextOn, 200, 25, MAL, Press 'm' to open MAL
+			Input, SplashInput, T1 L1
+			if (SplashInput = "m")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "Z:\OneDrive\AHK\imports\MAL_Edge.lnk"
+				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
+			SplashTextOff
 		}
-		SplashTextOff
     }
     Else
-    {
-		IfWinNotActive, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		{
-			WinShow, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			WinActivate, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-		}Else  {
-			WinHide, MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			Send, !{Tab}
-		}
-    }
-Return
-+!m::
-	IfWinActive, ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe
-	{
-		Click, -22 610		;-25, 740
-		Click, 	32 610		;40, 740
-	}Else  {
-		Send, +!m
-	}
+		BossKey("MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe")
 Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
-;[F12] Process Hacker
+;[Shift+Alt+...] Opera Sidebar
 ;-----------------------------------------------------------------------------------------------------------------------
-F12::
-    IfWinActive, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
-	{
-		WinHide, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
-		Send, !{Tab}
-	}Else {
-		WinShow, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
-		WinActivate, ahk_class MainWindowClassName ahk_exe ProcessHacker.exe
-		Send, ^k
-	}
+#If WinActive("ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe")
++!m::	;------MAL------
+	Click("-22", "610")		;-25, 740
+	Click("32", "610")		;40, 740
 Return
-
-
-;-----------------------------------------------------------------------------------------------------------------------
-;[Ctrl+Shift+S] Spotify
-;-----------------------------------------------------------------------------------------------------------------------
-F6::
-    IfWinActive, ahk_class Chrome_WidgetWin_0 ahk_exe Spotify.exe
-	{
-		WinHide
-		Send, !{Esc}
-	}
-	Else 
-	{
-		Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Spotify.lnk"
-		WinActivate
-	}
++!1::	;------GMAIL-0------
+	Click("-22", "663")
+	Click("32", "663")
 Return
-
-; Pause on Mute
-Current_Volume:
-SoundGet, C_Volume
-If ((C_Volume = 0) AND (c != 1))
-	{
-		Send, {Media_Play_Pause}
-		c := 1
-		; msgbox, %C_volume%, %c%
-	}
-If ((C_Volume > 0) AND (c = 1))
-	{
-		Send, {Media_Play_Pause}
-		c := 0
-		; msgbox, %C_volume%, %c%
-	}
++!2::	;------GMAIL-1------
+	Click("-22", "715")
+	Click("32", "715")
 Return
-
-; L::
-; WinGetTitle, winname, ahk_class Chrome_WidgetWin_0 ahk_exe Spotify.exe
-; Msgbox, %winname%
-; Return
+#If !WinActive("ahk_group game")
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -264,14 +296,15 @@ Return
     IfWinActive,  %A_ScriptFullPath% - Notepad++
 	{
 		Send, ^s
-		SoundBeep(10000, 200, 5)
+		; SoundBeep(10000, 200, 5)
+		WinActivate, ahk_class Shell_TrayWnd
 		Reload		; Restart This script
 	}Else {
 		Send, ^!s
 	}
 Return
+#If WinActive("- Notepad++")
 ^+!s::
-	IfWinActive, - Notepad++
 	{
 		IfWinNotExist, Window Spy ahk_exe AutoHotKey.exe
 			Run, C:\Program Files\AutoHotkey\AutoHotkey.exe "C:\Program Files\AutoHotkey\WindowSpy.ahk"
@@ -280,10 +313,14 @@ Return
 	}
 	Send, ^+!s
 Return
+^+!l::ListLines
+^+!k::KeyHistory
+^+!v::ListVars
+#If !WinActive("ahk_group game")
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
-;[Alt+.] Send ASCII character
+;[Alt+.] Send ASCII character & Hotstrings
 ;-----------------------------------------------------------------------------------------------------------------------
 ; !.::
 	; SoundBeep(6000, 110, 5)
@@ -295,11 +332,16 @@ Return
 	; SoundBeep(5000, 110, 5)
 ; Return
 
-:::lol::😂
-:::lmao::🤣
-:::sweat::😅
-:::sad::😢
-:::cry::😭
+:o::lol::😂
+:o::lmao::🤣
+:o::sweat::😅
+:o::exp::😑
+:o::sad::😢
+:o::cry::😢
+:o::sob::😭
+:o::smug::😏
+
+:?*O:@/::@gmail.com
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -321,226 +363,225 @@ Return
 
 
 ;-------------------------------------------------------------------------------
-; Turn off NumLock & CapsLock & Show Taskbar
+; Turn off NumLock & CapsLock & Show Taskbar/ Toggle F11
 ;-------------------------------------------------------------------------------
 ~NumLock::
 	Sleep, 60000	;1 min
 	SetNumLockState, Off
-	SoundBeep ;(3000, 100, 5)
 Return
 
 ~CapsLock::
 	Sleep, 60000	;1 min
 	SetCapsLockState, Off
-	SoundBeep ;(3000, 100, 5)
 Return
 
-~RButton::
+MButton::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx, posy
-	If ((posx > 800) AND (posy > 890))
-		WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
-Return
-
-
-;-------------------------------------------------------------------------------
-; Remaps
-;-------------------------------------------------------------------------------
-
-#If WinActive("ahk_exe mpvnet.exe")	;---------MPV NET-------------------------------------
-NumpadPgUp::Send {PgUp}
-+NumpadPgUp::Send +{PgUp}
-NumpadPgDn::Send {PgDn}
-+NumpadPgDn::Send +{PgDn}
-NumpadClear::Send {Numpad5}
-NumpadRight::Send, {Right}
-NumpadLeft::Send, {Left}
-NumpadUp::Send, {Up}
-NumpadDown::Send, {Down}
-!t::Run, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe" 
-
-
-#If WinActive("ahk_exe vlc.exe")	;---------VLC MEDIA PLAYER----------------------------------------
-NumpadPgUp::Send +{Right}
-NumpadClear::Send +{Left}
-NumpadPgDn::Send {/}
-+NumpadPgDn::Send +{/}
-!t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
-
-#If WinExist("ahk_exe vlc.exe")
-+NumpadHome::
-!F6::Open_VLC_Tray()
-
-
-#If WinActive("- AniMixPlay")	;----------ANIMIXPLAY-----------------------------
-NumpadPgDn::Send {/}
-+NumpadPgDn::Send +{/}
-!t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
-
-NumpadHome::
-	SendEvent, {Click, 1000, 500, 0}{Click, 1260, 500, 0}
-	Click, 1260 800 ;828		;1517 957
-	Sleep, 700
-	Click, 1260 708 ;738		;1480 900
-	Sleep, 500
-	Click, 1260 708 ;728		;1480 700
-	Sleep, 300
-	Click, 1260 735
-	Sleep, 300
-	Click, 1260 590
-	Sleep, 300
-	Click, 1260	500		;993 631
-	Click, 1260 500		;993 631
-Return
-
-
-#If WinActive("Taiga ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
-NumpadEnter::
-	Send, {Enter}
-	Sleep, 300
-	Send, !{Tab}
-	; WinActivate, ahk_class Qt5QWindowIcon	;VLC
-	; Click, 580 730, 1
-Return
-!t::WinClose, Taiga ahk_class TaigaMainW
-
-#If WinExist("Taiga ahk_exe Taiga.exe") OR WinActive("ahk_class WorkerW ahk_exe explorer.exe")
-!t::Run, Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe
-
-
-#If WinActive("Genshin Impact ahk_exe GenshinImpact.exe")	  ;---------GENSHIN IMPACT-------------------------
-CoordMode, Mouse, Screen
-/::
-	Send, {/}
-	Sleep, 200
-	Click, 640, 830		;800, 1000
-	Sleep, 300
-	Click, 640, 830		;800, 1000
-Return
-~MButton::
-	Send, {AltDown}
-	Sleep, 200
-	Click, 230, 33		;278, 42
-	Sleep, 200
-	; Send, {Ctrl}
-	Send, {AltUp}
-Return
-!d::GoTo, !d_Discord
-RCtrl::Send, {LButton}
-+RCtrl::Send, {LButton Down}
-
-
-#If WinActive("Search ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
-::A`;::Apps:
-::D`;::Documents:
-::F`;::Folder:
-::P`;::Photos:
-::V`;::Videos:
-::W`;::Web:
-::S`;::Settings:
-
-
-#If	;-------NORMAL-----------------------------------------------------------
-NumpadIns::Send {Space}
-#o::Send, #3
-+!a::Run, Z:\DO_NOT_TOUCH\MEmu\MAL
-!F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"
-#b::WinActivate, ahk_class Shell_TrayWnd
-
-
-#d::
-	If (Desktop = 1)
+	
+	If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900))
 	{
-		Send, #^{Right}
-		Desktop := 2
-		; WinActivate, Genshin Impact ahk_class UnityWndClass
-	}Else {
-		IfWinActive, Genshin Impact ahk_class UnityWndClass ahk_exe GenshinImpact.exe
-		{
-			Send, {Esc}
-			SoundSet, 0
-		}
-		Send, #^{Left}
-		Desktop := 1
+		posx := posx / (A_ScreenWidth / 1600.0)
+		posy := posy / (A_ScreenHeight / 900.0)
+	} Else If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900)) {
+		posx := posx * (A_ScreenWidth / 1600.0)
+		posy := posy * (A_ScreenHeight / 900.0)
+	}
+		
+	If ((posx > 0) AND (posy > 890))
+	{
+		If WinActive("ahk_class Shell_TrayWnd")
+			Send, !{Tab}
+		Else
+			WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
+	}
+	Else If ((posx > 1450) AND (posy < 2))
+	{
+		Send, {F11}
+	}
+	Else
+		Send, {MButton}
+Return
+
+
+#If		;------------Unlocked All Windows-------------------------------------------------------------------------------------
+
+;---------------------------------------------------------------------------------------------------------------------
+; Remaps
+;---------------------------------------------------------------------------------------------------------------------
+
+#Include Include\Hotkeys__GenshinImpact.ahk
+#Include Include\Hotkeys__Anime.ahk
+#Include Include\Hotkeys__Spotify.ahk
+#Include Include\Hotkeys__WSA.ahk
+#Include Include\Hotkeys__BatteryAlarm.ahk
+
+
+#If WinActive("ahk_class Windows.UI.Core.CoreWindow ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
+:*O:A`;::Apps:
+:*O:D`;::Documents:
+:*O:F`;::Folder:
+:*O:P`;::Photos:
+:*O:V`;::Videos:
+:*O:W`;::Web:
+:*O:S`;::Settings:
+:O:p/::paimon.moe/wish
+
+
+#If ( (Fullscreen()) AND (WinActive("- YouTube")) )	;----------YouTube is Fullscreen-----------------------------
+w::Send, {Up}
+a::Send, {Left}
+NumpadClear::
+s::Send, {Down}
+d::Send, {Right}
+
+
+#If	;------------------------------------------------NORMAL-----------------------------------------------------------
+NumpadIns::Send {Space}
+; ~LWin::Send, ^{Esc}
+#o::Send, #3		;Opera
+#+o::Send, #4		;Edge
+!F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"	 ;Screenshot
+
+#b::				;Taskbar
+If WinActive("ahk_class Shell_TrayWnd")
+	Send, !{Tab}
+Else {
+	WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
+	ControlFocus, Button2, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
+}
+Return
+
+#2::				;Phone Link
+	IfWinActive, Phone Link ahk_exe PhoneExperienceHost.exe
+		WinClose
+	Else
+		Send, #2
+Return
+
+>^>!Left::Run, Display.exe /rotate:90 /toggle		; Rotate Screen Clockwise
+>^>!Right::Run, Display.exe /rotate:270 /toggle	; Rotate Screen Counter-Clockwise
+>^>!Up::Run, Display.exe /rotate:180 /toggle		; Rotate Screen Vertically
+
++!1::
++!2::
+	SplashTextOn, 230, 25, MAL, Press '1' or '2' to open MAL
+	Input, SplashInput, T1 L1
+	If (SplashInput = "1")
+	{
+		Run, "D:\MAL"
+		SoundBeep(5000, 300, 5)
+	}
+	ELse If (SplashInput = "2")
+	{
+		Run, "Z:\DO_NOT_TOUCH\MEmu\Movies"
+		SoundBeep(5000, 300, 5)
+	}
+	SplashTextOff
+Return
+
+^+!F6::			; Headphone sound Balance
+	SoundGet, vol
+	SoundSet, 10
+	VA_SetMasterVolume("5", "2", "Headphone")
+	SoundSet, vol
+Return
+
+
+;-------------------------------------------------------------------------------
+; 4 Finger Wand
+;-------------------------------------------------------------------------------
+#^+F24::	;4 Finger Tap on touchpad
+4FingerWand:
+	CoordMode, Mouse, Screen
+	MouseGetPos, posx, posy
+	posx := posx * (A_ScreenWidth / 1920.0)
+	posy := posy * (A_ScreenHeight / 1080.0)
+	If ((posx > 1400) AND (posy > 200))		;Quick Settings		bottom-right-large
+	{
+		Sleep, 10
+		Send, #a
+	}
+	Else If ((posx < 600) AND (posy > 200))	;SwitchDesktop		bottom-left-large
+	{
+		Sleep, 10
+		SwitchDesktop()
+	}
+	Else If ((posx > 1850) AND (posy < 50))	;Edit This Script	top-right-small
+	{
+		Sleep, 10
+		Goto, Edit_This_Script
+	}
+	Else If ((posx < 80) AND (posy < 50))	;Discord			top-left-small
+	{
+		Sleep, 10
+		Goto, !d_Discord
+	}
+	Else	;Notification center
+	{
+		Sleep, 10
+		If (WinActive("ahk_exe opera.exe") AND GetKeyState("RButton", "P"))
+			Send, {RButton Down}{LButton}{RButton Up}
+		Else
+			Send, #n
 	}
 Return
-~#^Left::Desktop := 1
-~#^Right::Desktop := 2
+#If !WinActive("ahk_group game")
+~RButton & LButton Up::Goto, 4FingerWand
+#If
 
 ^+!F3::Run, nircmd.exe changebrightness 20
 ^+!F2::Run, nircmd.exe changebrightness -20
 
-; #c::	; CORTANA-----------------------------------------------------------
-	; If !WinExist("Cortana ahk_exe ApplicationFrameHost.exe")
-		; Run, "C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2203.4603.0_x64__8wekyb3d8bbwe\Cortana.exe" -ServerName:App.AppX2y379sjp88wjq1y80217mddj3fargf2y.mca
-	; If !WinActive("Cortana ahk_exe ApplicationFrameHost.exe")
-	; {
-		; WinActivate, Cortana ahk_exe ApplicationFrameHost.exe
-		; WinWaitActive, Cortana ahk_exe ApplicationFrameHost.exe
-		; Sleep, 300
-		; Click 513, 805	; 691, 945
-	; }Else 
-		; Click 513, 805	; 691, 945		
-; Return
-; ~Esc::
-	; WinClose, Cortana ahk_exe ApplicationFrameHost.exe
-	; sLeep 1000
-	; WinKill, Cortana
-; Return
-; #f::Send, #g
 
-
-
-
-
-
-
-
-
-
-
-
-; Shimanov's Read Integer Function
-ReadInteger( p_address, p_offset, p_size, p_hex=true )
-{
-  value = 0
-  old_FormatInteger := a_FormatInteger
-  if ( p_hex )
-    SetFormat, integer, hex
-  Else
-    SetFormat, integer, dec
-  loop, %p_size%
-    value := value+( *( ( p_address+p_offset )+( a_Index-1 ) ) << ( 8* ( a_Index-1 ) ) )
-  SetFormat, integer, %old_FormatInteger%
-  return, value
+;-------------------------------------------------------------------------------
+; Switch Desktop
+;-------------------------------------------------------------------------------
+Global Desktop := 1	; Define 'Desktop' as a global variable to make it be able to be read in functions
+SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
+	ControlSend, , %CharToSend%, %Window%
+	If (Desktop = 1)
+	{
+		Send, #^{Right}
+		Desktop := 2
+	}Else {
+		Send, #^{Left}
+		Desktop := 1
+	}	
+	If WinExist(Window2)
+		Sleep, 500
+	If WinActive(Window2)
+		Send, %CharToSend2%
 }
 
-; Battery Alarm
-Battery_Tan_Success := 0
-Battery_Check:
-	VarSetCapacity(powerstatus, 1+1+1+1+4+4)
-	success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
-	
-	AC_Status:=ReadInteger(&powerstatus,0,1,false)
-	Battery_Life:=ReadInteger(&powerstatus,2,1,false)
-	; msgbox, %AC_Status%
-	If ((Battery_Tan_Success < 1) AND ( ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
-	{
-		; SoundGet, currentvolume
-		; SoundSet, 30
-		SoundPlay, %A_ScriptDir%\audios\Alarm02.wav
-		IfWinNotActive, Genshin Impact ahk_class UnityWndClass
-			SplashImage, %A_ScriptDir%\images\Battery-Tan-665x245.jpg,b,
-		Sleep, 3000
-		SplashImage, Off
-		; SoundSet, currentvolume
-		Battery_Tan_Success++
-	}
-	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 81) OR (Battery_Life = 79)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
-		Battery_Tan_Success := 0
++NumpadHome::
+#d::SwitchDesktop()
+
+~#^Left::Desktop := 1
+~#^Right::Desktop := 2
+
+
+;-------------------------------------------------------------------------------
+;[End] Clear Notification & [F12] Process Hacker
+;-------------------------------------------------------------------------------
+~End & Home::
+	Send, #n
+	Sleep, 300
+	Send, #n
+Return
+
+F12::
+WinTitle := "ahk_class MainWindowClassName ahk_exe ProcessHacker.exe"
+If WinActive(WinTitle)
+{
+	WinMinimize, %WinTitle%
+	WinHide, %WinTitle%
+}Else {
+	WinShow, %WinTitle%
+	WinActivate, %WinTitle%
+	Send, ^k
+}
 Return
 
 
-
-
-
+;-----------------------------------------------------------------------------------------------------------------------
