@@ -109,6 +109,7 @@ Click(x, y, z:=1) {
 	y2 := y * (A_ScreenHeight / 900.0)
 	Click, %x1% %y2% %z%
 }
+; Sends a mouse button or mouse wheel event to a control in all resolutions
 ControlClick(x, y, WinTitle, z:="LEFT", c:="1", opt:="") {		; ControlClick(X-Pos, Y-Pos, WinTitle, WhichButton, ClickCount, Options)
 	x1 := x * (A_ScreenWidth / 1600.0)
 	y2 := y * (A_ScreenHeight / 900.0)
@@ -134,17 +135,20 @@ GetActiveExplorerPath() {
 }
 
 
+
 #If WinExist("ahk_group teyvat_map")
 CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 #If
-
 
 ; DISCORD-------------------------------
 <!d::
 +Numpad1::
 +NumpadEnd::
 !d_Discord:
-	; UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
+	; IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
+	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
+	; Else
+		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
 Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+*] ULTRA BOSS KEY
@@ -152,14 +156,15 @@ Return
 UltraBossKey(name, title, path, key) {
 	IfWinNotExist, %title%
     {
-		SplashTextOn, 200, 25, %name%, Press '%key%' to open %name%
+		SplashTextOn, 250, 25, %name%, Press '%key%' to open %name%
 		Input, SplashInput, T1 L1
 		if (SplashInput = key)
 		{
+			SplashTextOn, 250, 25, %name%, Opening %name%...
 			SoundBeep(6000, 100, 5)
 			Run, "%path%"
+			WinWait, %title%,,5
 			WinActivate, %title%
-			WinWait, %title%
 		}
 		SplashTextOff
     }
@@ -172,7 +177,7 @@ UltraBossKey(name, title, path, key) {
 !m::UltraBossKey("MAL"			, "MAL ahk_class Chrome_WidgetWin_1"				, "shell:AppsFolder\myanimelist.net-642C9947_syhf6hjm096rj!App"	, "m")
 !i::UltraBossKey("Instagram"	, "Instagram ahk_class Chrome_WidgetWin_1"			, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"					, "i")
 !c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
-!y::UltraBossKey("YouTube Music", "YouTube Music ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
+!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"						, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
 
 
@@ -203,7 +208,7 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
-#If WinActive("- Notepad++")
+#If WinActive("- Notepad++") OR WinActive("- Visual Studio Code")
 ^!s::
 	Send, ^s
 	; SoundBeep(10000, 200, 5)
@@ -256,7 +261,7 @@ Return
 F1::
 	If !WinExist("Drozd_net_monitor ahk_class AutoHotkeyGUI")
 	{
-		Run,  %A_ScriptDir%\Drozd_net_monitor\Drozd_net_monitor_original.exe
+		Run,  %A_ScriptDir%\imports\Drozd_net_monitor_original.lnk
 	}Else  {
 		If WinActive("Drozd_net_monitor ahk_class AutoHotkeyGUI") and !WinActive("ahk_class Notepad++")
 			Send, !{Tab}
@@ -483,7 +488,7 @@ Return
 ;-------------------------------------------------------------------------------
 ;[End] Clear Notification & [F12] Process Hacker
 ;-------------------------------------------------------------------------------
-End & Home::
+~End & Home::
 	Send, #n
 	Sleep, 300
 	Send, #n

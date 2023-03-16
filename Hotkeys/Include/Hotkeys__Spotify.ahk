@@ -47,7 +47,7 @@ If ((C_Volume = 0) AND (c != 1))	;Pause spotify & YTM
 		Else
 		{
 			If WinExist("- YouTube Music ahk_exe YouTube Music.exe")
-				Send, {Media_Play_Pause}
+				Send, ^+!{F10}
 		}
 		c := 1
 	}
@@ -59,7 +59,7 @@ If ((C_Volume > 0) AND (c = 1))		;Unpause spotify & YTM
 		Else
 		{
 			If WinExist("YouTube Music ahk_exe YouTube Music.exe")
-				Send, {Media_Play_Pause}
+				Send, ^+!{F10}
 		}
 		c := 0
 	}
