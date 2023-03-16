@@ -9,7 +9,7 @@ Return
 
 !g::Send, #g			;game bar
 
-`::						;Elemental Sight
+~`::						;Elemental Sight
 MButton::
 	; Send, {AltDown}
 	; Sleep, 200
@@ -25,12 +25,14 @@ LAlt & d::GoTo, !d_Discord
 +RCtrl::				;Charged Atk
 RAlt::
 	Send, {LButton Down}
-	Sleep, 500
+	; Sleep, 200
+	Sleep, 350
 	Send, {LButton Up}
 Return
 
-~End & Home::			;SwitchDesktop()
-~Alt & CapsLock::
+~f::Click, WheelDown 1
+
+~Alt & CapsLock::		;SwitchDesktop()
 ~MButton & RButton::
 #d::
 LCtrl::

@@ -39,18 +39,28 @@ spotifyKey(key) {
 Current_Volume:
 ListLines Off
 SoundGet, C_Volume
-If ((C_Volume = 0) AND (c != 1))	;Pause spotify
+If ((C_Volume = 0) AND (c != 1))	;Pause spotify & YTM
 	{
 		WinGetTitle, spotifyTitle, ahk_exe spotify.exe
 		If (WinExist("ahk_exe Spotify.exe") AND (spotifyTitle != "Spotify Free"))
 			spotifyKey("{Space}")
+		Else
+		{
+			If WinExist("- YouTube Music ahk_exe YouTube Music.exe")
+				Send, {Media_Play_Pause}
+		}
 		c := 1
 	}
-If ((C_Volume > 0) AND (c = 1))		;Unpause spotify
+If ((C_Volume > 0) AND (c = 1))		;Unpause spotify & YTM
 	{
 		WinGetTitle, spotifyTitle, ahk_exe spotify.exe
 		If (WinExist("ahk_exe Spotify.exe") AND (spotifyTitle = "Spotify Free"))
 			spotifyKey("{Space}")
+		Else
+		{
+			If WinExist("YouTube Music ahk_exe YouTube Music.exe")
+				Send, {Media_Play_Pause}
+		}
 		c := 0
 	}
 Return

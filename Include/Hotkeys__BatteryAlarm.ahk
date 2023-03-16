@@ -18,7 +18,7 @@ ListLines, Off
 		SplashImage, Off
 		Battery_Tan_Success++
 	}
-	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 81) OR (Battery_Life = 79)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
+	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 96) OR (Battery_Life = 94)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
 		Battery_Tan_Success := 0
 	If ((Battery_Life = 9) AND (AC_Status = 0))
 	{

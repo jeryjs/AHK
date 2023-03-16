@@ -65,7 +65,8 @@ Menu, Tray, Add , Open settings file , Open_ini
 Menu, Tray, Icon , Open settings file , Shell32.dll, 70
 Menu, Tray, Add ,
 Menu, Tray, Add, Settings, Settings
-Menu, Tray, Icon, Settings, wmploc.dll, %iconSet%  ; 18  ;in Win8
+; Menu, Tray, Icon, Settings, wmploc.dll, %iconSet%  ; 18  ;in Win8
+Menu, Tray, Icon, Settings, Shell32.dll, %iconSet%  ; 18  ;in Win8+
 Menu, Tray, Add ,
 Menu, Tray, Add , Edit in Scite, Edit_Scite
 Menu, Tray, Add , Edit in Notepad, Edit_Notepad
@@ -89,7 +90,8 @@ Menu, ContextMenu, Add,
 
 Menu, ContextMenu, Add, Settings, Settings
 ;Menu, ContextMenu, Icon, Settings, wmploc.dll, 25
-Menu, ContextMenu, Icon, Settings, wmploc.dll, %iconSet%  ;25
+; Menu, ContextMenu, Icon, Settings, wmploc.dll, %iconSet%  ;25
+Menu, ContextMenu, Icon, Settings, Shell32.dll, %iconSet%  ;25
 ;Menu, ContextMenu, Icon, Settings, Shell32.dll, 70
 ;Menu, ContextMenu, Icon, Settings, wmploc.dll,18  ;in Win8
 

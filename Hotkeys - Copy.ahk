@@ -138,14 +138,10 @@ GetActiveExplorerPath() {
 CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 #If
 
+!g::BossKey("Audio Router ahk_class Audio Router ahk_exe Audio Router.exe")
 
-; DISCORD-------------------------------
-<!d::
-+Numpad1::
-+NumpadEnd::
-!d_Discord:
-	; UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
-Return
+
+
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+*] ULTRA BOSS KEY
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -154,26 +150,223 @@ UltraBossKey(name, title, path, key) {
     {
 		SplashTextOn, 200, 25, %name%, Press '%key%' to open %name%
 		Input, SplashInput, T1 L1
-		if (SplashInput = key)
+		if (SplashInput = "c")
 		{
 			SoundBeep(6000, 100, 5)
 			Run, "%path%"
 			WinActivate, %title%
-			WinWait, %title%
 		}
 		SplashTextOff
     }
 	Else
 		BossKey(title)
+Return
 }
 
+
+;-----------------------------------------------------------------------------------------------------------------------
+;[Alt+D] Discord
+;-----------------------------------------------------------------------------------------------------------------------
+<!d::
++Numpad1::
++NumpadEnd::
+!d_Discord:
+	; ControlFocus, Intermediate D3D Window1, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+	; ControlGet, OutputVar1, Hwnd, , Intermediate D3D Window1, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe,,,
+    IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+    {
+		SplashTextOn, 200, 25, Discord, Press 'd' to open Discord
+		Input, SplashInput, T1 L1
+		If (SplashInput = "d")
+		{
+			SoundBeep(6000, 100, 5)
+			If A_IsAdmin
+				RunAsUser("C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord")
+			Else
+				Run, "C:\Users\Jery\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"
+				
+			; WinActivate, Discord ahk_exe Discord.exe
+			WinWait, Discord ahk_exe Discord.exe, ,8 , Discord Updater
+			WinHide, Discord ahk_exe Discord.exe,, Discord Updater
+		}
+		SplashTextOff
+    }
+    Else
+	{
+		WinGet, Discord_PID, PID, ahk_exe Discord.exe
+		If ProcessElevated(Discord_PID)		;check whether Discord is Elevated
+		{
+			IfWinNotActive, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe	; If Discord not in Foreground
+			{
+				WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				ControlGet, Discord_Visibility, Visible,, Intermediate D3D Window1, ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+				If Discord_Visibility != 1	; If Discord is not Visible
+				{
+					WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+					Send, !{Esc}
+					WinShow, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+					WinActivate, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+				}
+				WinGet, Discord_ID, ID, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe
+			}Else  {																	; If Discord is in Foreground
+				WinMinimize, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+				WinHide, Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe ahk_id %Discord_ID%
+			}
+		}
+		Else									; If Discord is not Elevated
+			BossKey("Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe")
+	}
+Return
+
+
 #If !WinActive("ahk_group game")
-!w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"	, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
-!m::UltraBossKey("MAL"			, "MAL ahk_class Chrome_WidgetWin_1"				, "shell:AppsFolder\myanimelist.net-642C9947_syhf6hjm096rj!App"	, "m")
-!i::UltraBossKey("Instagram"	, "Instagram ahk_class Chrome_WidgetWin_1"			, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"					, "i")
-!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
-!y::UltraBossKey("YouTube Music", "YouTube Music ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
-!t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"						, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
+;-----------------------------------------------------------------------------------------------------------------------
+;[Alt+W] WhatsApp Beta
+;-----------------------------------------------------------------------------------------------------------------------
+!w::
+    IfWinNotExist, WhatsApp ahk_class ApplicationFrameWindow
+    {
+		; IfWinActive, ahk_exe opera.exe
+			; Send, !w
+		; Else {
+			SplashTextOn, 200, 25, WhatsApp, Press 'w' or 'W' to open WhatsApp
+			Input, SplashInput, T1 L1
+			if ( (SplashInput = "W") AND (GetKeyState("Shift", "P")) )
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "shell:AppsFolder\5319275A.WhatsAppDesktop_cv1g1gvanyjgm!app"
+				WinActivate, WhatsApp
+			}
+			else if (SplashInput = "w")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!app"	; WA Beta
+				WinActivate, WhatsApp
+			}
+			SplashTextOff
+		; }
+	}
+    Else
+    {
+	WA:="WhatsApp Beta ahk_class ApplicationFrameWindow ahk_exe ApplicationFrameHost.exe"
+		IfWinNotActive, %WA%
+		{
+			; WinShow, WhatsApp Voip
+			; WinShow, call ahk_exe WhatsApp.exe
+			WinShow, %WA%
+			WinActivate, %WA%
+		}Else  {
+			WinMinimize, %WA%
+            WinHide, %WA%
+			; WinHide, WhatsApp Voip
+			; WinHide, call ahk_exe WhatsApp.exe
+		}
+	}
+Return
+
+; !k::  
+	; WinHide, % "ahk_id " (ID:=WinExist("A"))
+	; WinSet, ExStyle, ^0x80, ahk_id %ID% ; Apply ToolWindow Style
+	; WinShow, ahk_id %ID%
+; Return
+
+
+;----------------------------------------------------------------------------------------------------------------------
+;Alt+I] Instagram
+;----------------------------------------------------------------------------------------------------------------------
+!i::
+    IfWinNotExist, Instagram
+    {
+		IfWinActive, ahk_exe opera.exe
+			Send, !i
+		Else {
+			SplashTextOn, 200, 25, Instagram, Press 'i' to open Instagram
+			Input, SplashInput, T1 L1
+			if (SplashInput = "i")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"
+				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
+			SplashTextOff
+		}
+    }
+	Else
+		BossKey("Instagram ahk_class Chrome_WidgetWin_1")
+Return
+
+
+;----------------------------------------------------------------------------------------------------------------------
+;Alt+Y] YTMusic
+;----------------------------------------------------------------------------------------------------------------------
+!y::
+    IfWinNotExist, YouTube Music
+    {
+		IfWinActive, ahk_exe opera.exe
+			Send, !i
+		Else {
+			SplashTextOn, 200, 25, Youtube Music, Press 'y' to open Youtube Music
+			Input, SplashInput, T1 L1
+			if (SplashInput = "i")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"
+				WinActivate, Youtube Music ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe
+			}
+			SplashTextOff
+		}
+    }
+	Else
+		BossKey(Youtube Music ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe)
+Return
+
+
+;-----------------------------------------------------------------------------------------------------------------------
+;[Alt+M] MAL
+;-----------------------------------------------------------------------------------------------------------------------
+~!m::
+	If WinActive("Mal-Sync - Opera")
+		WinClose, Mal-Sync - Opera
+    If !WinExist("MAL")
+    {
+		If (!WinActive("Your Default Browser's Title") AND !WinActive("Opera"))	;just detect whether ur browser or anime page is ActiveX
+		{
+			SplashTextOn, 200, 25, MAL, Press 'm' to open MAL
+			Input, SplashInput, T1 L1
+			if (SplashInput = "m")
+			{
+				SoundBeep(6000, 100, 5)
+				Run, "Z:\OneDrive\AHK\imports\MAL_Edge.lnk"
+				WinActivate, Instagram ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
+			SplashTextOff
+		}
+    }
+    Else
+		BossKey("MAL ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe")
+Return
+
+
+;-----------------------------------------------------------------------------------------------------------------------
+;[Alt+C] ChatGPT
+;-----------------------------------------------------------------------------------------------------------------------
+!c::
+	IfWinNotExist, ChatGPT ahk_exe msedge.exe
+    {
+		SplashTextOn, 200, 25, ChatGPT, Press 'c' to open ChatGPT
+		Input, SplashInput, T1 L1
+		if (SplashInput = "c")
+		{
+			SoundBeep(6000, 100, 5)
+			Run, "%A_ScriptDir%\imports\ChatGPT.lnk"
+			WinActivate, ChatGPT ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		}
+		SplashTextOff
+    }
+	Else
+		BossKey("ChatGPT ahk_class Chrome_WidgetWin_1")
+Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -198,6 +391,7 @@ Return
 	Click("32", "725")
 	Click(posx, posy, 0)
 Return
+#If !WinActive("ahk_group game")
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -483,7 +677,7 @@ Return
 ;-------------------------------------------------------------------------------
 ;[End] Clear Notification & [F12] Process Hacker
 ;-------------------------------------------------------------------------------
-End & Home::
+~End & Home::
 	Send, #n
 	Sleep, 300
 	Send, #n
