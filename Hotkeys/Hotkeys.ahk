@@ -24,6 +24,7 @@ StartTime := A_TickCount
 menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
+
 SetTimer, Battery_Check, 1000
 SetTimer, Current_Volume, 10
 SoundBeep(10000, 200, 5)
@@ -74,8 +75,9 @@ SoundBeep(Frequency, Duration, Volume) {
 }
 
 ; Create a auto hiding ToolTip at cursor location
-ToolTip(text, time:=1000) {
-	MouseGetPos, ToolTip_X, ToolTip_Y
+ToolTip(text, time:=1000, ToolTip_X:="", ToolTip_Y:="") {
+	If (ToolTip_X="") AND (ToolTip_Y="")
+		MouseGetPos, ToolTip_X, ToolTip_Y
 	ToolTip, %text%, %ToolTip_X%, %ToolTip_Y%
 	SetTimer, RemoveToolTip, -%time%
 	Return
@@ -83,6 +85,20 @@ ToolTip(text, time:=1000) {
 RemoveToolTip:
 ToolTip
 return
+
+; Resolve Resolution
+ResRes(posx, posy) {
+	CoordMode, Mouse, Screen
+	If ((A_ScreenWidth > 1920) AND (A_ScreenHeight > 1080))
+	{
+		posx := posx / (A_ScreenWidth / 1920.0)
+		posy := posy / (A_ScreenHeight / 1080.0)
+	} Else If ((A_ScreenWidth > 1920) AND (A_ScreenHeight > 1080)) {
+		posx := posx * (A_ScreenWidth / 1920.0)
+		posy := posy * (A_ScreenHeight / 1080.0)
+	}
+	Return posx posy
+}
 
 ; Check If fullscreen or not
 Fullscreen() {
@@ -302,30 +318,32 @@ MButton::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx, posy
 	
-	If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900))
-	{
-		posx := posx / (A_ScreenWidth / 1600.0)
-		posy := posy / (A_ScreenHeight / 900.0)
-	} Else If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900)) {
-		posx := posx * (A_ScreenWidth / 1600.0)
-		posy := posy * (A_ScreenHeight / 900.0)
-	}
+	; If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900))
+	; {
+		; posx := posx / (A_ScreenWidth / 1600.0)
+		; posy := posy / (A_ScreenHeight / 900.0)
+	; } Else If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900)) {
+		; posx := posx * (A_ScreenWidth / 1600.0)
+		; posy := posy * (A_ScreenHeight / 900.0)
+	; }
+	
+	posx := posx * (A_ScreenWidth / 1920.0)
+	posy := posy * (A_ScreenHeight / 1080.0)
 		
-	If ((posx > 0) AND (posy > 890))
+	If ((posx > 0) AND (posy > 1070))
 	{
 		If WinActive("ahk_class Shell_TrayWnd")
 			Send, !{Tab}
 		Else
 			WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
 	}
-	Else If ((posx > 1450) AND (posy < 2))
+	Else If ((posx > 1750) AND (posy < 10))
 	{
 		Send, {F11}
 	}
 	Else
 		Send, {MButton}
 Return
-
 
 #If		;------------Unlocked All Windows-------------------------------------------------------------------------------------
 

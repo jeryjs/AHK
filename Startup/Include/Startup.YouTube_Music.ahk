@@ -6,6 +6,8 @@ SetWorkingDir, %A_ScriptDir%
 #NoTrayIcon
 
 
+Sleep, 10000
+
 title:="YouTube Music ahk_exe YouTube Music.exe"
 path:="shell:AppsFolder\com.github.th-ch.youtube-music"
 
@@ -19,6 +21,7 @@ Loop
             WinWait, %title%,,10
             WinHide, %title%
         }
+        MsgBox, CONNECTED TO INTERNET
         ExitApp
     }
     ConnectedToInternet(flag=0x43)
