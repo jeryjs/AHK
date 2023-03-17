@@ -73,6 +73,17 @@ SoundBeep(Frequency, Duration, Volume) {
 	Sleep, 100
 }
 
+; Create a auto hiding ToolTip at cursor location
+ToolTip(text, time:=1000) {
+	MouseGetPos, ToolTip_X, ToolTip_Y
+	ToolTip, %text%, %ToolTip_X%, %ToolTip_Y%
+	SetTimer, RemoveToolTip, -%time%
+	Return
+}
+RemoveToolTip:
+ToolTip
+return
+
 ; Check If fullscreen or not
 Fullscreen() {
 	WinGetPos,,, w, h, A
@@ -208,7 +219,7 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
-#If WinActive("- Notepad++") OR WinActive("- Visual Studio Code")
+#If WinActive("- Notepad++") OR WinActive("- AHK (Workspace) - Visual Studio Code")
 ^!s::
 	Send, ^s
 	; SoundBeep(10000, 200, 5)
@@ -322,11 +333,12 @@ Return
 ; Remaps
 ;---------------------------------------------------------------------------------------------------------------------
 
-#Include %A_ScriptDir%\Include\Hotkeys__GenshinImpact.ahk
-#Include %A_ScriptDir%\Include\Hotkeys__Anime.ahk
-#Include %A_ScriptDir%\Include\Hotkeys__Spotify.ahk
-#Include %A_ScriptDir%\Include\Hotkeys__WSA.ahk
-#Include %A_ScriptDir%\Include\Hotkeys__BatteryAlarm.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.Anime.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.BatteryAlarm.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.GenshinImpact.ahk
+; #Include %A_ScriptDir%\Include\Hotkeys.Spotify.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.WSA.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.YouTube_Music.ahk
 
 
 #If WinActive("ahk_class Windows.UI.Core.CoreWindow ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
@@ -486,7 +498,7 @@ Return
 
 
 ;-------------------------------------------------------------------------------
-;[End] Clear Notification & [F12] Process Hacker
+;[End] Clear Notification & [F12] System Informer
 ;-------------------------------------------------------------------------------
 ~End & Home::
 	Send, #n
