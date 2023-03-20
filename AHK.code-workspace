@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "C:/Program Files/AutoHotkey/Lib"
+			"path": "../../DO_NOT_TOUCH/Environments/AutoHotkey/Lib"
 		}
 	],
 	"settings": {}

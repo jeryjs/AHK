@@ -11,7 +11,7 @@ path:="Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"
 
 Loop
 {
-    If ConnectedToInternet()
+    If IsConnectedToInternet()
     {
         If !WinExist(title) 
         {
@@ -20,10 +20,6 @@ Loop
             WinHide, %title%
         }
         ExitApp
-    }
-    ConnectedToInternet(flag=0x43)
-    {
-        Return DllCall("Wininet.dll\InternetGetConnectedState", Str,flag, Int,0 )
     }
 }
 Return

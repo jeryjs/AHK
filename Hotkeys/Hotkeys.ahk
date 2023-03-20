@@ -17,8 +17,10 @@ SetBatchLines -1
 #Persistent
 #InstallKeybdHook
 ListLines, Off
-#Include, C:/Program Files/AutoHotkey/Lib/VD.ahk
 #MaxHotkeysPerInterval 200
+
+RegRead, AHK_Path, HKLM\SOFTWARE\AutoHotkey, InstallDir
+#Include Z:\DO_NOT_TOUCH\Environments\AutoHotkey\Lib\VD.ahk
 StartTime := A_TickCount
 
 menu, tray, add, Edit This Script, Edit_This_Script
@@ -175,7 +177,7 @@ CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 	; IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
 	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
 	; Else
-		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
+		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1 ahk_exe DiscordPtb.exe", "shell:AppsFolder\com.squirrel.DiscordPtb.DiscordPtb", "d")
 Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+*] ULTRA BOSS KEY
@@ -245,7 +247,7 @@ Return
 ^+!s::
 	{
 		IfWinNotExist, Window Spy ahk_exe AutoHotKey.exe
-			Run, C:\Program Files\AutoHotkey\AutoHotkey.exe "C:\Program Files\AutoHotkey\WindowSpy.ahk"
+			Run, %A_AhkPath% "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\WindowSpy.ahk"
 		Else
 			WinClose, Window Spy ahk_exe AutoHotKey.exe
 	}
@@ -254,31 +256,6 @@ Return
 ^+!l::ListLines
 ^+!k::KeyHistory
 ^+!v::ListVars
-
-
-;-----------------------------------------------------------------------------------------------------------------------
-;[Alt+.] Send ASCII character & Hotstrings
-;-----------------------------------------------------------------------------------------------------------------------
-; !.::
-	; SoundBeep(6000, 110, 5)
-	; Input, key, L6, LControl}{RControl}{LAlt}{RAlt}{LShift}{RShift}{LWin}{RWin}{AppsKey}{F1}{F2}{F3}{F4}{F5}{F6}{F7}{F8}{F9}{F10}{F11}{F12}{Left}{Right}{Up}{Down}{Home}{End}{PgUp}{PgDn}{Del}{Ins}{BS}{CapsLock}{NumLock}{PrintScreen}
-	; str := key
-	; For letter, number in {j: 1, k: 2, l: 3, u: 4, i: 5, o: 6, m: 0}
-	; str := StrReplace(str, letter, number)
-	; Send % str ~= "^\d+$" ? Format("{ASC {:0" StrLen(str) "}}", str) : key
-	; SoundBeep(5000, 110, 5)
-; Return
-
-:o::lol::😂
-:o::lmao::🤣
-:o::sweat::😅
-:o::exp::😑
-:o::sad::😢
-:o::cry::😢
-:o::sob::😭
-:o::smug::😏
-
-:o:@/::@gmail.com
 
 
 #If !WinActive("ahk_group game")
@@ -368,6 +345,18 @@ Return
 :*O?:S\::{Home}Settings:{Space}{End}
 :*O?:W\::{Home}Web:{Space}{End}
 :O:p/::paimon.moe/wish
+
+
+:o::lol::😂		;--------general HOTSTRING------------------------------------------
+:o::lmao::🤣
+:o::sweat::😅
+:o::exp::😑
+:o::sad::😢
+:o::cry::😢
+:o::sob::😭
+:o::smug::😏
+
+:*o:@g::@gmail.com
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube")) )	;----------YouTube is Fullscreen-----------------------------

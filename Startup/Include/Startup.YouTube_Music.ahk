@@ -13,7 +13,7 @@ path:="shell:AppsFolder\com.github.th-ch.youtube-music"
 
 Loop
 {
-    If ConnectedToInternet()
+    If IsConnectedToInternet()
     {
         If !WinExist(title)
         {
@@ -21,12 +21,7 @@ Loop
             WinWait, %title%,,10
             WinHide, %title%
         }
-        MsgBox, CONNECTED TO INTERNET
         ExitApp
-    }
-    ConnectedToInternet(flag=0x43)
-    {
-        Return DllCall("Wininet.dll\InternetGetConnectedState", Str,flag, Int,0 )
     }
 }
 Return
