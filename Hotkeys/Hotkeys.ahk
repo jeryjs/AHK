@@ -61,7 +61,7 @@ Edit_This_Script:
 EndTime := A_TickCount
 If ((EndTime - StartTime) > 3000)
 If GetKeyState("Shift", "P")
-	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe", A_ScriptFullPath)
+	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Microsoft VS Code\Code.exe", "Z:\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
 Else
 	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 Return
@@ -203,7 +203,7 @@ UltraBossKey(name, title, path, key) {
 
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"	, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
-!m::UltraBossKey("MAL"			, "MAL ahk_class Chrome_WidgetWin_1"				, "shell:AppsFolder\myanimelist.net-642C9947_syhf6hjm096rj!App"	, "m")
+!m::UltraBossKey("MAL"			, "MyAnimeList ahk_class Chrome_WidgetWin_1"				, "shell:AppsFolder\myanimelist.net-642C9947_syhf6hjm096rj!App"	, "m")
 !i::UltraBossKey("Instagram"	, "Instagram ahk_class Chrome_WidgetWin_1"			, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"					, "i")
 !c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
 !y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
