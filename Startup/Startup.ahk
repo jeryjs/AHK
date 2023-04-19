@@ -10,6 +10,7 @@ Menu, Tray, Icon, Z:\OneDrive\AHK\Hotkeys\imports\Discord.ico
 SoundSet, 15
 Run, imports\Drozd_net_monitor_original.lnk
 Run, imports\server_win.lnk
+; Run, imports\Hotkeys.ahk(elevated).lnk,,Hide
 Run, Include\Startup.Discord.ahk
 Run, Include\Startup.YouTube_Music.ahk
 Run, Include\Startup.Taiga.ahk

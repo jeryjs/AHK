@@ -18,10 +18,12 @@ Return
 
 LAlt & d::GoTo, !d_Discord	;discord
 
+~XButton1 & XButton2::Send, {Esc}
+
 *RCtrl::Send, {LButton}	;Atk
 
 +RCtrl::				;Charged Atk
-RAlt::
+*RAlt::
 	Send, {LButton Down}
 	; Sleep, 200
 	Sleep, 350

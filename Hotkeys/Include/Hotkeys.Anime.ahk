@@ -4,11 +4,13 @@ NumpadPgUp::Send {Right}
 NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
 
+XButton1::Send {Right}
+XButton2::Send {Left}
+
 LAlt::
 NumpadEnter::
 RCtrl::
 Ctrl::SwitchDesktop("{Space}")
-Home::SwitchDesktop()
 
 #If ( WinActive("ahk_group anime") AND is Fullscreen() )
 w::Send, {Up}
@@ -31,6 +33,9 @@ RCtrl::
 LCtrl::
 NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "YouTube")
 Home::SwitchDesktop()
+
+XButton1::Send {Right}
+XButton2::Send {Left}
 
 
 #If WinActive("ahk_exe vlc.exe")	;---------VLC MEDIA PLAYER----------------------------------------

@@ -44,7 +44,7 @@ GroupAdd, game, Honkai Impact 3rd ahk_class UnityWndClass ahk_exe BH3.exe
 GroupAdd, game, Nox ahk_exe nox.exe
 GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
 GroupAdd, game, ahk_exe EXCEL.EXE
-GroupAdd, game, ahk_exe studio64.exe
+; GroupAdd, game, ahk_exe studio64.exe
 GroupAdd, game, ahk_exe VALORANT-Win64-Shipping.exe 	; VALORANT ahk_class UnrealWindow ahk_exe VALORANT-Win64-Shipping.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
@@ -201,12 +201,11 @@ UltraBossKey(name, title, path, key) {
 		BossKey(title)
 }
 
+!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
+!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"	, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
-!m::UltraBossKey("MAL"			, "MyAnimeList ahk_class Chrome_WidgetWin_1"				, "shell:AppsFolder\myanimelist.net-642C9947_syhf6hjm096rj!App"	, "m")
 !i::UltraBossKey("Instagram"	, "Instagram ahk_class Chrome_WidgetWin_1"			, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"					, "i")
-!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
-!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"						, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
 
 
@@ -275,7 +274,7 @@ F1::
 	If WinActive("ahk_exe notepad++.exe")
 		Send, {F1}
 Return
-RCtrl & F1::Send, {F1}
++F1::Send, {F1}
 
 
 ;-------------------------------------------------------------------------------
@@ -347,16 +346,17 @@ Return
 :O:p/::paimon.moe/wish
 
 
-:o::lol::😂		;--------general HOTSTRING------------------------------------------
-:o::lmao::🤣
-:o::sweat::😅
-:o::exp::😑
-:o::sad::😢
-:o::cry::😢
-:o::sob::😭
-:o::smug::😏
+#If		;--------general HOTSTRING------------------------------------------
+:O::lol::😂
+:O::lmao::🤣
+:O::sweat::😅
+:O::exp::😑
+:O::sad::😢
+:O::cry::😢
+:O::sob::😭
+:O::smug::😏
 
-:*o:@g::@gmail.com
+:*O:@g::@gmail.com
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube")) )	;----------YouTube is Fullscreen-----------------------------
@@ -424,6 +424,7 @@ Return
 ; 4 Finger Wand
 ;-------------------------------------------------------------------------------
 #^+F24::	;4 Finger Tap on touchpad
+; ~XButton1 & XButton2::
 4FingerWand:
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1
@@ -452,10 +453,7 @@ Return
 	Else	;Notification center
 	{
 		Sleep, 10
-		If (WinActive("ahk_exe opera.exe") AND GetKeyState("RButton", "P"))
-			Send, {RButton Down}{LButton}{RButton Up}
-		Else
-			Send, #n
+		Send, #n
 	}
 Return
 #If !WinActive("ahk_group game")
@@ -530,22 +528,29 @@ Return
 ;-------------------------------------------------------------------------------
 ;[#^+H] R-ADB
 ;-------------------------------------------------------------------------------
-toggle := 0
 #^+h::
 IF !ProcessExist("radb.exe") {
-    Run, C:\WINDOWS\system32\cmd.exe /c ""Z:\DO_NOT_TOUCH\Tools\gnirehtet-rust-win64\radb.cmd" ",, hide, radbPID
-	toggle := 0
+	Run, C:\WINDOWS\system32\cmd.exe /c ""Z:\DO_NOT_TOUCH\Tools\gnirehtet-rust-win64\radb.cmd" ",, hide, radbPID
+	SoundBeep(3000, 300, 5)
 }Else {
-    If (toggle = 1) {
-        WinMinimize, ahk_pid %radbPID%
-        WinHide, ahk_pid %radbPID%
-        toggle := 0
-    }Else {
-        WinShow, ahk_pid %radbPID%
-        WinActivate, ahk_pid %radbPID%
-        toggle := 1
-    }
-	; BossKey("ahk_pid "%radbPID%)
+	BossKey("ahk_pid "radbPID)
+	If !radbPID {
+		Run, TaskKill /IM radb.exe /F,, hide
+		SoundBeep(5000, 300, 5)
+	}
+}
+Return
+
+#!c::
+IF !ProcessExist("chat.exe") {
+	Run, z:\Documents\All-Projects\talk\talk.exe,,, talkPID
+	SoundBeep(3000, 300, 5)
+}Else {
+	BossKey("ahk_pid "talkPID)
+	If !talkPID {
+		Run, TaskKill /IM talk.exe /F,, hide
+		SoundBeep(5000, 300, 5)
+	}
 }
 Return
 
