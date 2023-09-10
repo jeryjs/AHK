@@ -10,7 +10,7 @@ XButton2::Send {Left}
 LAlt::
 NumpadEnter::
 RCtrl::
-Ctrl::SwitchDesktop("{Space}")
+Ctrl::SwitchDesktop("{Space}",,"{Space}")
 
 #If ( WinActive("ahk_group anime") AND is Fullscreen() )
 w::Send, {Up}
@@ -26,13 +26,13 @@ Space::Send, {Media_Play_Pause}
 
 #If WinActive("ahk_exe mpvnet.exe")	;---------MPV NET-------------------------------------
 +NumpadPgDn::	Send +{PgDn}
-NumpadEnter::
-LAlt::
-RAlt::
-RCtrl::
-LCtrl::
-NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "YouTube")
-Home::SwitchDesktop()
+; NumpadEnter::
+; LAlt::
+; RAlt::
+; RCtrl::
+; LCtrl::
+; NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "YouTube")
+; Home::SwitchDesktop()
 
 XButton1::Send {Right}
 XButton2::Send {Left}

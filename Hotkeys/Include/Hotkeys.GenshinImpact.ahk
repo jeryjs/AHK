@@ -1,4 +1,4 @@
-﻿#If WinActive("Genshin Impact ahk_exe GenshinImpact.exe")	  ;---------GENSHIN IMPACT-------------------------
+﻿#If WinActive("Genshin Impact ahk_exe GenshinImpact.exe") OR WinActive("Honkai: Star Rail ahk_class UnityWndClass ahk_exe StarRail.exe")	  ;---------GENSHIN IMPACT-------------------------
 F6::Send, {F6}
 ; F8::Goto, F6_Spotify
 /::						;Chat
@@ -18,7 +18,8 @@ Return
 
 LAlt & d::GoTo, !d_Discord	;discord
 
-~XButton1 & XButton2::Send, {Esc}
+~XButton1 & XButton2::Send, !{Esc}
+~XButton2 & XButton1::Send, {Esc}
 
 *RCtrl::Send, {LButton}	;Atk
 
@@ -35,7 +36,6 @@ Return
 ~Alt & CapsLock::		;SwitchDesktop()
 ~MButton & RButton::
 #d::
-LCtrl::
 Genshin_Boss_Key:
 	Send, {g}
 	; SoundSet, 0, , , 4

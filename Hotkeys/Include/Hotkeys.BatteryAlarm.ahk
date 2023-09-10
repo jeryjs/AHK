@@ -20,10 +20,11 @@ ListLines, Off
 	}
 	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 96) OR (Battery_Life = 94)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
 		Battery_Tan_Success := 0
-	If ((Battery_Life = 9) AND (AC_Status = 0))
+		
+	If ((Battery_Life = 10) AND (AC_Status = 0))
 	{
-		Loop, 100 {
-			SplashImage, Z:\OneDrive\AHK\images\Battery-Tan-665x245.jpg,b,
+		Loop, 10 {
+			SplashImage, %A_ScriptDir%\images\Battery-Tan-665x245.jpg,b,
 			Sleep, 100
 			SplashImage, Off
 			If AC_Status = 1

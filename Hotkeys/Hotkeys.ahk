@@ -8,8 +8,8 @@ SetTitleMatchMode Fast
 DetectHiddenWindows On
 DetectHiddenText On
 #WinActivateForce
-SetControlDelay 1
-SetWinDelay 0
+SetControlDelay -1
+SetWinDelay -1
 SetKeyDelay -1
 SetMouseDelay -1
 SetBatchLines -1
@@ -18,6 +18,7 @@ SetBatchLines -1
 #InstallKeybdHook
 ListLines, Off
 #MaxHotkeysPerInterval 200
+Process, Priority,, H
 
 RegRead, AHK_Path, HKLM\SOFTWARE\AutoHotkey, InstallDir
 #Include Z:\DO_NOT_TOUCH\Environments\AutoHotkey\Lib\VD.ahk
@@ -26,6 +27,7 @@ StartTime := A_TickCount
 menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
+global Desktop
 
 SetTimer, Battery_Check, 1000
 SetTimer, Current_Volume, 10
@@ -34,13 +36,16 @@ SoundBeep(10000, 200, 5)
 
 If not A_IsAdmin
 {
-	MsgBox, This Script needs to run as Admin for best performance... So do that!!
+	; MsgBox, This Script needs to run as Admin for best performance... So do that!!
 	Run *RunAs "%A_ScriptFullPath%"
 }
 
 ; AHK_Groups
 GroupAdd, game, Genshin Impact ahk_exe GenshinImpact.exe
 GroupAdd, game, Honkai Impact 3rd ahk_class UnityWndClass ahk_exe BH3.exe
+GroupAdd, game, Honkai: Star Rail ahk_class UnityWndClass ahk_exe StarRail.exe
+GroupAdd, game, God of War ahk_class SonySantaMonica
+GroupAdd, game, Detroit: Become Human ahk_class Renderer ahk_exe DetroitBecomeHuman.exe
 GroupAdd, game, Nox ahk_exe nox.exe
 GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
 GroupAdd, game, ahk_exe EXCEL.EXE
@@ -54,12 +59,13 @@ GroupAdd, teyvat_map, The Chasm
 GroupAdd, anime, - AniMixPlay
 GroupAdd, anime, - YugenAnime
 GroupAdd, anime, 9Anime -
+GroupAdd, anime, - mpv.net
 ListLines, On
 
 ; Double click tray icon to edit script
 Edit_This_Script:
 EndTime := A_TickCount
-If ((EndTime - StartTime) > 3000)
+If ((EndTime - StartTime) > 5000)
 If GetKeyState("Shift", "P")
 	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Microsoft VS Code\Code.exe", "Z:\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
 Else
@@ -201,13 +207,11 @@ UltraBossKey(name, title, path, key) {
 		BossKey(title)
 }
 
-!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"			, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
-!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"			, "shell:AppsFolder\chat.openai.com-46164D31_9andzsn4mr4ca!App"	, "c")
+!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
+!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chat.openai.com-41209409_9andzsn4mr4ca!App"	, "c")
 #If !WinActive("ahk_group game")
-!w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"	, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
-!i::UltraBossKey("Instagram"	, "Instagram ahk_class Chrome_WidgetWin_1"			, "Z:\OneDrive\AHK\imports\Instagram_Edge.lnk"					, "i")
-!t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"						, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
-
+!w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
+!t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+Alt+...] Opera Sidebar
@@ -215,22 +219,22 @@ UltraBossKey(name, title, path, key) {
 #If WinActive("ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe")
 +!m::	;------MAL------
 	MouseGetPos, posx, posy
-	Click("-22", "620")		;-25, 740
-	Click("32", "620")		;40, 740
+	Click("-22", "640")		;-25, 740
+	Click("32", "640")		;40, 740
 	Click(posx, posy, 0)
 Return
-+!1::	;------GMAIL-0------
-	MouseGetPos, posx, posy
-	Click("-22", "673")
-	Click("32", "673")
-	Click(posx, posy, 0)
-Return
-+!2::	;------GMAIL-1------
-	MouseGetPos, posx, posy
-	Click("-22", "725")
-	Click("32", "725")
-	Click(posx, posy, 0)
-Return
+; +!1::	;------GMAIL-0------
+	; MouseGetPos, posx, posy
+	; Click("-22", "673")
+	; Click("32", "673")
+	; Click(posx, posy, 0)
+; Return
+; +!2::	;------GMAIL-1------
+	; MouseGetPos, posx, posy
+	; Click("-22", "725")
+	; Click("32", "725")
+	; Click(posx, posy, 0)
+; Return
 
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -356,7 +360,7 @@ Return
 :O::sob::😭
 :O::smug::😏
 
-:*O:@g::@gmail.com
+:?*O:@g::@gmail.com
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube")) )	;----------YouTube is Fullscreen-----------------------------
@@ -376,10 +380,9 @@ NumpadIns::Send {Space}
 
 #b::				;Taskbar
 If WinActive("ahk_class Shell_TrayWnd")
-	Send, !{Tab}
+	Send, !{Esc}
 Else {
-	WinActivate, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
-	ControlFocus, Button2, ahk_class Shell_TrayWnd ahk_exe Explorer.EXE
+	Send, #{b}
 }
 Return
 
@@ -400,13 +403,13 @@ Return
 	Input, SplashInput, T1 L1
 	If (SplashInput = "1")
 	{
-		Run, "Y:\MAL"
+		Run, "Z:\Videos\MAL"
 		SoundBeep(5000, 300, 5)
 	}
 	ELse If (SplashInput = "2")
 	{
 		FilePath := GetActiveExplorerPath()
-		Run, "Y:\MAL\Anime Rename.ahk" %FilePath%
+		Run, "Z:\Videos\MAL\Anime Rename.ahk" %FilePath%
 		SoundBeep(5000, 300, 5)
 	}
 	SplashTextOff
@@ -443,7 +446,7 @@ Return
 	Else If ((posx > 1850) AND (posy < 50))	;Edit This Script	top-right-small
 	{
 		Sleep, 10
-		Goto, Edit_This_Script
+		BossKey("ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe")
 	}
 	Else If ((posx < 80) AND (posy < 50))	;Discord			top-left-small
 	{
@@ -456,39 +459,72 @@ Return
 		Send, #n
 	}
 Return
+
+WheelUp::
+	MouseGetPos, posx1, posy1,, classnn
+	posx := posx1 * (A_ScreenWidth / 1920.0)
+	posy := posy1 * (A_ScreenHeight / 1080.0)
+	if ((posx > 1680 AND posx < 1780) AND (posy > 1030))
+		Send, {volume_Up}{volume_Up}
+	Else
+		Send, {WheelUp}
+	Return
+WheelDown::
+	MouseGetPos, posx1, posy1,, classnn
+	posx := posx1 * (A_ScreenWidth / 1920.0)
+	posy := posy1 * (A_ScreenHeight / 1080.0)
+	if ((posx > 1680 AND posx < 1780) AND (posy > 1030))
+		Send, {Volume_Down}{Volume_Down}
+	Else
+		Send, {WheelDown}
+	Return                  
+	
 #If !WinActive("ahk_group game")
 ~RButton & LButton Up::Goto, 4FingerWand
 ~RButton & WheelDown::AltTab
 ~RButton & WheelUp::ShiftAltTab
 #If
 
-^+!F3::Run, nircmd.exe changebrightness 20
-^+!F2::Run, nircmd.exe changebrightness -20
+~^+!F2::Run, nircmd.exe changebrightness -20
+~^+!F3::Run, nircmd.exe changebrightness 20
 
 
 ;-------------------------------------------------------------------------------
 ; Switch Desktop
 ;-------------------------------------------------------------------------------
 SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
-	Desktop := VD.getCurrentDesktopNum()
+	; Desktop := VD.getCurrentDesktopNum()
+	; MsgBox, %Desktop%
 	ControlSend, , %CharToSend%, %Window%
 	If (Desktop = 1)
-		Send, #^{Right}
-	Else
+	{
+		Desktop := 0
 		Send, #^{Left}
+	}
+	Else
+	{
+		Desktop := 1
+		Send, #^{Right}
+	}
 	
 	If WinExist(Window2)
 		Sleep, 500
 	If WinActive(Window2)
 		Send, %CharToSend2%
-		; MsgBox, %Desktop%
 }
 #+d::
-Desktop := VD.getCurrentDesktopNum()
+; Desktop := VD.getCurrentDesktopNum()
+; MsgBox, %Desktop%
 If ((Desktop = 1) OR (Desktop = 2))
+{
+	Desktop := 0
 	Send, #^{Right}
+}
 Else
+{
+	Desktop := 1
 	Send, #^{Left}
+}
 Return
 
 +NumpadHome::
@@ -541,8 +577,8 @@ IF !ProcessExist("radb.exe") {
 }
 Return
 
-#!c::
-IF !ProcessExist("chat.exe") {
+#c::
+IF !ProcessExist("talk.exe") {
 	Run, z:\Documents\All-Projects\talk\talk.exe,,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
@@ -555,3 +591,4 @@ IF !ProcessExist("chat.exe") {
 Return
 
 ;-----------------------------------------------------------------------------------------------------------------------
+;the reward for good work is more work!
