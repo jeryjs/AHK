@@ -7,7 +7,7 @@ ListLines, Off
 
 	AC_Status:=ReadInteger(&powerstatus,0,1,false)
 	Battery_Life:=ReadInteger(&powerstatus,2,1,false)
-	If ((Battery_Tan_Success < 1) AND ( ((AC_Status = 1) AND (Battery_Life = 95)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
+	If ((Battery_Tan_Success < 1) AND ( ((AC_Status = 1) AND (Battery_Life = 80)) OR ((AC_Status = 0) AND (Battery_Life = 40)) ) )
 	{
 		SoundPlay, %A_ScriptDir%\audios\Alarm02.wav
 		IfWinNotActive, ahk_group game
@@ -18,7 +18,7 @@ ListLines, Off
 		SplashImage, Off
 		Battery_Tan_Success++
 	}
-	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 96) OR (Battery_Life = 94)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
+	Else If ((Battery_Tan_Success = 1) AND ( ((Battery_Life = 86) OR (Battery_Life = 84)) OR ((Battery_Life = 41) OR (Battery_Life = 39)) ) )
 		Battery_Tan_Success := 0
 		
 	If ((Battery_Life = 10) AND (AC_Status = 0))

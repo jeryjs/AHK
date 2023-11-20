@@ -48,9 +48,11 @@ GroupAdd, game, God of War ahk_class SonySantaMonica
 GroupAdd, game, Detroit: Become Human ahk_class Renderer ahk_exe DetroitBecomeHuman.exe
 GroupAdd, game, Nox ahk_exe nox.exe
 GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
+GroupAdd, game, ahk_class Qt5152QWindowIcon ahk_exe MEmu.exe
 GroupAdd, game, ahk_exe EXCEL.EXE
 ; GroupAdd, game, ahk_exe studio64.exe
 GroupAdd, game, ahk_exe VALORANT-Win64-Shipping.exe 	; VALORANT ahk_class UnrealWindow ahk_exe VALORANT-Win64-Shipping.exe
+GroupAdd, game, ahk_class GameNxApp ahk_exe Spider-Man.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
@@ -82,6 +84,20 @@ SoundBeep(Frequency, Duration, Volume) {
 	Sleep, 100
 }
 
+; Change Brightness and display brightness in a ToolTip
+ChangeBrightness(change) {
+	For property in ComObjGet( "winmgmts:\\.\root\WMI" ).ExecQuery( "SELECT * FROM WmiMonitorBrightness" )
+		currentBrightness := property.CurrentBrightness	
+	If (currentBrightness + change) > 100
+		changedBrightness := 100
+	Else If (currentBrightness + change) < 0
+		changedBrightness := 0
+	Else
+		changedBrightness := currentBrightness + change
+	ToolTip("--------------" . changedBrightness . "--------------", , 860, 950)
+	Run, nircmd.exe changebrightness %change%
+}
+
 ; Create a auto hiding ToolTip at cursor location
 ToolTip(text, time:=1000, ToolTip_X:="", ToolTip_Y:="") {
 	If (ToolTip_X="") AND (ToolTip_Y="")
@@ -94,18 +110,18 @@ RemoveToolTip:
 ToolTip
 return
 
-; Resolve Resolution
+; Resolve Resolution in a 16:9 display
+; Warning: Incomplete implementation for display with resolution less than 1600x900
 ResRes(posx, posy) {
 	CoordMode, Mouse, Screen
-	If ((A_ScreenWidth > 1920) AND (A_ScreenHeight > 1080))
-	{
-		posx := posx / (A_ScreenWidth / 1920.0)
-		posy := posy / (A_ScreenHeight / 1080.0)
-	} Else If ((A_ScreenWidth > 1920) AND (A_ScreenHeight > 1080)) {
+	If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900)) {
 		posx := posx * (A_ScreenWidth / 1920.0)
 		posy := posy * (A_ScreenHeight / 1080.0)
+	} Else If ((A_ScreenWidth < 1600) OR (A_ScreenHeight < 900)) {
+		posx := posx / (A_ScreenWidth / 1600.0)
+		posy := posy / (A_ScreenHeight / 900.0)
 	}
-	Return posx posy
+	Return (posx, posy)
 }
 
 ; Check If fullscreen or not
@@ -206,9 +222,9 @@ UltraBossKey(name, title, path, key) {
 	Else
 		BossKey(title)
 }
-
++NumpadDown::
 !y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
-!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chat.openai.com-41209409_9andzsn4mr4ca!App"	, "c")
+!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chat.openai.com-93E9DB25_9andzsn4mr4ca!App"	, "c")
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
@@ -240,7 +256,7 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Ctrl+Alt+S] Save Hotkeys.ahk
 ;-----------------------------------------------------------------------------------------------------------------------
-#If WinActive("- Notepad++") OR WinActive("- AHK (Workspace) - Visual Studio Code")
+#If WinActive("- Notepad++") OR WinActive(" - Visual Studio Code")
 ^!s::
 	Send, ^s
 	; SoundBeep(10000, 200, 5)
@@ -250,7 +266,7 @@ Return
 ^+!s::
 	{
 		IfWinNotExist, Window Spy ahk_exe AutoHotKey.exe
-			Run, %A_AhkPath% "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\WindowSpy.ahk"
+			Run, "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\v2\AutoHotkey32.exe" /force "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\WindowSpy.ahk"
 		Else
 			WinClose, Window Spy ahk_exe AutoHotKey.exe
 	}
@@ -438,6 +454,11 @@ Return
 		Sleep, 10
 		Send, #a
 	}
+	Else If ((posx > 650  AND posx < 1280) AND (posy < 1080 AND posy > 1020))
+	{
+		Sleep, 10
+		Send, ^{Esc}
+	}
 	Else If ((posx < 600) AND (posy > 200))	;SwitchDesktop		bottom-left-large
 	{
 		Sleep, 10
@@ -460,33 +481,39 @@ Return
 	}
 Return
 
-WheelUp::
+*WheelUp::
+	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
 	posx := posx1 * (A_ScreenWidth / 1920.0)
 	posy := posy1 * (A_ScreenHeight / 1080.0)
-	if ((posx > 1680 AND posx < 1780) AND (posy > 1030))
+	if (posx > 1780) AND (posy > 1030)		;Increase Vol		bottom-right-small
 		Send, {volume_Up}{volume_Up}
+	Else If (posx < 140) AND (posy > 1030)	;increase Brt		bottom-left-small
+		ChangeBrightness(10)
 	Else
 		Send, {WheelUp}
 	Return
-WheelDown::
+*WheelDown::
+	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
 	posx := posx1 * (A_ScreenWidth / 1920.0)
 	posy := posy1 * (A_ScreenHeight / 1080.0)
-	if ((posx > 1680 AND posx < 1780) AND (posy > 1030))
+	if (posx > 1780) AND (posy > 1030)		;Decrease Vol		bottom-right-small
 		Send, {Volume_Down}{Volume_Down}
+	Else If (posx < 140) AND (posy > 1030)	;Decrease Brt		bottom-left-small
+		ChangeBrightness(-10)
 	Else
 		Send, {WheelDown}
-	Return                  
-	
+	Return
+
+~^+!F4:: ChangeBrightness(-10)
+~^+!F5:: ChangeBrightness(20)
+
 #If !WinActive("ahk_group game")
 ~RButton & LButton Up::Goto, 4FingerWand
 ~RButton & WheelDown::AltTab
 ~RButton & WheelUp::ShiftAltTab
 #If
-
-~^+!F2::Run, nircmd.exe changebrightness -20
-~^+!F3::Run, nircmd.exe changebrightness 20
 
 
 ;-------------------------------------------------------------------------------
