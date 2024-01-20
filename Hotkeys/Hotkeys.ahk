@@ -17,7 +17,7 @@ SetBatchLines -1
 #Persistent
 #InstallKeybdHook
 ListLines, Off
-#MaxHotkeysPerInterval 200
+#MaxHotkeysPerInterval 500
 Process, Priority,, H
 
 RegRead, AHK_Path, HKLM\SOFTWARE\AutoHotkey, InstallDir
@@ -42,10 +42,7 @@ If not A_IsAdmin
 
 ; AHK_Groups
 GroupAdd, game, Genshin Impact ahk_exe GenshinImpact.exe
-GroupAdd, game, Honkai Impact 3rd ahk_class UnityWndClass ahk_exe BH3.exe
 GroupAdd, game, Honkai: Star Rail ahk_class UnityWndClass ahk_exe StarRail.exe
-GroupAdd, game, God of War ahk_class SonySantaMonica
-GroupAdd, game, Detroit: Become Human ahk_class Renderer ahk_exe DetroitBecomeHuman.exe
 GroupAdd, game, Nox ahk_exe nox.exe
 GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
 GroupAdd, game, ahk_class Qt5152QWindowIcon ahk_exe MEmu.exe
@@ -53,6 +50,10 @@ GroupAdd, game, ahk_exe EXCEL.EXE
 ; GroupAdd, game, ahk_exe studio64.exe
 GroupAdd, game, ahk_exe VALORANT-Win64-Shipping.exe 	; VALORANT ahk_class UnrealWindow ahk_exe VALORANT-Win64-Shipping.exe
 GroupAdd, game, ahk_class GameNxApp ahk_exe Spider-Man.exe
+GroupAdd, game, ahk_class UnrealWindow ahk_exe FortniteClient-Win64-Shipping.exe
+GroupAdd, game, ahk_class Tiger D3D Window ahk_exe destiny2.exe
+GroupAdd, game, ahk_class CROSVM_1 ahk_exe crosvm.exe
+GroupAdd, game, ahk_class UnrealWindow ahk_exe HogwartsLegacy.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
@@ -80,8 +81,8 @@ SoundBeep(Frequency, Duration, Volume) {
     SoundSet, Volume
 	Sleep, 100
     SoundBeep, Frequency, Duration
+	Sleep, 500
     SoundSet, MasterVolume
-	Sleep, 100
 }
 
 ; Change Brightness and display brightness in a ToolTip
@@ -228,6 +229,7 @@ UltraBossKey(name, title, path, key) {
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
+!g::UltraBossKey("GlideX"		, "GlideX ahk_exe GlideX.exe"								, "shell:AppsFolder\B9ECED6F.Glidex_qmba6cd70vzyy!App"			, "g")
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+Alt+...] Opera Sidebar
@@ -481,7 +483,7 @@ Return
 	}
 Return
 
-*WheelUp::
+~*WheelUp::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
 	posx := posx1 * (A_ScreenWidth / 1920.0)
@@ -490,10 +492,10 @@ Return
 		Send, {volume_Up}{volume_Up}
 	Else If (posx < 140) AND (posy > 1030)	;increase Brt		bottom-left-small
 		ChangeBrightness(10)
-	Else
-		Send, {WheelUp}
+	; Else
+		; Send, {WheelUp}
 	Return
-*WheelDown::
+~*WheelDown::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
 	posx := posx1 * (A_ScreenWidth / 1920.0)
@@ -502,8 +504,8 @@ Return
 		Send, {Volume_Down}{Volume_Down}
 	Else If (posx < 140) AND (posy > 1030)	;Decrease Brt		bottom-left-small
 		ChangeBrightness(-10)
-	Else
-		Send, {WheelDown}
+	; Else
+		; Send, {WheelDown}
 	Return
 
 ~^+!F4:: ChangeBrightness(-10)
@@ -520,19 +522,12 @@ Return
 ; Switch Desktop
 ;-------------------------------------------------------------------------------
 SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
-	; Desktop := VD.getCurrentDesktopNum()
-	; MsgBox, %Desktop%
+	Desktop := VD.getCurrentDesktopNum()
 	ControlSend, , %CharToSend%, %Window%
-	If (Desktop = 1)
-	{
-		Desktop := 0
+	If (Desktop != 1)
 		Send, #^{Left}
-	}
 	Else
-	{
-		Desktop := 1
 		Send, #^{Right}
-	}
 	
 	If WinExist(Window2)
 		Sleep, 500
@@ -540,29 +535,39 @@ SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 		Send, %CharToSend2%
 }
 #+d::
-; Desktop := VD.getCurrentDesktopNum()
-; MsgBox, %Desktop%
-If ((Desktop = 1) OR (Desktop = 2))
-{
-	Desktop := 0
-	Send, #^{Right}
-}
-Else
-{
-	Desktop := 1
+	Desktop := VD.getCurrentDesktopNum()
+	If ((Desktop = 1) OR (Desktop = 2))
+		Send, #^{Right}
+	Else
 	Send, #^{Left}
-}
 Return
 
 +NumpadHome::
 #d::SwitchDesktop()
 
++#Numpad1::
++#NumpadEnd::
+	VD.MoveWindowToDesktopNum("A",1)
 #Numpad1::
-#NumpadEnd::VD.goToDesktopNum(1)
+#NumpadEnd::
+	VD.goToDesktopNum(1)
+Return
+
++#Numpad2::
++#NumpadDown::
+	VD.MoveWindowToDesktopNum("A",2)
 #Numpad2::
-#NumpadDown::VD.goToDesktopNum(2)
+#NumpadDown::
+	VD.goToDesktopNum(2)
+Return
+
++#Numpad3::
++#NumpadPgDn::
+	VD.MoveWindowToDesktopNum("A",3)
 #Numpad3::
-#NumpadPgDn::VD.goToDesktopNum(3)
+#NumpadPgDn::
+	VD.goToDesktopNum(3)
+Return
 
 
 ;-------------------------------------------------------------------------------
@@ -574,6 +579,7 @@ Return
 	Send, #n
 Return
 
+!F12::Send, {F12}
 F12::
 WinTitle := "ahk_class MainWindowClassName ahk_exe SystemInformer.exe"
 If WinActive(WinTitle)
@@ -616,6 +622,10 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
+
+
+; Unlock mobile
+^!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!

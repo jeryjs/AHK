@@ -62,7 +62,6 @@ class VD {
             ;conditionally assign method to method
             this._dll_GetCurrentDesktop:=this._dll_GetCurrentDesktop_Win10
             this._dll_GetDesktops:=this._dll_GetDesktops_Win10
-            this._dll_SwitchDesktop:=this._dll_SwitchDesktop_Win10
             this._dll_CreateDesktop:=this._dll_CreateDesktop_Win10
             this._dll_GetName:=this._dll_GetName_Win10
             this.RegisterDesktopNotifications:=this.RegisterDesktopNotifications_Win10
@@ -70,16 +69,16 @@ class VD {
         else
         {
             ; Windows 11
-            IID_IVirtualDesktopManagerInternal_:="{B2F925B9-5A0F-4D2E-9F4D-2B1507593C10}" ;https://github.com/MScholtes/VirtualDesktop/blob/812c321e286b82a10f8050755c94d21c4b69812f/VirtualDesktop11.cs#L163-L185
-            IID_IVirtualDesktop_:="{536D3495-B208-4CC9-AE26-DE8111275BF8}" ;https://github.com/MScholtes/VirtualDesktop/blob/812c321e286b82a10f8050755c94d21c4b69812f/VirtualDesktop11.cs#L149-L150
+            IID_IVirtualDesktopManagerInternal_:="{4970BA3D-FD4E-4647-BEA3-D89076EF4B9C}" ;https://github.com/MScholtes/VirtualDesktop/blob/812c321e286b82a10f8050755c94d21c4b69812f/VirtualDesktop11.cs#L163-L185
+            IID_IVirtualDesktop_:="{3F07F4BE-B107-441A-AF0F-39D82529072C}" ;https://github.com/MScholtes/VirtualDesktop/blob/812c321e286b82a10f8050755c94d21c4b69812f/VirtualDesktop11.cs#L149-L150
             ;conditionally assign method to method
             this._dll_GetCurrentDesktop:=this._dll_GetCurrentDesktop_Win11
             this._dll_GetDesktops:=this._dll_GetDesktops_Win11
-            this._dll_SwitchDesktop:=this._dll_SwitchDesktop_Win11
             this._dll_CreateDesktop:=this._dll_CreateDesktop_Win11
             this._dll_GetName:=this._dll_GetName_Win11
             this.RegisterDesktopNotifications:=this.RegisterDesktopNotifications_Win11
         }
+
         ;----------------------
         this.IVirtualDesktopManager := ComObjCreate("{AA509086-5CA9-4C25-8F95-589D3C07B48A}", "{A5CD92FF-29BE-454C-8D04-D82879FB3F1B}")
         this.GetWindowDesktopId := this._vtable(this.IVirtualDesktopManager, 4)
@@ -98,7 +97,7 @@ class VD {
 
             this.GetDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 7) ; void GetDesktops(out IObjectArray desktops);
             ; this.GetAdjacentDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 8) ; int GetAdjacentDesktop(IVirtualDesktop from, int direction, out IVirtualDesktop desktop);
-            this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; void SwitchDesktop(IVirtualDesktop desktop);
+            ; this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; void SwitchDesktop(IVirtualDesktop desktop);
             this.Ptr_CreateDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 10) ; IVirtualDesktop CreateDesktop();
             this.Ptr_RemoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 11) ; void RemoveDesktop(IVirtualDesktop desktop, IVirtualDesktop fallback);
             this.FindDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 12) ; IVirtualDesktop FindDesktop(ref Guid desktopid);
@@ -107,7 +106,7 @@ class VD {
 
             this.GetDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 7) ; void GetDesktops(IntPtr hWndOrMon, out IObjectArray desktops);
             ; this.GetAdjacentDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 8) ; int GetAdjacentDesktop(IVirtualDesktop from, int direction, out IVirtualDesktop desktop);
-            this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; void SwitchDesktop(IntPtr hWndOrMon, IVirtualDesktop desktop);
+            ; this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; void SwitchDesktop(IntPtr hWndOrMon, IVirtualDesktop desktop);
             this.Ptr_CreateDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 10) ; IVirtualDesktop CreateDesktop(IntPtr hWndOrMon);
             ; this.MoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 11) ; void MoveDesktop(IVirtualDesktop desktop, IntPtr hWndOrMon, int nIndex);
             this.Ptr_RemoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 12) ; void RemoveDesktop(IVirtualDesktop desktop, IVirtualDesktop fallback);
@@ -115,14 +114,14 @@ class VD {
         } else {
             ;Windows 11 Insider build 22489 https://github.com/MScholtes/VirtualDesktop/blob/9f3872e1275408a0802bdbe46df499bb7645dc87/VirtualDesktop11Insider.cs#L163-L186
 
-            ; this.GetAllCurrentDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 7) ; IObjectArray GetAllCurrentDesktops();
-            this.GetDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 8) ; void GetDesktops(IntPtr hWndOrMon, out IObjectArray desktops);
-            ; this.GetAdjacentDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; int GetAdjacentDesktop(IVirtualDesktop from, int direction, out IVirtualDesktop desktop);
-            this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 10) ; void SwitchDesktop(IntPtr hWndOrMon, IVirtualDesktop desktop);
-            this.Ptr_CreateDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 11) ; IVirtualDesktop CreateDesktop(IntPtr hWndOrMon);
-            ; this.MoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 12) ; void MoveDesktop(IVirtualDesktop desktop, IntPtr hWndOrMon, int nIndex);
-            this.Ptr_RemoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 13) ; void RemoveDesktop(IVirtualDesktop desktop, IVirtualDesktop fallback);
-            this.FindDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 14) ; IVirtualDesktop FindDesktop(ref Guid desktopid);
+            ; this.GetAllCurrentDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 6) ; IObjectArray GetAllCurrentDesktops();
+            this.GetDesktops := this._vtable(this.IVirtualDesktopManagerInternal, 7) ; void GetDesktops(IntPtr hWndOrMon, out IObjectArray desktops);
+            ; this.GetAdjacentDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 8) ; int GetAdjacentDesktop(IVirtualDesktop from, int direction, out IVirtualDesktop desktop);
+            ; this.SwitchDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 9) ; void SwitchDesktop(IntPtr hWndOrMon, IVirtualDesktop desktop);
+            this.Ptr_CreateDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 10) ; IVirtualDesktop CreateDesktop(IntPtr hWndOrMon);
+            ; this.MoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 11) ; void MoveDesktop(IVirtualDesktop desktop, IntPtr hWndOrMon, int nIndex);
+            this.Ptr_RemoveDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 12) ; void RemoveDesktop(IVirtualDesktop desktop, IVirtualDesktop fallback);
+            this.FindDesktop := this._vtable(this.IVirtualDesktopManagerInternal, 13) ; IVirtualDesktop FindDesktop(ref Guid desktopid);
         }
 
         ;https://github.com/MScholtes/VirtualDesktop/blob/812c321e286b82a10f8050755c94d21c4b69812f/VirtualDesktop.cs#L225-L234
@@ -170,7 +169,7 @@ class VD {
     }
     _dll_GetCurrentDesktop_Win11() {
         IVirtualDesktop_ofCurrentDesktop := 0
-        DllCall(this.GetCurrentDesktop, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr", 0, "Ptr*", IVirtualDesktop_ofCurrentDesktop)
+        DllCall(this.GetCurrentDesktop, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr*", IVirtualDesktop_ofCurrentDesktop)
         return IVirtualDesktop_ofCurrentDesktop
     }
     _dll_GetDesktops_Win10() {
@@ -180,14 +179,8 @@ class VD {
     }
     _dll_GetDesktops_Win11() {
         IObjectArray := 0
-        DllCall(this.GetDesktops, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr", 0, "UPtr*", IObjectArray)
+        DllCall(this.GetDesktops, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr*", IObjectArray)
         return IObjectArray
-    }
-    _dll_SwitchDesktop_Win10(IVirtualDesktop) {
-        DllCall(this.SwitchDesktop, "ptr", this.IVirtualDesktopManagerInternal, "UPtr", IVirtualDesktop)
-    }
-    _dll_SwitchDesktop_Win11(IVirtualDesktop) {
-        DllCall(this.SwitchDesktop, "ptr", this.IVirtualDesktopManagerInternal, "Ptr", 0, "UPtr", IVirtualDesktop)
     }
     _dll_CreateDesktop_Win10() {
         IVirtualDesktop_ofNewDesktop:=0
@@ -196,7 +189,7 @@ class VD {
     }
     _dll_CreateDesktop_Win11() {
         IVirtualDesktop_ofNewDesktop:=0
-        DllCall(this.Ptr_CreateDesktop, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr", 0, "Ptr*", IVirtualDesktop_ofNewDesktop)
+        DllCall(this.Ptr_CreateDesktop, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr*", IVirtualDesktop_ofNewDesktop)
         return IVirtualDesktop_ofNewDesktop
     }
     _dll_GetName_Win10(IVirtualDesktop) {
@@ -244,26 +237,31 @@ class VD {
         return this._GetDesktops_Obj().GetCount()
     }
 
-    goToDesktopNum(desktopNum) {
-        IVirtualDesktop:=this._GetDesktops_Obj().GetAt(desktopNum)
-        this._SwitchIVirtualDesktop(IVirtualDesktop)
+    goToDesktopNum(desktopNum) { ; Lej77 https://github.com/Grabacr07/VirtualDesktop/pull/23#issuecomment-334918711
+        firstWindowId:=this._getFirstWindowInVD(desktopNum)
 
-        if (this._isWindowFullScreen("A")) {
-            timerFunc := ObjBindMethod(this, "_pleaseSwitchDesktop", desktopNum) ;https://www.autohotkey.com/docs/commands/SetTimer.htm#ExampleClass
-            SetTimer % timerFunc, -50
+        Gui VD_animation_gui:New, % "-Border -SysMenu +Owner -Caption +HwndVD_animation_gui_hwnd_tmp"
+        VD_animation_gui_hwnd:=VD_animation_gui_hwnd_tmp+0
+        IVirtualDesktop := this._GetDesktops_Obj().GetAt(desktopNum)
+        GetId:=this._vtable(IVirtualDesktop, 4)
+        VarSetCapacity(GUID_Desktop, 16)
+        DllCall(GetId, "Ptr", IVirtualDesktop, "Ptr", &GUID_Desktop)
+        DllCall(this.MoveWindowToDesktop, "Ptr", this.IVirtualDesktopManager, "Ptr", VD_animation_gui_hwnd, "Ptr", &GUID_Desktop)
+        DllCall("ShowWindow","Ptr",VD_animation_gui_hwnd,"Int",4) ;after gui on current desktop owned by current process became active window, Show gui on different desktop owned by current process
+        this._WinActivate_NewProcess(VD_animation_gui_hwnd)
+        loop 20 {
+            if (this.getCurrentDesktopNum()==desktopNum) { ; wildest hack ever..
+                if (firstWindowId) {
+                    DllCall("SetForegroundWindow","Ptr",firstWindowId)
+                } else {
+                    this._activateDesktopBackground()
+                }
+                break
+            }
+            Sleep 25
         }
+        Gui VD_animation_gui:Destroy
 
-    }
-    animationToDesktopNum(desktopNum) { ; Lej77 https://github.com/Grabacr07/VirtualDesktop/pull/23#issuecomment-334918711
-      Gui VD_animation_gui:New, % "-Border -SysMenu +Owner -Caption +HwndVD_animation_gui_hwnd"
-      IVirtualDesktop := this._GetDesktops_Obj().GetAt(desktopNum)
-      GetId:=this._vtable(IVirtualDesktop, 4)
-      VarSetCapacity(GUID_Desktop, 16)
-      DllCall(GetId, "Ptr", IVirtualDesktop, "Ptr", &GUID_Desktop)
-      DllCall(this.MoveWindowToDesktop, "Ptr", this.IVirtualDesktopManager, "Ptr", VD_animation_gui_hwnd, "Ptr", &GUID_Desktop)
-      Gui VD_animation_gui:Show
-      Sleep 100
-      Gui VD_animation_gui:Destroy
     }
 
     _getLocalizedWord_Desktop() {
@@ -271,44 +269,22 @@ class VD {
             return this.savedLocalizedWord_Desktop
         }
 
-        ; _FindStringResourceEx(hModule, uId, langId) {
-        ;https://stackoverflow.com/questions/2502375/find-localized-windows-strings#2588937
-
-        hModule := DllCall("GetModuleHandle", "Str", "twinui.pcshell.dll", "Ptr")
-        (!hModule) && (hModule:=DllCall("LoadLibrary", "Str", "twinui.pcshell.dll", "Ptr"))
-        ; localizedString := this._FindStringResourceEx(hModule, 13502, DllCall("GetUserDefaultUILanguage", "UShort")) ;"Desktop"=13502
-        uId:=13502, langId:=DllCall("GetUserDefaultUILanguage", "UShort") ;"Desktop"=13502
-
-        debugThis := uId // 16 + 1
-        hrsrc := DllCall("FindResourceExW", "Ptr",hModule, "Ptr",6, "Ptr",debugThis, "UShort",langId, "UPtr") ;RT_STRING=6
-        pwsz:=0
-        if (hrsrc) {
-            hglob := DllCall("LoadResource", "Ptr",hModule, "Ptr",hrsrc, "Ptr")
-            if (hglob) {
-                pwsz := DllCall("LockResource", "Ptr",hglob, "Ptr")
-                if (pwsz) {
-                    lolWhat := uId & 15
-                    j:=0
-                    while (j < lolWhat) {
-                        pwsz += 2 + 2*NumGet(pwsz+0, 0, "UShort")
-                        ++j
-                    }
-                    pwsz+=2
-                }
-            }
-        }
-        this.savedLocalizedWord_Desktop := pwsz ? StrGet(pwsz, "UTF-16") : 0
+        hModule := DllCall("GetModuleHandle", "Str","shell32.dll", "Ptr") ;ahk always loads "shell32.dll"
+        length:=DllCall("LoadString", "Uint",hModule, "Uint",21769, "Ptr*",lpBuffer, "Int",0) ;21769="Desktop"
+        this.savedLocalizedWord_Desktop := StrGet(lpBuffer, length, "UTF-16")
         return this.savedLocalizedWord_Desktop
     }
     getNameFromDesktopNum(desktopNum) {
         IVirtualDesktop:=this._GetDesktops_Obj().GetAt(desktopNum)
         _name:=this._dll_GetName(IVirtualDesktop)
-        (!_name) && (_name:=this._getLocalizedWord_Desktop() " " desktopNum)
+        if (!_name) {
+            _name:=this._getLocalizedWord_Desktop() " " desktopNum
+        }
         return _name
     }
 
     getDesktopNumOfWindow(wintitle) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -319,7 +295,7 @@ class VD {
     }
 
     goToDesktopOfWindow(wintitle, activateYourWindow:=true) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -333,18 +309,36 @@ class VD {
         }
     }
 
-    MoveWindowToDesktopNum(wintitle, desktopNum)
-    {
-        found:=this._getFirstValidWindow(wintitle)
+    MoveWindowToDesktopNum(wintitle, desktopNum) {
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
         theHwnd:=found[1]
         thePView:=found[2]
 
-        IVirtualDesktop:=this._GetDesktops_Obj().GetAt(desktopNum)
+        needActivateWindowUnder:=false
+        if (activeHwnd:=WinExist("A")) {
+            if (activeHwnd==theHwnd) {
+                currentDesktopNum:=this.getCurrentDesktopNum()
+                if (!(currentDesktopNum==desktopNum)) {
+                    needActivateWindowUnder:=true
+                }
+            }
+        }
 
-        this._MoveView_to_IVirtualDesktop(thePView, IVirtualDesktop)
+        IVirtualDesktop:=this._GetDesktops_Obj().GetAt(desktopNum)
+        DllCall(this.MoveViewToDesktop, "ptr", this.IVirtualDesktopManagerInternal, "Ptr", thePView, "Ptr", IVirtualDesktop)
+
+        if (needActivateWindowUnder) {
+            firstWindowId:=this._getFirstWindowInVD(currentDesktopNum, theHwnd)
+            if (firstWindowId) {
+                VD._WinActivate_NewProcess(firstWindowId)
+            } else {
+                this._activateDesktopBackground()
+            }
+        }
+
     }
 
     getRelativeDesktopNum(anchor_desktopNum, relative_count)
@@ -379,9 +373,8 @@ class VD {
         this.goToDesktopNum(this.getRelativeDesktopNum(this.getCurrentDesktopNum(), relative_count))
     }
 
-    MoveWindowToCurrentDesktop(wintitle, activateYourWindow:=true)
-    {
-        found:=this._getFirstValidWindow(wintitle)
+    MoveWindowToCurrentDesktop(wintitle, activateYourWindow:=true) {
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -391,7 +384,7 @@ class VD {
         currentDesktopNum:=this.getCurrentDesktopNum()
         IVirtualDesktop:=this._GetDesktops_Obj().GetAt(currentDesktopNum)
 
-        this._MoveView_to_IVirtualDesktop(thePView, IVirtualDesktop)
+        DllCall(this.MoveViewToDesktop, "ptr", this.IVirtualDesktopManagerInternal, "Ptr", thePView, "Ptr", IVirtualDesktop)
 
         if (activateYourWindow) {
             WinActivate % "ahk_id " theHwnd
@@ -460,7 +453,7 @@ class VD {
     }
 
     IsWindowPinned(wintitle) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -470,7 +463,7 @@ class VD {
         return viewIsPinned
     }
     TogglePinWindow(wintitle) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -485,7 +478,7 @@ class VD {
 
     }
     PinWindow(wintitle) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -494,7 +487,7 @@ class VD {
         DllCall(this.PinView, "UPtr", this.IVirtualDesktopPinnedApps, "Ptr", thePView)
     }
     UnPinWindow(wintitle) {
-        found:=this._getFirstValidWindow(wintitle)
+        found:=this._tryGetValidWindow(wintitle)
         if (!found) {
             return -1 ;for false
         }
@@ -610,7 +603,7 @@ class VD {
         }
 
         str_IID_IUnknown:="{00000000-0000-0000-C000-000000000046}"
-        str_IID_IVirtualDesktopNotification:="{CD403E52-DEED-4C13-B437-B98380F2B1E8}"
+        str_IID_IVirtualDesktopNotification:="{B9E5E94D-233E-49AB-AF5C-2B4541C3AADE}"
 
         VarSetCapacity(someStr, 40*2)
         DllCall("Ole32\StringFromGUID2", "Ptr", riid, "Ptr",&someStr, "Ptr",40)
@@ -818,72 +811,116 @@ class VD {
     ;actual methods end
 
     ;internal methods start
-    _MoveView_to_IVirtualDesktop(thePView, IVirtualDesktop) {
-        DllCall(this.MoveViewToDesktop, "ptr", this.IVirtualDesktopManagerInternal, "Ptr", thePView, "Ptr", IVirtualDesktop)
-        DllCall(this.MoveViewToDesktop, "ptr", this.IVirtualDesktopManagerInternal, "Ptr", thePView, "Ptr", IVirtualDesktop)
-        this._activateWindowUnder()
-    }
-    _SwitchIVirtualDesktop(IVirtualDesktop) {
-        ;activate taskbar before ;https://github.com/mzomparelli/zVirtualDesktop/issues/59#issuecomment-317613971
-        WinActivate, ahk_class Shell_TrayWnd
-        WinWaitActive, ahk_class Shell_TrayWnd
 
-        this._dll_SwitchDesktop(IVirtualDesktop)
-        this._dll_SwitchDesktop(IVirtualDesktop)
-        this._activateWindowUnder()
-    }
+    _WinActivate_NewProcess(hWnd) {
+        ; WinActivate of AHK will first try SetForegroundWindow(), it will work if the keyboard hook is not used
+        ; so it will work for
+        ; Numpad2::
+        ; it will not work for
+        ; ^#Right::
+        ; Right always uses the keyboard hook
 
-    _pleaseSwitchDesktop(desktopNum) {
-        ;IVirtualDesktop should be calculated again because IVirtualDesktop could have changed
-        ;what we want is the same desktopNum
-        IVirtualDesktop:=this._GetDesktops_Obj().GetAt(desktopNum)
-        this._SwitchIVirtualDesktop(IVirtualDesktop)
-        ;this method is goToDesktopNum(), but without the recursion, to prevent recursion
-    }
+        ; AHK will then try AttachThreadInput(), it works reliably, but fails for Teams.exe for reasons I have yet to uncover
+        ; let's just say that either Teams.exe is resistant to AttachThreadInput, or the code inside Teams.exe has a weird defined behavior once AttachThreadInput is called
 
-    _activateWindowUnder() {
-        ; if this doesn't work
-        ;try https://www.autohotkey.com/boards/viewtopic.php?t=28760#p326541
-        found:=this._getFirstWindowUnder()
-        if (!found) {
-            return -1 ;for false
-        }
-        theHwnd:=found[1]
-        ; MsgBox % theHwnd
+        ; this ? there's only one way to find out how well it works, by testing in production
+        ; attempt Number 2
+        ; new Thread doesn't work, somehow new Process works
 
-        WinGet, OutputVar_MinMax, MinMax, % "ahk_id " theHwnd
-        if (!(OutputVar_MinMax==-1)) {
-            WinActivate, ahk_id %theHwnd%
+        foregroundWindow:=DllCall("GetForegroundWindow","Ptr")
+        threadID:=DllCall("GetWindowThreadProcessId","Ptr",foregroundWindow,"Uint*",PID)
+        currentThreadID:=DllCall("GetCurrentThreadId")
+        if (threadID==currentThreadID) {
+            DllCall("SetForegroundWindow","Ptr",hWnd)
+        } else {
+            loop 10 {
+                Run % """" A_LineFile "\..\SetForeGroundWindow.exe"" " hWnd
+                if (DllCall("GetForegroundWindow","Ptr")==hWnd) {
+                    break
+                }
+                Sleep 10
+                if (DllCall("GetForegroundWindow","Ptr")==hWnd) {
+                    break
+                }
+            }
         }
     }
 
-    _getFirstWindowUnder() {
+    _activateDesktopBackground() { ;this is really copying extremely long comments for short code like in AHK source code
+        ; Win10:
+        ; "FolderView ahk_class SysListView32 ahk_exe explorer.exe"
+        ; "ahk_class SHELLDLL_DefView ahk_exe explorer.exe"
+        ; "Program Manager ahk_class Progman ahk_exe explorer.exe" is the top level parent
+
+        ; the parent parent of FolderView BECOMES "ahk_class WorkerW ahk_exe explorer.exe" after you press Win+Tab
+        ; WorkerW doesn't exist before you press Win+Tab
+        ; it's the same for Win11, Progman gets replaced by WorkerW, Progman still exists but isn't the parent of FolderView or top-level window that gets activated
+
+        ; Q: if WinActivate Progman activates WorkerW(we want that) then what's the problem ?
+        ; A: WinActivate will send {Alt down}{Alt up}{Alt down}{Alt up} if Progman is not activated : AHK source code: ((VK_MENU | 0x12 | ALT key)) https://github.com/AutoHotkey/AutoHotkey/blob/df84a3e902b522db0756a7366bd9884c80fa17b6/source/window.cpp#L260-L261
+        ; the desktop background is correctly activated, we just don't want the extra Alt keys:
+        ; if the hotkey is Ctrl+Shift+Win, and you add an Alt in there, Office 365 hotkey is triggered:
+        ; https://github.com/FuPeiJiang/VD.ahk/issues/40#issuecomment-1548252485
+        ; https://answers.microsoft.com/en-us/msoffice/forum/all/help-disabling-office-hotkey-of-ctrl-win-alt-shift/040ef6e5-8152-449b-849a-7494323101bb
+        ; https://superuser.com/questions/1457073/how-do-i-disable-specific-windows-10-office-keyboard-shortcut-ctrlshiftwinal
+        ; this is also bad because it prevents subsequent uses of the hotkey #!Right:: because {Alt up} releases Alt
+        ; if (WinExist("ahk_class WorkerW ahk_exe explorer.exe")) {
+        ;     WinActivate % "ahk_class WorkerW ahk_exe explorer.exe"
+        ; } else {
+        ;     WinActivate % "ahk_class Progman ahk_exe explorer.exe"
+        ; }
+        DllCall("SetForegroundWindow","Ptr",WinExist("ahk_class Progman ahk_exe explorer.exe"))
+    }
+
+    _getFirstWindowInVD(desktopNum, excludeHwnd:=0) {
         bak_DetectHiddenWindows:=A_DetectHiddenWindows
-        DetectHiddenWindows, off
-        returnValue:=false
+        DetectHiddenWindows, on
+        returnValue:=0
         WinGet, outHwndList, List
+        VarSetCapacity(GUID_Desktop, 16)
+        Desktops_Obj:=this._GetDesktops_Obj()
+        IVirtualDesktop:=Desktops_Obj.GetAt(desktopNum)
         loop % outHwndList {
-            if (pView:=this._isValidWindow(outHwndList%A_Index%)) {
-                returnValue:=[outHwndList%A_Index%, pView]
-                break
+            theHwnd:=outHwndList%A_Index%+0
+            if (theHwnd==excludeHwnd) {
+                continue
+            }
+            arr_success_pView_hWnd:=this._isValidWindow(theHwnd)
+            if (arr_success_pView_hWnd[1]==0) {
+                pView:=arr_success_pView_hWnd[2]
+                WinGet, OutputVar_MinMax, MinMax, % "ahk_id " theHwnd
+                if (!(OutputVar_MinMax==-1)) { ;not Minimized
+
+                    HRESULT := DllCall(this.GetWindowDesktopId, "UPtr", this.IVirtualDesktopManager, "Ptr", theHwnd, "Ptr", &GUID_Desktop)
+                    if (!(HRESULT==0)) {
+                        continue
+                    }
+                    DllCall(this.FindDesktop, "UPtr", this.IVirtualDesktopManagerInternal, "Ptr", &GUID_Desktop, "Ptr*", IVirtualDesktop_ofWindow)
+                    if (IVirtualDesktop_ofWindow == IVirtualDesktop) {
+                        ; WinActivate % "ahk_id " theHwnd
+                        returnValue:=theHwnd
+                        break
+                    }
+                }
             }
         }
         DetectHiddenWindows % bak_DetectHiddenWindows
         return returnValue
     }
 
-    _getFirstValidWindow(wintitle) {
-
+    _tryGetValidWindow(wintitle) {
         bak_DetectHiddenWindows:=A_DetectHiddenWindows
         bak_TitleMatchMode:=A_TitleMatchMode
         DetectHiddenWindows, on
         SetTitleMatchMode, 2
         WinGet, outHwndList, List, % wintitle
-
         returnValue:=false
         loop % outHwndList {
-            if (pView:=this._isValidWindow(outHwndList%A_Index%)) {
-                returnValue:=[outHwndList%A_Index%, pView]
+            theHwnd:=outHwndList%A_Index%+0
+            arr_success_pView_hWnd:=this._isValidWindow(theHwnd)
+            pView:=arr_success_pView_hWnd[2]
+            if (pView) {
+                returnValue:=[arr_success_pView_hWnd[3], pView]
                 break
             }
         }
@@ -961,30 +998,40 @@ class VD {
         Return ((style & 0x20800000) or winH < A_ScreenHeight or winW < A_ScreenWidth) ? false : true
     }
 
-    _isValidWindow(hWnd) ;returns pView if succeeded
+    _isValidWindow(hWnd,checkUpper:=true) ;returns [0,pView,hWnd] if succeeded
     {
-        ; DetectHiddenWindows, on ;this is needed, but for optimization the caller will do it
-
-        returnValue:=false
+        returnValue:=[1,0,0]
         breakToReturnFalse:
         loop 1 {
-            ; WinGetTitle, title, ahk_id %hWnd%
-            WinGetTitle, title, % "ahk_id " hwnd
-            if (!title) {
+            dwStyle:=DllCall("GetWindowLongPtrW","Ptr",hWnd,"Int",-16,"Ptr")
+            if (!(dwStyle & 0x10000000)) { ;0x10000000=WS_VISIBLE
                 break breakToReturnFalse
             }
-
-            WinGet, dwStyle, Style, ahk_id %hWnd%
-            if ((dwStyle&0x08000000) || !(dwStyle&0x10000000)) {
-                break breakToReturnFalse
-            }
-            WinGet, dwExStyle, ExStyle, ahk_id %hWnd%
-            if (dwExStyle & 0x00000080) {
-                break breakToReturnFalse
-            }
-            WinGetClass, szClass, ahk_id %hWnd%
-            if (szClass = "TApplication") {
-                break breakToReturnFalse
+            dwExStyle:=DllCall("GetWindowLongPtrW","Ptr",hWnd,"Int",-20,"Ptr")
+            if (!(dwExStyle&0x00040000)) { ;0x00040000=WS_EX_APPWINDOW
+                if (dwExStyle&0x00000080 || dwExStyle&0x08000000) { ;0x00000080=WS_EX_TOOLWINDOW, 0x08000000=WS_EX_NOACTIVATE
+                    break breakToReturnFalse
+                }
+                ; if any of ancestor is valid window, can't be valid window
+                if (checkUpper) {
+                    toCheck:=[]
+                    upHwnd:=hWnd
+                    while (upHwnd := DllCall("GetWindow","Ptr",upHwnd,"Uint",4)) { ;4=GW_OWNER
+                        if (upHwnd==65552) {
+                            break breakToReturnFalse
+                        }
+                        toCheck.Push(upHwnd)
+                    }
+                    i:=toCheck.Length() + 1
+                    while (i-->1) { ;i goes to 1 (lmao)
+                        arr_success_pView_hWnd:=this._isValidWindow(toCheck[i],false)
+                        if (arr_success_pView_hWnd[1]==0) {
+                            arr_success_pView_hWnd[1]:=2
+                            returnValue:=arr_success_pView_hWnd
+                            break breakToReturnFalse
+                        }
+                    }
+                }
             }
 
             pView:=this._view_from_Hwnd(hWnd)
@@ -997,9 +1044,8 @@ class VD {
                 break breakToReturnFalse
             }
 
-            returnValue:=pView
+            returnValue:=[0,pView,hWnd]
         }
-        ; DetectHiddenWindows, off ;this is needed, but for optimization the caller will do it
         return returnValue
     }
     ;-------------------

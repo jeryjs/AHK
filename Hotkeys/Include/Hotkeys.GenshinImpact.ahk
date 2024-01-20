@@ -18,7 +18,7 @@ Return
 
 LAlt & d::GoTo, !d_Discord	;discord
 
-~XButton1 & XButton2::Send, !{Esc}
+~XButton1 & XButton2::sendplay, {lcontrol}{lalt}{Pause}
 ~XButton2 & XButton1::Send, {Esc}
 
 *RCtrl::Send, {LButton}	;Atk
