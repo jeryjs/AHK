@@ -7,6 +7,7 @@ SetTitleMatchMode 2
 SetTitleMatchMode Fast
 DetectHiddenWindows On
 DetectHiddenText On
+#KeyHistory 0
 #WinActivateForce
 SetControlDelay -1
 SetWinDelay -1
@@ -522,9 +523,9 @@ Return
 ; Switch Desktop
 ;-------------------------------------------------------------------------------
 SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
-	Desktop := VD.getCurrentDesktopNum()
+	; Desktop := VD.getCurrentDesktopNum()
 	ControlSend, , %CharToSend%, %Window%
-	If (Desktop != 1)
+	If (VD.getCurrentDesktopNum() != 1)
 		Send, #^{Left}
 	Else
 		Send, #^{Right}
@@ -536,7 +537,7 @@ SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 }
 #+d::
 	Desktop := VD.getCurrentDesktopNum()
-	If ((Desktop = 1) OR (Desktop = 2))
+	If ((Desktop = 1) OR (Desktop = 2) OR (Desktop = 3))
 		Send, #^{Right}
 	Else
 	Send, #^{Left}
@@ -567,6 +568,14 @@ Return
 #Numpad3::
 #NumpadPgDn::
 	VD.goToDesktopNum(3)
+Return
+
++#Numpad4::
++#NumpadLeft::
+	VD.MoveWindowToDesktopNum("A",4)
+#Numpad4::
+#NumpadLeft::
+	VD.goToDesktopNum(4)
 Return
 
 
