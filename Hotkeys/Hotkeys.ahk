@@ -28,7 +28,7 @@ StartTime := A_TickCount
 menu, tray, add, Edit This Script, Edit_This_Script
 menu, tray, Default, Edit This Script
 
-global Desktop
+global Desktop, sdToggle
 
 SetTimer, Battery_Check, 1000
 SetTimer, Current_Volume, 10
@@ -523,12 +523,22 @@ Return
 ; Switch Desktop
 ;-------------------------------------------------------------------------------
 SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
-	; Desktop := VD.getCurrentDesktopNum()
+	Desktop := VD.getCurrentDesktopNum()
+	If (sdToggle == "")
+		sdToggle = 1
+	Else If (Desktop == 4)
+		sdToggle = 1
+	
 	ControlSend, , %CharToSend%, %Window%
-	If (VD.getCurrentDesktopNum() != 1)
-		Send, #^{Left}
-	Else
+
+	If (Desktop == 3 AND sdToggle == 0)
 		Send, #^{Right}
+	Else If (Desktop == 2 AND sdToggle == 1)
+		Send, #^{Right}
+	Else If (Desktop == 1)
+		Send, #^{Right}
+	Else
+		Send, #^{Left}
 	
 	If WinExist(Window2)
 		Sleep, 500
@@ -537,10 +547,11 @@ SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 }
 #+d::
 	Desktop := VD.getCurrentDesktopNum()
-	If ((Desktop = 1) OR (Desktop = 2) OR (Desktop = 3))
-		Send, #^{Right}
-	Else
-	Send, #^{Left}
+	If (Desktop == 3)
+		sdToggle := 0
+	Else If (Desktop == 2)
+		sdToggle := !sdToggle
+	SwitchDesktop()
 Return
 
 +NumpadHome::
