@@ -508,9 +508,12 @@ Return
 	; Else
 		; Send, {WheelDown}
 	Return
+	
+#WheelUp::Send, #=
+#WheelDown::Send, #-
 
-~^+!F4:: ChangeBrightness(-10)
-~^+!F5:: ChangeBrightness(20)
+^+!F4:: ChangeBrightness(-10)
+^+!F5:: ChangeBrightness(20)
 
 #If !WinActive("ahk_group game")
 ~RButton & LButton Up::Goto, 4FingerWand
@@ -632,7 +635,7 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, z:\Documents\All-Projects\talk\talk.exe,,, talkPID
+	Run, z:\Documents\All-Projects\talk\talk.exe --ai bard,,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
