@@ -45,6 +45,17 @@ NumpadPgDn::	Send {/}
 +NumpadPgDn::	Send +{/}
 
 
+#If WinActive("Aniyomi ahk_class xyz.jmir.tachiyomi.mi.debug")	;---------Aniyomi-------------------------------------
+NumpadClear:: Send a	; left
+XButton1::Send d		; right
+XButton2::Send a		; left
+
+
+#If WinActive("Advanced Search - Opera")
+Ctrl::SwitchDesktop("{Space}",,"{Space}")
+NumpadEnter::SwitchDesktop("{Space}","Advanced Search - Opera","{Space}")
+
+
 #If WinExist("Taiga ahk_class #32770 ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
 NumpadEnter::
 Enter::

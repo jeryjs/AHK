@@ -14,11 +14,18 @@ MButton::
 	Send, {MButton Up}
 	Sleep, 10
 	Send, {MButton Down}
+	loop, 10 {
+		Sleep, 300
+		If !WinActive("Genshin Impact ahk_exe GenshinImpact.exe") {
+			Send, {MButton Up}
+			break
+		}
+	}
 Return
 
 LAlt & d::GoTo, !d_Discord	;discord
 
-~XButton1 & XButton2::sendplay, {lcontrol}{lalt}{Pause}
+; ~XButton1 & XButton2::sendplay, {lcontrol}{lalt}{Pause}
 ~XButton2 & XButton1::Send, {Esc}
 
 *RCtrl::Send, {LButton}	;Atk

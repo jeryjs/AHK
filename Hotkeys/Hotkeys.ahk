@@ -55,6 +55,7 @@ GroupAdd, game, ahk_class UnrealWindow ahk_exe FortniteClient-Win64-Shipping.exe
 GroupAdd, game, ahk_class Tiger D3D Window ahk_exe destiny2.exe
 GroupAdd, game, ahk_class CROSVM_1 ahk_exe crosvm.exe
 GroupAdd, game, ahk_class UnrealWindow ahk_exe HogwartsLegacy.exe
+GroupAdd, game, Wuthering Waves ahk_exe Client-Win64-Shipping.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
@@ -63,7 +64,7 @@ GroupAdd, teyvat_map, The Chasm
 GroupAdd, anime, - AniMixPlay
 GroupAdd, anime, - YugenAnime
 GroupAdd, anime, 9Anime -
-GroupAdd, anime, - mpv.net
+; GroupAdd, anime, - mpv.net
 ListLines, On
 
 ; Double click tray icon to edit script
@@ -382,7 +383,7 @@ Return
 :?*O:@g::@gmail.com
 
 
-#If ( (Fullscreen()) AND (WinActive("- YouTube")) )	;----------YouTube is Fullscreen-----------------------------
+#If ( (Fullscreen()) AND (WinActive("- YouTube") OR WinActive("Advanced Search - Opera") OR WinActive("| Iwara")) )	;----------YouTube is Fullscreen-----------------------------
 w::Send, {Up}
 a::Send, {Left}
 NumpadClear::
@@ -527,8 +528,12 @@ Return
 ;-------------------------------------------------------------------------------
 SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 	Desktop := VD.getCurrentDesktopNum()
-	If (sdToggle == "")
-		sdToggle = 1
+	If (sdToggle == "") {
+		If (Desktop == 1)
+			sdToggle = 0
+		Else
+			sdToggle = 1
+	}
 	Else If (Desktop == 4)
 		sdToggle = 1
 	
@@ -635,7 +640,7 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, z:\Documents\All-Projects\talk\talk.exe --ai bard,,, talkPID
+	Run, z:\Documents\All-Projects\talk\talk.exe --ai liberty,,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
@@ -645,6 +650,7 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
+#!c::Send, #{c}
 
 
 ; Unlock mobile
