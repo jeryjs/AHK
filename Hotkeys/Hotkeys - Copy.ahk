@@ -58,9 +58,9 @@ Edit_This_Script:
 EndTime := A_TickCount
 If ((EndTime - StartTime) > 3000)
 If GetKeyState("Shift", "P")
-	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe", A_ScriptFullPath)
+	RunAsUser("Z:\Applications\Notepad++\notepad++.exe", A_ScriptFullPath)
 Else
-	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
+	Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 Return
 
 ; Custom SoundBeep
@@ -542,7 +542,7 @@ NumpadIns::Send {Space}
 ; ~LWin::Send, ^{Esc}
 #o::Send, #3		;Opera
 #+o::Send, #4		;Edge 
-!F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"	 ;Screenshot
+!F11::Run, "Z:\Applications\IObit\ScreenShot.exe"	 ;Screenshot
 
 #b::				;Taskbar
 If WinActive("ahk_class Shell_TrayWnd")

@@ -6,16 +6,16 @@ SetWorkingDir, %A_ScriptDir%
 #NoTrayIcon
 
 
-updater:="Discord Updater ahk_exe DiscordPtb.exe"
-loading:="ahk_exe DiscordPTB.exe"
-discord:="Friends - Discord ahk_class Chrome_WidgetWin_1 ahk_exe DiscordPTB.exe"
+updater:="Discord Updater ahk_exe Discord.exe"
+loading:="ahk_exe Discord.exe"
+discord:="Friends - Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe"
 
 Loop
 {
     ; Check if connected to the internet
     If IsConnectedToInternet()
     {
-        Run, shell:AppsFolder\com.squirrel.DiscordPtb.DiscordPtb,, Min
+        Run, shell:AppsFolder\com.squirrel.Discord.Discord,, Min
 
         WinWait, %updater%,, 20
         WinHide, %updater%

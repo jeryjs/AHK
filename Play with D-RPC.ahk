@@ -15,7 +15,7 @@ Menu, Tray, Icon, %A_ScriptDir%\imports\{Play with D-RPC`} VLC-Media-Player-icon
 
 ; MsgBox, `%0`% = %0% `n `%1`% = %1% `n `%2`% = %2% `n `%3`% = %3% `n `%4`% = %4% `n `%5`% = %5% `n `%6`% = %6% `n `%7`% = %7% `n `%8`% = %8% `n `n Total = %1%%2%%3%%4% `n`n Whats this - %Folder_Path%
 
-Run, Z:\DO_NOT_TOUCH\Applications\VLC\vlc.exe "%1%"
+Run, Z:\Applications\VLC\vlc.exe "%1%"
 WinWait, ahk_exe vlc.exe, , 5
 
 

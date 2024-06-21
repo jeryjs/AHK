@@ -4,7 +4,7 @@ SendMode Input ; Recommended for new scripts due to its superior speed and relia
 SetWorkingDir %A_ScriptDir% ; Ensures a consistent starting directory.
 #SingleInstance Force
 
-Menu, Tray, Icon, Z:\OneDrive\AHK\Hotkeys\imports\Discord.ico
+Menu, Tray, Icon, C:\users\Jery\OneDrive\AHK\Hotkeys\imports\Discord.ico
 
 
 SoundSet, 15

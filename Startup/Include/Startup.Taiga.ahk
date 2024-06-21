@@ -7,7 +7,7 @@ SetWorkingDir, %A_ScriptDir%
 
 
 title:="Taiga ahk_exe Taiga.exe"
-path:="Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"
+path:="Z:\Applications\Taiga\Taiga.exe"
 
 Loop
 {

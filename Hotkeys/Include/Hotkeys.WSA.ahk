@@ -47,7 +47,7 @@ SetKizzyRPC(Kizzy_ActivityName, Kizzy_ImageLink, Kizzy_ActivityState) {
 		Clipboard := "Catchin' up with the new chapters"
 		WinActivate, Kizzy ahk_class com.my.kizzy
 		Kizzy_ActivityDetails := Clipboard
-		ImageSearch, FoundX, FoundY, -52, 127, 514, 349, Z:\DO_NOT_TOUCH\Applications\MacroCreator\Screenshots\Screen_20220608120650.png
+		ImageSearch, FoundX, FoundY, -52, 127, 514, 349, Z:\Applications\MacroCreator\Screenshots\Screen_20220608120650.png
 		If ErrorLevel
 		{
 			Click, 200, 100		;Token Input Field

@@ -22,7 +22,7 @@ ListLines, Off
 Process, Priority,, H
 
 RegRead, AHK_Path, HKLM\SOFTWARE\AutoHotkey, InstallDir
-#Include Z:\DO_NOT_TOUCH\Environments\AutoHotkey\Lib\VD.ahk
+#Include Y:\Dev\AutoHotkey\Lib\VD.ahk
 StartTime := A_TickCount
 
 menu, tray, add, Edit This Script, Edit_This_Script
@@ -72,9 +72,9 @@ Edit_This_Script:
 EndTime := A_TickCount
 If ((EndTime - StartTime) > 5000)
 If GetKeyState("Shift", "P")
-	RunAsUser("Z:\DO_NOT_TOUCH\Applications\Microsoft VS Code\Code.exe", "Z:\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
+	RunAsUser("Z:\Applications\Microsoft VS Code\Code.exe", "C:\Users\Jery\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
 Else
-	Run, "Z:\DO_NOT_TOUCH\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
+	Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 Return
 
 ; Custom SoundBeep
@@ -202,7 +202,7 @@ CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 	; IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
 	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
 	; Else
-		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1 ahk_exe DiscordPtb.exe", "shell:AppsFolder\com.squirrel.DiscordPtb.DiscordPtb", "d")
+		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
 Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+*] ULTRA BOSS KEY
@@ -230,7 +230,7 @@ UltraBossKey(name, title, path, key) {
 !c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chat.openai.com-93E9DB25_9andzsn4mr4ca!App"	, "c")
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
-!t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\DO_NOT_TOUCH\Applications\Taiga\Taiga.exe"				, "t")
+!t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\Applications\Taiga\Taiga.exe"				, "t")
 !g::UltraBossKey("GlideX"		, "GlideX ahk_exe GlideX.exe"								, "shell:AppsFolder\B9ECED6F.Glidex_qmba6cd70vzyy!App"			, "g")
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ Return
 ^+!s::
 	{
 		IfWinNotExist, Window Spy ahk_exe AutoHotKey.exe
-			Run, "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\v2\AutoHotkey32.exe" /force "Z:\DO_NOT_TOUCH\Environments\AutoHotkey\WindowSpy.ahk"
+			Run, "Y:\Dev\AutoHotkey\UX\AutoHotkeyUX.exe" /force "Y:\Dev\AutoHotkey\UX\WindowSpy.ahk"
 		Else
 			WinClose, Window Spy ahk_exe AutoHotKey.exe
 	}
@@ -290,10 +290,7 @@ F1::
 	{
 		Run,  %A_ScriptDir%\imports\Drozd_net_monitor_original.lnk
 	}Else  {
-		If WinActive("Drozd_net_monitor ahk_class AutoHotkeyGUI") and !WinActive("ahk_class Notepad++")
-			Send, !{Tab}
-		Else If !WinActive("Drozd_net_monitor ahk_class AutoHotkeyGUI") and !WinActive("ahk_class Notepad++")
-			WinActivate Drozd_net_monitor ahk_class AutoHotkeyGUI
+		BossKey("Drozd_net_monitor ahk_class AutoHotkeyGUI")
 	}
 	If WinActive("ahk_exe notepad++.exe")
 		Send, {F1}
@@ -396,7 +393,7 @@ NumpadIns::Send {Space}
 ; ~LWin::Send, ^{Esc}
 #o::Send, #3		;Opera
 #+o::Send, #4		;Edge 
-!F11::Run, "Z:\DO_NOT_TOUCH\Applications\IObit\ScreenShot.exe"	 ;Screenshot
+!F11::Run, "Z:\Applications\IObit\ScreenShot.exe"	 ;Screenshot
 
 #b::				;Taskbar
 If WinActive("ahk_class Shell_TrayWnd")
@@ -417,19 +414,24 @@ Return
 >^>!Right::Run, Display.exe /rotate:270 /toggle	; Rotate Screen Counter-Clockwise
 >^>!Up::Run, Display.exe /rotate:180 /toggle		; Rotate Screen Vertically
 
+; Unlock mobile
+^!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
+; Get Mobile IP
+^!i::Run, % "curl -s https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip | clip"
+
 +!1::
 +!2::
 	SplashTextOn, 230, 25, MAL, Press '1' or '2' to open MAL
 	Input, SplashInput, T1 L1
 	If (SplashInput = "1")
 	{
-		Run, "Z:\Videos\MAL"
+		Run, "Z:\Media\Videos\MAL"
 		SoundBeep(5000, 300, 5)
 	}
 	ELse If (SplashInput = "2")
 	{
 		FilePath := GetActiveExplorerPath()
-		Run, "Z:\Videos\MAL\Anime Rename.ahk" %FilePath%
+		Run, "Z:\Media\Videos\MAL\Anime Rename.ahk" %FilePath%
 		SoundBeep(5000, 300, 5)
 	}
 	SplashTextOff
@@ -627,7 +629,7 @@ Return
 ;-------------------------------------------------------------------------------
 #^+h::
 IF !ProcessExist("radb.exe") {
-	Run, C:\WINDOWS\system32\cmd.exe /c ""Z:\DO_NOT_TOUCH\Tools\gnirehtet-rust-win64\radb.cmd" ",, hide, radbPID
+	Run, C:\WINDOWS\system32\cmd.exe /c ""Y:\Tools\gnirehtet-rust-win64\radb.cmd" ",, hide, radbPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "radbPID)
@@ -640,7 +642,7 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, z:\Documents\All-Projects\talk\talk.exe --ai liberty,,, talkPID
+	Run, Y:\All-Projects\talk\talk.exe --ai liberty,,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
@@ -650,11 +652,52 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
-#!c::Send, #{c}
+#!c::
+	If !WinActive("Copilot ahk_class Chrome_WidgetWin_1")
+		Run, Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App
+	Else
+		BossKey("Copilot ahk_class Chrome_WidgetWin_1")
+	; WinActivate, Copilot ahk_class Chrome_WidgetWin_1
+Return
 
 
-; Unlock mobile
-^!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
+;-------------------------------------------------------------------------------
+; Bing Rewards
+;-------------------------------------------------------------------------------
+RunBingRewards(name, key, paths) {
+    SplashTextOn, 250, 25, Bing Rewards %name%, Press '%key%' to run bing rewards (%name%)
+    Input, SplashInput, T1 L1
+    if (SplashInput = key)
+    {
+        SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
+        searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "buddhism", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
+        query := "https://www.bing.com/search?q="
+        Random, loopCount, 1, 5
+        Loop % loopCount {    
+            Random, randomIndex, 1, searchTerms.Length()
+            randomWord := searchTerms[randomIndex]
+            query .= randomWord . "%20"
+        }
+        query .= "&form=STARTSCRIPT"
+        rewardsPage := "https://rewards.bing.com"
+        SysGet, MonitorWorkArea, MonitorWorkArea
+        windowWidth := MonitorWorkAreaRight // paths.Length()
+        for index, path in paths {
+			; if (path.Contains("wsa://")) {
+			; 	Run, %path% %query%
+			; 	Run, %path% %rewardsPage%
+			; } Else
+				Run, %path% %query%
+            ; WinWaitActive, ahk_exe %path%
+            WinRestore, ahk_exe %path%
+            Sleep, 300
+            WinMove, ahk_exe %path%,, (index-1)*windowWidth, 0, windowWidth, MonitorWorkAreaBottom
+        }
+    }
+    SplashTextOff
+}
+!b::RunBingRewards("Desktop", "b", [".\imports\Firefox-Dev-Edition.lnk", ".\imports\Firefox.lnk", ".\imports\Microsoft-Edge-Dev.lnk", ".\imports\Microsoft-Edge.lnk"])
++!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta", "wsa://net.waterfox.android.release"])
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!
