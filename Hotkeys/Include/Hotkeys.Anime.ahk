@@ -10,7 +10,7 @@ XButton2::Send {Left}
 ; LAlt::
 ; NumpadEnter::
 ; RCtrl::
-; Ctrl::SwitchDesktop("{Space}",,"{Space}")
+; Ctrl::SwitchDesktop("{Space}", "ahk_group anime","{Space}")
 
 #If ( WinActive("ahk_group anime") AND is Fullscreen() )
 w::Send, {Up}
@@ -57,6 +57,7 @@ NumpadEnter::SwitchDesktop("{Space}","Advanced Search - Opera","{Space}")
 
 
 #If WinExist("Taiga ahk_class #32770 ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
+Space::
 NumpadEnter::
 Enter::
 	WinActivate, Taiga ahk_exe Taiga.exe

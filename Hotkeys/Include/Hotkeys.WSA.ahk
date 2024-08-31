@@ -17,12 +17,17 @@ NumpadAdd::
 	Send, {LButton Up}
 Return
 
-LAlt::
-NumpadEnter::
-RCtrl::
-Ctrl::SwitchDesktop()
+; LAlt::
+; NumpadEnter::
+; RCtrl::
+; Ctrl::SwitchDesktop()
 
+WheelDown::
+; XButton1::
 Tab::Send, {Left}
+
+WheelUp::
+; XButton2::
 Shift::Send, {Right}
 
 !l::SetKizzyRPC("𝐓𝐚𝐜𝐡𝐢𝐲𝐨𝐦𝐢𝐒𝐘", "attachments/961577469427736636/971135180322529310/unknown.png", "𝔐𝔞𝔫𝔤𝔞")
