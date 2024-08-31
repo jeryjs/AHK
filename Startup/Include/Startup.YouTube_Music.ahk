@@ -1,5 +1,6 @@
 #NoEnv
 #SingleInstance, Force
+DetectHiddenWindows, On
 SendMode, Input
 SetBatchLines, -1
 SetWorkingDir, %A_ScriptDir%
