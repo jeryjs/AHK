@@ -654,7 +654,7 @@ IF !ProcessExist("talk.exe") {
 Return
 #!c::
 	If !WinExist("Gemini ahk_class Chrome_WidgetWin_1")
-		Run, Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App
+		Run, Shell:AppsFolder\gemini.google.com-C6D6DB3B_vn3jms8s81tkg!App
 	Else
 		BossKey("Gemini ahk_class Chrome_WidgetWin_1")
 Return
