@@ -12,6 +12,12 @@ discord:="Friends - Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe"
 
 Loop
 {
+    ; Check if Discord is already running
+    if WinExist("ahk_exe Discord.exe")
+    {
+        ExitApp
+    }
+
     ; Check if connected to the internet
     If IsConnectedToInternet()
     {

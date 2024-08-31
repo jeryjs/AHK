@@ -11,6 +11,13 @@ path:="Z:\Applications\Taiga\Taiga.exe"
 
 Loop
 {
+    
+    ; Check if Taiga is already running
+    if WinExist("ahk_exe Taiga.exe")
+    {
+        ExitApp
+    }
+
     If IsConnectedToInternet()
     {
         If !WinExist(title) 

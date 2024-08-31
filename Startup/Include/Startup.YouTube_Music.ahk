@@ -13,13 +13,18 @@ path:="shell:AppsFolder\com.github.th-ch.youtube-music"
 
 Loop
 {
+    ; Check if YouTube Music is already running
+    if WinExist("ahk_exe YouTube Music.exe")
+    {
+        ExitApp
+    }
+
     If IsConnectedToInternet()
     {
         If !WinExist(title)
         {
             Run, %path%,, Min
-            WinWait, %title%,,10
-            
+            WinWait, %title%,,10            
             WinHide, %title%
         }
         ExitApp
