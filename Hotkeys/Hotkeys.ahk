@@ -227,7 +227,7 @@ UltraBossKey(name, title, path, key) {
 }
 +NumpadDown::
 !y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
-!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chat.openai.com-93E9DB25_9andzsn4mr4ca!App"	, "c")
+!c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chatgpt.com-DFCB3CE4_ch69rtgtz055j!App"		, "c")
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\Applications\Taiga\Taiga.exe"				, "t")
@@ -448,7 +448,7 @@ Return
 ;-------------------------------------------------------------------------------
 ; 4 Finger Wand
 ;-------------------------------------------------------------------------------
-#^+F24::	;4 Finger Tap on touchpad
+^+!F6::	;4 Finger Tap on touchpad
 ; ~XButton1 & XButton2::
 4FingerWand:
 	CoordMode, Mouse, Screen
@@ -642,7 +642,7 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, Y:\All-Projects\talk\talk.exe --ai liberty,,, talkPID
+	Run, Y:\All-Projects\talk\talk.exe --ai gemini --se tts,,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
@@ -653,24 +653,23 @@ IF !ProcessExist("talk.exe") {
 }
 Return
 #!c::
-	If !WinActive("Copilot ahk_class Chrome_WidgetWin_1")
-		Run, Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App
+	If !WinExist("Gemini ahk_class Chrome_WidgetWin_1")
+		Run, Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App
 	Else
-		BossKey("Copilot ahk_class Chrome_WidgetWin_1")
-	; WinActivate, Copilot ahk_class Chrome_WidgetWin_1
+		BossKey("Gemini ahk_class Chrome_WidgetWin_1")
 Return
-
+; #!c::Send, #c
 
 ;-------------------------------------------------------------------------------
 ; Bing Rewards
 ;-------------------------------------------------------------------------------
 RunBingRewards(name, key, paths) {
-    SplashTextOn, 250, 25, Bing Rewards %name%, Press '%key%' to run bing rewards (%name%)
+    SplashTextOn, 250, 25, Bing Rewards %name%, Press '%key%' to run Bing rewards (%name%)
     Input, SplashInput, T1 L1
     if (SplashInput = key)
     {
         SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
-        searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "buddhism", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
+        searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
         query := "https://www.bing.com/search?q="
         Random, loopCount, 1, 5
         Loop % loopCount {    
@@ -679,25 +678,63 @@ RunBingRewards(name, key, paths) {
             query .= randomWord . "%20"
         }
         query .= "&form=STARTSCRIPT"
-        rewardsPage := "https://rewards.bing.com"
+        
         SysGet, MonitorWorkArea, MonitorWorkArea
-        windowWidth := MonitorWorkAreaRight // paths.Length()
+        screenWidth := MonitorWorkAreaRight - MonitorWorkAreaLeft
+        screenHeight := MonitorWorkAreaBottom - MonitorWorkAreaTop
+        ; screenWidth := A_ScreenWidth
+        ; screenHeight := A_ScreenHeight
+        
+        ; Define position templates for different window counts using arrays
+        posTemplates := []
+        posTemplates.Insert([[0, 0, 1, 1]])  ; 1 window
+        posTemplates.Insert([[0, 0, 0.5, 1], [0.5, 0, 0.5, 1]])  ; 2 windows
+        posTemplates.Insert([[0, 0, 1/3, 1], [1/3, 0, 1/3, 1], [2/3, 0, 1/3, 1]])  ; 3 windows
+        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 4 windows
+        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5]])  ; 5 windows
+
         for index, path in paths {
-			; if (path.Contains("wsa://")) {
-			; 	Run, %path% %query%
-			; 	Run, %path% %rewardsPage%
-			; } Else
-				Run, %path% %query%
-            ; WinWaitActive, ahk_exe %path%
-            WinRestore, ahk_exe %path%
-            Sleep, 300
-            WinMove, ahk_exe %path%,, (index-1)*windowWidth, 0, windowWidth, MonitorWorkAreaBottom
+            if (paths.Length() > posTemplates.Length()) {
+                ; Default behavior for more than 5 windows
+                row := Floor((index - 1) / 3)
+                col := Mod(index - 1, 3)
+                x := col * screenWidth / 3
+                y := row * screenHeight / 2
+                w := screenWidth / 3
+                h := screenHeight / 2
+            } else {
+                ; Retrieve position from template
+                template := posTemplates[paths.Length()][index]
+                x := template[1] * screenWidth
+                y := template[2] * screenHeightŚ
+                w := template[3] * screenWidth
+                h := template[4] * screenHeight
+            
+			
+            ; Run browser and adjust its position
+            Run, %path% %query%
+            Sleep, 700 ; Give some time for the window to open
+			
+			}
+            
+            ; Find the topmost window of the executable and reposition it
+			If path contains wsa://
+				WinGet, winList, List, ahk_exe WsaClient.exe
+            Else
+				WinGet, winList, List, ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+
+            if (winList) {
+                ; Use the first window in the list (topmost)
+                WinRestore, ahk_id %winList1% ; Restore window if maximized
+                WinMove, ahk_id %winList1%, , %x%, %y%, %w%, %h%
+            }
         }
     }
     SplashTextOff
 }
-!b::RunBingRewards("Desktop", "b", [".\imports\Firefox-Dev-Edition.lnk", ".\imports\Firefox.lnk", ".\imports\Microsoft-Edge-Dev.lnk", ".\imports\Microsoft-Edge.lnk"])
-+!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta", "wsa://net.waterfox.android.release"])
+
+!b::RunBingRewards("Desktop", "b", [".\imports\Microsoft-Edge.lnk", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 2""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 3""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 4""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 5"""])
++!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta", "wsa://net.waterfox.android.release", "wsa://io.github.forkmaintainers.iceraven"])
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!
