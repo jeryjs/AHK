@@ -90,7 +90,7 @@ SoundBeep(Frequency, Duration, Volume) {
 ; Change Brightness and display brightness in a ToolTip
 ChangeBrightness(change) {
 	For property in ComObjGet( "winmgmts:\\.\root\WMI" ).ExecQuery( "SELECT * FROM WmiMonitorBrightness" )
-		currentBrightness := property.CurrentBrightness	
+		currentBrightness := property.CurrentBrightness
 	If (currentBrightness + change) > 100
 		changedBrightness := 100
 	Else If (currentBrightness + change) < 0
@@ -314,7 +314,7 @@ Return
 MButton::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx, posy
-	
+
 	; If ((A_ScreenWidth > 1600) AND (A_ScreenHeight > 900))
 	; {
 		; posx := posx / (A_ScreenWidth / 1600.0)
@@ -323,10 +323,10 @@ MButton::
 		; posx := posx * (A_ScreenWidth / 1600.0)
 		; posy := posy * (A_ScreenHeight / 900.0)
 	; }
-	
+
 	posx := posx * (A_ScreenWidth / 1920.0)
 	posy := posy * (A_ScreenHeight / 1080.0)
-		
+
 	If ((posx > 0) AND (posy > 1070))
 	{
 		If WinActive("ahk_class Shell_TrayWnd")
@@ -378,6 +378,7 @@ Return
 :O::smug::😏
 
 :?*O:@g::@gmail.com
+:?*O:@j::@jainuniversity.ac.in
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube") OR WinActive("Advanced Search - Opera") OR WinActive("| Iwara")) )	;----------YouTube is Fullscreen-----------------------------
@@ -392,7 +393,7 @@ d::Send, {Right}
 NumpadIns::Send {Space}
 ; ~LWin::Send, ^{Esc}
 #o::Send, #3		;Opera
-#+o::Send, #4		;Edge 
+#+o::Send, #4		;Edge
 !F11::Run, "Z:\Applications\IObit\ScreenShot.exe"	 ;Screenshot
 
 #b::				;Taskbar
@@ -415,9 +416,9 @@ Return
 >^>!Up::Run, Display.exe /rotate:180 /toggle		; Rotate Screen Vertically
 
 ; Unlock mobile
-^!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
+>^>!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
 ; Get Mobile IP
-^!i::Run, % "curl -s https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip | clip"
+>^>!i::Run, % "curl -s https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip | clip"
 
 +!1::
 +!2::
@@ -511,7 +512,7 @@ Return
 	; Else
 		; Send, {WheelDown}
 	Return
-	
+
 #WheelUp::Send, #=
 #WheelDown::Send, #-
 
@@ -538,7 +539,7 @@ SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 	}
 	Else If (Desktop == 4)
 		sdToggle = 1
-	
+
 	ControlSend, , %CharToSend%, %Window%
 
 	If (Desktop == 3 AND sdToggle == 0)
@@ -549,7 +550,7 @@ SwitchDesktop(CharToSend:="", Window:="A",CharToSend2:="" , Window2:="A") {
 		Send, #^{Right}
 	Else
 		Send, #^{Left}
-	
+
 	If WinExist(Window2)
 		Sleep, 500
 	If WinActive(Window2)
@@ -672,26 +673,26 @@ RunBingRewards(name, key, paths) {
         searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
         query := "https://www.bing.com/search?q="
         Random, loopCount, 1, 5
-        Loop % loopCount {    
+        Loop % loopCount {
             Random, randomIndex, 1, searchTerms.Length()
             randomWord := searchTerms[randomIndex]
             query .= randomWord . "%20"
         }
         query .= "&form=STARTSCRIPT"
-        
+
         SysGet, MonitorWorkArea, MonitorWorkArea
         screenWidth := MonitorWorkAreaRight - MonitorWorkAreaLeft
         screenHeight := MonitorWorkAreaBottom - MonitorWorkAreaTop
         ; screenWidth := A_ScreenWidth
         ; screenHeight := A_ScreenHeight
-        
+
         ; Define position templates for different window counts using arrays
         posTemplates := []
         posTemplates.Insert([[0, 0, 1, 1]])  ; 1 window
         posTemplates.Insert([[0, 0, 0.5, 1], [0.5, 0, 0.5, 1]])  ; 2 windows
         posTemplates.Insert([[0, 0, 1/3, 1], [1/3, 0, 1/3, 1], [2/3, 0, 1/3, 1]])  ; 3 windows
         posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 4 windows
-        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5]])  ; 5 windows
+        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 5 windows
 
         for index, path in paths {
             if (paths.Length() > posTemplates.Length()) {
@@ -706,22 +707,24 @@ RunBingRewards(name, key, paths) {
                 ; Retrieve position from template
                 template := posTemplates[paths.Length()][index]
                 x := template[1] * screenWidth
-                y := template[2] * screenHeightŚ
+                y := template[2] * screenHeight
                 w := template[3] * screenWidth
                 h := template[4] * screenHeight
-            
+            }
 			
-            ; Run browser and adjust its position
+			; Run browser and adjust its position
             Run, %path% %query%
-            Sleep, 700 ; Give some time for the window to open
-			
-			}
-            
+            Sleep, 600 ; Give some time for the window to open
+
             ; Find the topmost window of the executable and reposition it
-			If path contains wsa://
-				WinGet, winList, List, ahk_exe WsaClient.exe
-            Else
+			If (InStr(path, "wsa://")) {
+				pkgName := StrReplace(path, "wsa://")
+				; WinWaitActive, ahk_class %pkgName% ahk_exe WsaClient.exe,,30
+				; WinGet, winList, List, ahk_exe WsaClient.exe
+			} Else {
+				WinWaitActive, ahk_exe msedge.exe,,10
 				WinGet, winList, List, ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+			}
 
             if (winList) {
                 ; Use the first window in the list (topmost)
@@ -733,8 +736,8 @@ RunBingRewards(name, key, paths) {
     SplashTextOff
 }
 
-!b::RunBingRewards("Desktop", "b", [".\imports\Microsoft-Edge.lnk", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 2""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 3""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 4""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 5"""])
-+!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta", "wsa://net.waterfox.android.release", "wsa://io.github.forkmaintainers.iceraven"])
+!b::RunBingRewards("Desktop", "b", [".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 2""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 3""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 4"""])
++!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release"])
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!
