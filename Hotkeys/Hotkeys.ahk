@@ -30,6 +30,8 @@ menu, tray, Default, Edit This Script
 
 global Desktop, sdToggle
 
+global currentFanSpeed := 0
+
 SetTimer, Battery_Check, 1000
 SetTimer, Current_Volume, 10
 SoundBeep(10000, 200, 5)
@@ -69,12 +71,12 @@ ListLines, On
 
 ; Double click tray icon to edit script
 Edit_This_Script:
-EndTime := A_TickCount
-If ((EndTime - StartTime) > 5000)
-If GetKeyState("Shift", "P")
-	RunAsUser("Z:\Applications\Microsoft VS Code\Code.exe", "C:\Users\Jery\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
-Else
-	Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
+	EndTime := A_TickCount
+	If ((EndTime - StartTime) > 5000)
+	If GetKeyState("Shift", "P")
+		RunAsUser("Z:\Applications\Microsoft VS Code Insiders\Code.exe", "C:\Users\Jery\OneDrive\AHK\AHK.code-workspace -g " A_ScriptFullPath)
+	Else
+		Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 Return
 
 ; Custom SoundBeep
@@ -97,12 +99,37 @@ ChangeBrightness(change) {
 		changedBrightness := 0
 	Else
 		changedBrightness := currentBrightness + change
-	ToolTip("--------------" . changedBrightness . "--------------", , 860, 950)
+	ToolTip("--------------" . changedBrightness . "--------------")
 	Run, nircmd.exe changebrightness %change%
 }
 
+; Change Fan Speed and update the global variable
+global timerRunning := false
+ChangeFanSpeed(change) {
+    global currentFanSpeed, timerRunning
+    currentFanSpeed += change
+	if (currentFanSpeed > 100) {
+		currentFanSpeed := 100
+	} else if (currentFanSpeed < 0) {
+		currentFanSpeed := 0
+	}
+
+    ToolTip("🪟--------------" . currentFanSpeed . "--------------")
+    
+    if (timerRunning)
+        SetTimer, ExecuteFanSpeedChange, Off
+    timerRunning := true
+    SetTimer, ExecuteFanSpeedChange, -1500
+}
+ExecuteFanSpeedChange:
+    global currentFanSpeed, timerRunning
+    strStdOut := StdOutStream("Y:\Tools\AsusFanControl\AsusFanControl.exe --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
+    ToolTip(strStdOut, 3000)
+    timerRunning := false
+return
+
 ; Create a auto hiding ToolTip at cursor location
-ToolTip(text, time:=1000, ToolTip_X:="", ToolTip_Y:="") {
+ToolTip(text, time:=1000, ToolTip_X:=860, ToolTip_Y:=890) {
 	If (ToolTip_X="") AND (ToolTip_Y="")
 		MouseGetPos, ToolTip_X, ToolTip_Y
 	ToolTip, %text%, %ToolTip_X%, %ToolTip_Y%
@@ -110,7 +137,7 @@ ToolTip(text, time:=1000, ToolTip_X:="", ToolTip_Y:="") {
 	Return
 }
 RemoveToolTip:
-ToolTip
+	ToolTip
 return
 
 ; Resolve Resolution in a 16:9 display
@@ -496,7 +523,9 @@ Return
 	if (posx > 1780) AND (posy > 1030)		;Increase Vol		bottom-right-small
 		Send, {volume_Up}{volume_Up}
 	Else If (posx < 140) AND (posy > 1030)	;increase Brt		bottom-left-small
-		ChangeBrightness(10)
+		ChangeBrightness(+10)
+    Else If (posx < 140) AND (posy < 30)	;increase fan		Top-left corner 
+        ChangeFanSpeed(+10)
 	; Else
 		; Send, {WheelUp}
 	Return
@@ -509,6 +538,8 @@ Return
 		Send, {Volume_Down}{Volume_Down}
 	Else If (posx < 140) AND (posy > 1030)	;Decrease Brt		bottom-left-small
 		ChangeBrightness(-10)
+    Else If (posx < 140) AND (posy < 30)	;Decrease fan		Top-left corner 
+        ChangeFanSpeed(-10)
 	; Else
 		; Send, {WheelDown}
 	Return
