@@ -9,24 +9,28 @@ SetWorkingDir, %A_ScriptDir%
 
 Sleep, 5000
 
-title:="ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"
+title:="YouTube Music ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"
 path:="shell:AppsFolder\com.github.th-ch.youtube-music"
 
 Loop
 {
     ; Check if YouTube Music is already running
-    if WinExist("ahk_exe YouTube Music.exe")
-    {
-        ExitApp
-    }
+    ; if WinExist(title)
+    ; {
+    ;     ExitApp
+    ; }
 
     If IsConnectedToInternet()
     {
         If !WinExist(title)
         {
             Run, %path%,, Min
-            WinWait, %title%,,10            
-            WinHide, %title%
+            WinWait, %title%,,10
+			Loop, 30
+            {
+                WinHide, %title%
+                Sleep, 1000
+            }
         }
         ExitApp
     }
