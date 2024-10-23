@@ -1,9 +1,9 @@
 #SingleInstance, Force
 SendMode Input
 SetWorkingDir, %A_ScriptDir%
-;@Ahk2Exe-SetMainIcon Z:\Documents\All-Projects\Vishal-Sir\CO-PO-Attainment\.venv\Lib\site-packages\win32\test\win32rcparser\python.ico
+;@Ahk2Exe-SetMainIcon C:\Users\Jery\OneDrive\AHK\Hotkeys\imports\Settings-Icon.ico
 
-; Y:\Dev\AutoHotkey\Compiler\Ahk2Exe.exe /in Z:\Documents\All-Projects\bing-rewards\bing-rewards.ahk
+; Y:\Dev\AutoHotkey\Compiler\Ahk2Exe.exe /in C:\Users\Jery\OneDrive\AHK\Bing-Rewards\bing-rewards.ahk
 
 Loop
 {
@@ -11,45 +11,94 @@ Loop
         Break
 }
 
-class Browser {
-    __New(path, title) {
-        this.path := path
-        this.title := title
-    }
-}
 
-browsers := []
-android := True
-
-tempFile := A_Temp . "\bing-reward-android"
-if FileExist(tempFile) {
-    FileDelete, %tempFile%
-} else {
-    FileAppend, , %tempFile%
+; Check for command-line argument
+android := False
+if (A_Args[1] = "android") {
+    android := True
+} Else If (A_Args[1] = "desktop") {
     android := False
-}
-
-if (android) {
-    browsers.Push(new Browser("shell:AppsFolder\org.mozilla.fenix", "ahk_class org.mozilla.fenix ahk_exe WsaClient.exe"))
-    browsers.Push(new Browser("shell:AppsFolder\org.mozilla.firefox_beta", "ahk_class org.mozilla.firefox_beta ahk_exe WsaClient.exe"))
-    browsers.Push(new Browser("shell:AppsFolder\org.mozilla.firefox", "ahk_class org.mozilla.firefox ahk_exe WsaClient.exe"))
-    browsers.Push(new Browser("shell:AppsFolder\org.mozilla.fennec_fdroid", "ahk_class org.mozilla.fennec_fdroid ahk_exe WsaClient.exe"))
-} Else {    
-    browsers.Push(new Browser("C:\Program Files (x86)\Microsoft\Edge Dev\Application\msedge.exe  https://www.bing.com/search?q=  https://rewards.bing.com/", "- Personal - Microsoft Edge Dev ahk_exe msedge.exe"))
-    browsers.Push(new Browser("shell:AppsFolder\Mozilla.Firefox_n80bbvh6b1yt2!App", "— Mozilla Firefox ahk_exe firefox.exe"))
-    browsers.Push(new Browser("shell:AppsFolder\CA9422711AE1A81C", "— Firefox Developer Edition ahk_exe firefox.exe"))
-    browsers.Push(new Browser("C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe", "- Personal - Microsoft Edge Dev ahk_exe msedge.exe"))
-}
-
-for index, browser in browsers
-{
-    Run, % browser.path
-
-    if (android) {
-        WinWait, % browser.title,, 10
-        ; WinWaitClose, % browser.title
-        ; MsgBox, % "closed: " browser.title
+} else {
+    tempFile := A_Temp . "\bing-reward-android"
+    if FileExist(tempFile) {
+        FileDelete, %tempFile%
+        android := True
+    } else {
+        FileAppend, , %tempFile%
+        android := False
     }
 }
+
+
+RunBingRewards(name, paths) {
+	SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
+	searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
+	query := "https://www.bing.com/search?q="
+	Random, loopCount, 1, 5
+	Loop % loopCount {
+		Random, randomIndex, 1, searchTerms.Length()
+		randomWord := searchTerms[randomIndex]
+		query .= randomWord . "%20"
+	}
+	query .= "&form=STARTSCRIPT"
+
+	SysGet, MonitorWorkArea, MonitorWorkArea
+	screenWidth := MonitorWorkAreaRight - MonitorWorkAreaLeft
+	screenHeight := MonitorWorkAreaBottom - MonitorWorkAreaTop
+
+	; Define position templates for different window counts using arrays
+	posTemplates := []
+	posTemplates.Insert([[0, 0, 1, 1]])  ; 1 window
+	posTemplates.Insert([[0, 0, 0.5, 1], [0.5, 0, 0.5, 1]])  ; 2 windows
+	posTemplates.Insert([[0, 0, 1/3, 1], [1/3, 0, 1/3, 1], [2/3, 0, 1/3, 1]])  ; 3 windows
+	posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 4 windows
+	posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 5 windows
+
+	for index, path in paths {
+		if (paths.Length() > posTemplates.Length()) {
+			; Default behavior for more than 5 windows
+			row := Floor((index - 1) / 3)
+			col := Mod(index - 1, 3)
+			x := col * screenWidth / 3
+			y := row * screenHeight / 2
+			w := screenWidth / 3
+			h := screenHeight / 2
+		} else {
+			; Retrieve position from template
+			template := posTemplates[paths.Length()][index]
+			x := template[1] * screenWidth
+			y := template[2] * screenHeight
+			w := template[3] * screenWidth
+			h := template[4] * screenHeight
+		}
+		
+		; Run browser and adjust its position
+		Run, %path% %query%
+		Sleep, 500 ; Give some time for the window to open
+
+		; Find the topmost window of the executable and reposition it
+		If (InStr(path, "wsa://")) {
+			pkgName := StrReplace(path, "wsa://")
+			; WinWaitActive, ahk_class %pkgName% ahk_exe WsaClient.exe,,30
+			; WinGet, winList, List, ahk_exe WsaClient.exe
+		} Else {
+			WinWaitActive, ahk_exe msedge.exe,,10
+			WinGet, winList, List, ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+		}
+
+		if (winList) {
+			; Use the first window in the list (topmost)
+			WinRestore, ahk_id %winList1% ; Restore window if maximized
+			WinMove, ahk_id %winList1%, , %x%, %y%, %w%, %h%
+		}
+	}
+}
+
+edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+If (!android)
+	RunBingRewards("Desktop", [edge . " --profile-directory=""Profile 2""", edge . " --profile-directory=""Profile 3""", edge . " --profile-directory=""Profile 4"""])
+Else
+	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release"])
+
 
 ExitApp
