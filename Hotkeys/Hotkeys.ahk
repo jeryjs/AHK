@@ -161,14 +161,19 @@ Fullscreen() {
 }
 
 ; Boss key
-BossKey(title) {
-	IfWinActive, %title%
+BossKey(title, path:="") {
+	If (!WinExist(title) And path != "")
+		Run, %path%
+	Else
 	{
-		WinMinimize, %title%
-		WinHide, %title%
-	}Else {
-		WinShow, %title%
-		WinActivate, %title%
+		IfWinActive, %title%
+		{
+			WinMinimize, %title%
+			WinHide, %title%
+		}Else {
+			WinShow, %title%
+			WinActivate, %title%
+		}
 	}
 }
 
@@ -258,7 +263,6 @@ UltraBossKey(name, title, path, key) {
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\Applications\Taiga\Taiga.exe"				, "t")
-!g::UltraBossKey("GlideX"		, "GlideX ahk_exe GlideX.exe"								, "shell:AppsFolder\B9ECED6F.Glidex_qmba6cd70vzyy!App"			, "g")
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+Alt+...] Opera Sidebar
@@ -421,7 +425,7 @@ NumpadIns::Send {Space}
 ; ~LWin::Send, ^{Esc}
 #o::Send, #3		;Opera
 #+o::Send, #4		;Edge
-!F11::Run, "Z:\Applications\IObit\ScreenShot.exe"	 ;Screenshot
+!F11::Run, "Y:\Tools\IObit\ScreenShot.exe"	 ;Screenshot
 
 #b::				;Taskbar
 If WinActive("ahk_class Shell_TrayWnd")
@@ -684,12 +688,8 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
-#!c::
-	If !WinExist("Gemini ahk_class Chrome_WidgetWin_1")
-		Run, Shell:AppsFolder\gemini.google.com-C6D6DB3B_vn3jms8s81tkg!App
-	Else
-		BossKey("Gemini ahk_class Chrome_WidgetWin_1")
-Return
+#!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
+#!n::BossKey("Sticky Notes ahk_class ApplicationFrameWindow", "Shell:AppsFolder\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App")
 ; #!c::Send, #c
 
 ;-------------------------------------------------------------------------------
@@ -714,8 +714,6 @@ RunBingRewards(name, key, paths) {
         SysGet, MonitorWorkArea, MonitorWorkArea
         screenWidth := MonitorWorkAreaRight - MonitorWorkAreaLeft
         screenHeight := MonitorWorkAreaBottom - MonitorWorkAreaTop
-        ; screenWidth := A_ScreenWidth
-        ; screenHeight := A_ScreenHeight
 
         ; Define position templates for different window counts using arrays
         posTemplates := []
