@@ -1,4 +1,4 @@
-#NoEnv
+﻿#NoEnv
 SetWorkingDir %A_ScriptDir%
 CoordMode, Mouse, Window
 SendMode Input
@@ -695,78 +695,16 @@ Return
 ;-------------------------------------------------------------------------------
 ; Bing Rewards
 ;-------------------------------------------------------------------------------
-RunBingRewards(name, key, paths) {
+RunBingRewards(name, key) {
     SplashTextOn, 250, 25, Bing Rewards %name%, Press '%key%' to run Bing rewards (%name%)
     Input, SplashInput, T1 L1
-    if (SplashInput = key)
-    {
-        SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
-        searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
-        query := "https://www.bing.com/search?q="
-        Random, loopCount, 1, 5
-        Loop % loopCount {
-            Random, randomIndex, 1, searchTerms.Length()
-            randomWord := searchTerms[randomIndex]
-            query .= randomWord . "%20"
-        }
-        query .= "&form=STARTSCRIPT"
-
-        SysGet, MonitorWorkArea, MonitorWorkArea
-        screenWidth := MonitorWorkAreaRight - MonitorWorkAreaLeft
-        screenHeight := MonitorWorkAreaBottom - MonitorWorkAreaTop
-
-        ; Define position templates for different window counts using arrays
-        posTemplates := []
-        posTemplates.Insert([[0, 0, 1, 1]])  ; 1 window
-        posTemplates.Insert([[0, 0, 0.5, 1], [0.5, 0, 0.5, 1]])  ; 2 windows
-        posTemplates.Insert([[0, 0, 1/3, 1], [1/3, 0, 1/3, 1], [2/3, 0, 1/3, 1]])  ; 3 windows
-        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 4 windows
-        posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 5 windows
-
-        for index, path in paths {
-            if (paths.Length() > posTemplates.Length()) {
-                ; Default behavior for more than 5 windows
-                row := Floor((index - 1) / 3)
-                col := Mod(index - 1, 3)
-                x := col * screenWidth / 3
-                y := row * screenHeight / 2
-                w := screenWidth / 3
-                h := screenHeight / 2
-            } else {
-                ; Retrieve position from template
-                template := posTemplates[paths.Length()][index]
-                x := template[1] * screenWidth
-                y := template[2] * screenHeight
-                w := template[3] * screenWidth
-                h := template[4] * screenHeight
-            }
-			
-			; Run browser and adjust its position
-            Run, %path% %query%
-            Sleep, 600 ; Give some time for the window to open
-
-            ; Find the topmost window of the executable and reposition it
-			If (InStr(path, "wsa://")) {
-				pkgName := StrReplace(path, "wsa://")
-				; WinWaitActive, ahk_class %pkgName% ahk_exe WsaClient.exe,,30
-				; WinGet, winList, List, ahk_exe WsaClient.exe
-			} Else {
-				WinWaitActive, ahk_exe msedge.exe,,10
-				WinGet, winList, List, ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-			}
-
-            if (winList) {
-                ; Use the first window in the list (topmost)
-                WinRestore, ahk_id %winList1% ; Restore window if maximized
-                WinMove, ahk_id %winList1%, , %x%, %y%, %w%, %h%
-            }
-        }
-    }
     SplashTextOff
+    if (SplashInput = key)
+        Run, "C:\Users\Jery\OneDrive\AHK\Bing-Rewards\bing-rewards.exe" %name%
 }
 
-!b::RunBingRewards("Desktop", "b", [".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 2""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 3""", ".\imports\Microsoft-Edge.lnk --profile-directory=""Profile 4"""])
-+!b::RunBingRewards("Mobile", "B", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release"])
+!b::RunBingRewards("desktop", "b")
++!b::RunBingRewards("android", "B")
 
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!

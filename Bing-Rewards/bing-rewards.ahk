@@ -74,7 +74,7 @@ RunBingRewards(name, paths) {
 		
 		; Run browser and adjust its position
 		Run, %path% %query%
-		Sleep, 500 ; Give some time for the window to open
+		Sleep, 400 ; Give some time for the window to open
 
 		; Find the topmost window of the executable and reposition it
 		If (InStr(path, "wsa://")) {
@@ -92,13 +92,15 @@ RunBingRewards(name, paths) {
 			WinMove, ahk_id %winList1%, , %x%, %y%, %w%, %h%
 		}
 	}
+	
+	ExitApp
 }
 
-edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe --profile-directory="
 If (!android)
-	RunBingRewards("Desktop", [edge . " --profile-directory=""Profile 2""", edge . " --profile-directory=""Profile 3""", edge . " --profile-directory=""Profile 4"""])
+	RunBingRewards("Desktop", [edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4""", edge . """Profile 5""", edge . """Profile 6""", edge . """Profile 7"""])
 Else
-	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release"])
+	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release", "wsa://org.mozilla.firefox_beta", "wsa://io.github.forkmaintainers.iceraven"])
 
 
-ExitApp
+Esc::ExitApp
