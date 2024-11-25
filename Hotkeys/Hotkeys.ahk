@@ -1,4 +1,4 @@
-﻿#NoEnv
+#NoEnv
 SetWorkingDir %A_ScriptDir%
 CoordMode, Mouse, Window
 SendMode Input
@@ -51,20 +51,20 @@ GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
 GroupAdd, game, ahk_class Qt5152QWindowIcon ahk_exe MEmu.exe
 GroupAdd, game, ahk_exe EXCEL.EXE
 ; GroupAdd, game, ahk_exe studio64.exe
-GroupAdd, game, ahk_exe VALORANT-Win64-Shipping.exe 	; VALORANT ahk_class UnrealWindow ahk_exe VALORANT-Win64-Shipping.exe
+GroupAdd, game, ahk_exe VALORANT-Win64-Shipping.exe
 GroupAdd, game, ahk_class GameNxApp ahk_exe Spider-Man.exe
 GroupAdd, game, ahk_class UnrealWindow ahk_exe FortniteClient-Win64-Shipping.exe
 GroupAdd, game, ahk_class Tiger D3D Window ahk_exe destiny2.exe
-GroupAdd, game, ahk_class CROSVM_1 ahk_exe crosvm.exe
-GroupAdd, game, ahk_class UnrealWindow ahk_exe HogwartsLegacy.exe
-GroupAdd, game, Wuthering Waves ahk_exe Client-Win64-Shipping.exe
+GroupAdd, game, The Last of Us™ Part I ahk_class T1X ahk_exe tlou-i.exe
+GroupAdd, game, PUBG: BATTLEGROUNDS ahk_class UnrealWindow ahk_exe TslGame.exe
+GroupAdd, game, Call of Duty
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
 GroupAdd, teyvat_map, The Chasm
 
-GroupAdd, anime, - AniMixPlay
 GroupAdd, anime, - YugenAnime
+GroupAdd, anime, :: animepahe
 GroupAdd, anime, 9Anime -
 ; GroupAdd, anime, - mpv.net
 ListLines, On
@@ -678,7 +678,7 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, Y:\All-Projects\talk\talk.exe --ai gemini --se tts,,, talkPID
+	Run, Y:\All-Projects\talk\talk.exe --ai gemini --se tts, Y:\All-Projects\talk,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
