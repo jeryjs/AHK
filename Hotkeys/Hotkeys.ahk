@@ -33,7 +33,7 @@ global Desktop, sdToggle
 global currentFanSpeed := 0
 
 SetTimer, Battery_Check, 1000
-SetTimer, Current_Volume, 10
+SetTimer, Current_Volume, 1000
 SoundBeep(10000, 200, 5)
 
 
@@ -48,6 +48,7 @@ GroupAdd, game, Genshin Impact ahk_exe GenshinImpact.exe
 GroupAdd, game, Honkai: Star Rail ahk_class UnityWndClass ahk_exe StarRail.exe
 GroupAdd, game, Nox ahk_exe nox.exe
 GroupAdd, game, ahk_class TXGuiFoundation ahk_exe AndroidEmulatorEn.exe
+GroupAdd, game, ahk_class CROSVM_1 ahk_exe crosvm.exe
 GroupAdd, game, ahk_class Qt5152QWindowIcon ahk_exe MEmu.exe
 GroupAdd, game, ahk_exe EXCEL.EXE
 ; GroupAdd, game, ahk_exe studio64.exe
@@ -57,15 +58,24 @@ GroupAdd, game, ahk_class UnrealWindow ahk_exe FortniteClient-Win64-Shipping.exe
 GroupAdd, game, ahk_class Tiger D3D Window ahk_exe destiny2.exe
 GroupAdd, game, The Last of Us™ Part I ahk_class T1X ahk_exe tlou-i.exe
 GroupAdd, game, PUBG: BATTLEGROUNDS ahk_class UnrealWindow ahk_exe TslGame.exe
+GroupAdd, game, Marvel Rivals ahk_class UnrealWindow ahk_exe Marvel-Win64-Shipping.exe
 GroupAdd, game, Call of Duty
+GroupAdd, game, Marvel's Spider-Man ahk_class GameNxApp ahk_exe MilesMorales.exe
+GroupAdd, game, Marvel's Spider-Man 2 v1.130.1.0 ahk_class GameNxApp ahk_exe Spider-Man2.exe
+GroupAdd, game, ahk_class UnrealWindow ahk_exe MCC-Win64-Shipping.exe
+GroupAdd, game, ahk_class UnrealWindow ahk_exe b1-Win64-Shipping.exe
+GroupAdd, game, ahk_exe FragPunk.exe
+GroupAdd, game, ahk_exe re4.exe
+GroupAdd, game, Red Dead Redemption 2 ahk_class sgaWindow ahk_exe RDR2.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
 GroupAdd, teyvat_map, The Chasm
 
-GroupAdd, anime, - YugenAnime
 GroupAdd, anime, :: animepahe
 GroupAdd, anime, 9Anime -
+GroupAdd, anime, · Miruro
+GroupAdd, anime, anime.tv
 ; GroupAdd, anime, - mpv.net
 ListLines, On
 
@@ -115,7 +125,7 @@ ChangeFanSpeed(change) {
 	}
 
     ToolTip("🪟--------------" . currentFanSpeed . "--------------")
-    
+
     if (timerRunning)
         SetTimer, ExecuteFanSpeedChange, Off
     timerRunning := true
@@ -123,7 +133,8 @@ ChangeFanSpeed(change) {
 }
 ExecuteFanSpeedChange:
     global currentFanSpeed, timerRunning
-    strStdOut := StdOutStream("Y:\Tools\AsusFanControl\AsusFanControl.exe --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
+    ; strStdOut := StdOutStream("""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
+    strStdOut := StdOutStream("""Y:\Tools\AsusFanControl\PsExec.exe"" -s -nobanner ""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
     ToolTip(strStdOut, 3000)
     timerRunning := false
 return
@@ -208,18 +219,6 @@ ProcessExist(Name){
 	return Errorlevel
 }
 
-; Return path of active explorer window
-GetActiveExplorerPath() {
-	explorerHwnd := WinActive("ahk_class CabinetWClass")
-	if (explorerHwnd)
-	{
-		for window in ComObjCreate("Shell.Application").Windows {
-			if (window.hwnd==explorerHwnd)
-				return window.Document.Folder.Self.Path
-		}
-	}
-}
-
 
 
 #If WinExist("ahk_group teyvat_map")
@@ -235,6 +234,7 @@ CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
 	; Else
 		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
+		; UltraBossKey("Discord", " ahk_class Chrome_WidgetWin_1 ahk_exe Legcord.exe", "shell:AppsFolder\app.legcord.Legcord", "d")
 Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Alt+*] ULTRA BOSS KEY
@@ -270,8 +270,10 @@ UltraBossKey(name, title, path, key) {
 #If WinActive("ahk_class Chrome_WidgetWin_1 ahk_exe opera.exe")
 +!m::	;------MAL------
 	MouseGetPos, posx, posy
-	Click("-22", "640")		;-25, 740
-	Click("32", "640")		;40, 740
+	; Click("-22", "640")		;-25, 740
+	; Click("32", "640")		;40, 740
+	Click("-22", "515")		;-25, 740
+	Click("32", "515")		;40, 740
 	Click(posx, posy, 0)
 Return
 ; +!1::	;------GMAIL-0------
@@ -316,17 +318,17 @@ Return
 ;-----------------------------------------------------------------------------------------------------------------------
 ;[Shift+F4] Network Monitor
 ;-----------------------------------------------------------------------------------------------------------------------
-F1::
-	If !WinExist("Drozd_net_monitor ahk_class AutoHotkeyGUI")
-	{
-		Run,  %A_ScriptDir%\imports\Drozd_net_monitor_original.lnk
-	}Else  {
-		BossKey("Drozd_net_monitor ahk_class AutoHotkeyGUI")
-	}
-	If WinActive("ahk_exe notepad++.exe")
-		Send, {F1}
-Return
-+F1::Send, {F1}
+; F1::
+	; If !WinExist("Drozd_net_monitor ahk_class AutoHotkeyGUI")
+	; {
+		; Run,  %A_ScriptDir%\imports\Drozd_net_monitor_original.lnk
+	; }Else  {
+		; BossKey("Drozd_net_monitor ahk_class AutoHotkeyGUI")
+	; }
+	; If WinActive("ahk_exe notepad++.exe")
+		; Send, {F1}
+; Return
+; +F1::Send, {F1}
 
 
 ;-------------------------------------------------------------------------------
@@ -469,13 +471,18 @@ Return
 	SplashTextOff
 Return
 
-; ^+!F6::			; Headphone sound Balance	; Reset audio
-	; SoundGet, vol
-	; SoundSet, 10
-	; VA_SetMasterVolume("5", "0", "Headphone")	; replace '0' with '2' for left channel
-	; SoundSet, vol
-; Return
-
+; Toggle Hidden Files in Explorer.exe 
+#IfWinActive ahk_exe explorer.exe
+!h:: 
+	RegRead, HiddenFiles_Status, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, Hidden 
+	If HiddenFiles_Status = 2 
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, Hidden, 1
+	Else
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, Hidden, 2 
+	WinGetClass, eh_Class,A
+	send, {F5} 
+Return
+#If
 
 ;-------------------------------------------------------------------------------
 ; 4 Finger Wand
@@ -528,7 +535,7 @@ Return
 		Send, {volume_Up}{volume_Up}
 	Else If (posx < 140) AND (posy > 1030)	;increase Brt		bottom-left-small
 		ChangeBrightness(+10)
-    Else If (posx < 140) AND (posy < 30)	;increase fan		Top-left corner 
+    Else If (posx < 140) AND (posy < 30)	;increase fan		Top-left corner
         ChangeFanSpeed(+10)
 	; Else
 		; Send, {WheelUp}
@@ -542,7 +549,7 @@ Return
 		Send, {Volume_Down}{Volume_Down}
 	Else If (posx < 140) AND (posy > 1030)	;Decrease Brt		bottom-left-small
 		ChangeBrightness(-10)
-    Else If (posx < 140) AND (posy < 30)	;Decrease fan		Top-left corner 
+    Else If (posx < 140) AND (posy < 30)	;Decrease fan		Top-left corner
         ChangeFanSpeed(-10)
 	; Else
 		; Send, {WheelDown}
@@ -553,6 +560,13 @@ Return
 
 ^+!F4:: ChangeBrightness(-10)
 ^+!F5:: ChangeBrightness(20)
+
+^!T::
+	path := GetActiveExplorerPath()
+	if !path || (SubStr(path, 1, 2) = "::")
+		path := A_UserProfile
+	Run, wt.exe -d "%path%"
+return
 
 #If !WinActive("ahk_group game")
 ~RButton & LButton Up::Goto, 4FingerWand
@@ -689,6 +703,7 @@ IF !ProcessExist("talk.exe") {
 }
 Return
 #!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
+#+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
 #!n::BossKey("Sticky Notes ahk_class ApplicationFrameWindow", "Shell:AppsFolder\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App")
 ; #!c::Send, #c
 
@@ -700,7 +715,7 @@ RunBingRewards(name, key) {
     Input, SplashInput, T1 L1
     SplashTextOff
     if (SplashInput = key)
-        Run, "C:\Users\Jery\OneDrive\AHK\Bing-Rewards\bing-rewards.exe" %name%
+        Run, "C:\Users\Jery\OneDrive\AHK\Bing-Rewards\bing-rewards.ahk" %name%
 }
 
 !b::RunBingRewards("desktop", "b")

@@ -40,8 +40,8 @@ Return
 
 ~f::Click, WheelDown 1	;interact
 
-~Alt & CapsLock::		;SwitchDesktop()
-~MButton & RButton::
+; ~Alt & CapsLock::		;SwitchDesktop()
+; ~MButton & RButton::
 #d::
 Genshin_Boss_Key:
 	Send, {g}

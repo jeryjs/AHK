@@ -13,9 +13,14 @@ XButton2::Send {Left}
 ; Ctrl::SwitchDesktop("{Space}", "ahk_group anime","{Space}")
 
 #If ( WinActive("ahk_group anime") AND is Fullscreen() )
+NumpadUp::
 w::Send, {Up}
+NumpadLeft::
 a::Send, {Left}
+NumpadDown::
 s::Send, {Down}
+NumpadClear::
+NumpadRight::
 d::Send, {Right}
 c::Send {/}
 +c::Send +{/}
@@ -31,7 +36,7 @@ Space::Send, {Space}
 ; RAlt::
 ; RCtrl::
 ; LCtrl::
-; NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "YouTube")
+; NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "A")
 ; Home::SwitchDesktop()
 
 XButton1::Send {Right}

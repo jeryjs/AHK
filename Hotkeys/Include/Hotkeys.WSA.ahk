@@ -17,20 +17,22 @@ NumpadAdd::
 	Send, {LButton Up}
 Return
 
+Esc::Send, !{Left}
+
 ; LAlt::
 ; NumpadEnter::
 ; RCtrl::
 ; Ctrl::SwitchDesktop()
 
-WheelDown::
+; WheelDown::
 ; XButton1::
 Tab::Send, {Left}
 
-WheelUp::
+; WheelUp::
 ; XButton2::
 Shift::Send, {Right}
 
-!l::SetKizzyRPC("𝐓𝐚𝐜𝐡𝐢𝐲𝐨𝐦𝐢𝐒𝐘", "attachments/961577469427736636/971135180322529310/unknown.png", "𝔐𝔞𝔫𝔤𝔞")
+; !l::SetKizzyRPC("𝐓𝐚𝐜𝐡𝐢𝐲𝐨𝐦𝐢𝐒𝐘", "attachments/961577469427736636/971135180322529310/unknown.png", "𝔐𝔞𝔫𝔤𝔞")
 
 
 #If WinActive("Kizzy ahk_class com.my.kizzy")				;-----------KIZZY-------------------------
@@ -74,7 +76,7 @@ SetKizzyRPC(Kizzy_ActivityName, Kizzy_ImageLink, Kizzy_ActivityState) {
 	}
 }
 
-!l::SetKizzyRPC("𝐓𝐚𝐜𝐡𝐢𝐲𝐨𝐦𝐢𝐒𝐘", "attachments/961577469427736636/971135180322529310/unknown.png", "𝔐𝔞𝔫𝔤𝔞")
-!k::SetKizzyRPC("𝐀𝐧𝐢𝐲𝐨𝐦𝐢", "attachments/949382602073210921/985567214193225769/unknown.png", "𝒜𝔫𝔦𝔪𝔢")
+; !l::SetKizzyRPC("𝐓𝐚𝐜𝐡𝐢𝐲𝐨𝐦𝐢𝐒𝐘", "attachments/961577469427736636/971135180322529310/unknown.png", "𝔐𝔞𝔫𝔤𝔞")
+; !k::SetKizzyRPC("𝐀𝐧𝐢𝐲𝐨𝐦𝐢", "attachments/949382602073210921/985567214193225769/unknown.png", "𝒜𝔫𝔦𝔪𝔢")
 
 #If
