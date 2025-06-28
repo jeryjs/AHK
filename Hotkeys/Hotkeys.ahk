@@ -134,8 +134,12 @@ ChangeFanSpeed(change) {
 ExecuteFanSpeedChange:
     global currentFanSpeed, timerRunning
     ; strStdOut := StdOutStream("""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
-    strStdOut := StdOutStream("""Y:\Tools\AsusFanControl\PsExec.exe"" -s -nobanner ""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
-    ToolTip(strStdOut, 3000)
+    result := ""
+	fullResult := StdOutStream("""Y:\Tools\AsusFanControl\PsExec.exe"" -nobanner -s ""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . 0 )
+	Loop, Parse, fullResult, `n, `r
+    if RegExMatch(A_LoopField, "i)(Current|Test mode)")
+        result .= A_LoopField . "`n"
+    ToolTip(result, 3000)
     timerRunning := false
 return
 
