@@ -145,7 +145,8 @@ edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe --profile-
 If (!android)
 	RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 6"""])	; RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4""", edge . """Profile 5""", edge . """Profile 6"""])
 Else
-	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release", "wsa://org.mozilla.firefox_beta", "wsa://io.github.forkmaintainers.iceraven", "wsa://org.mozilla.firefox123"])
+	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta"])
+	; RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release", "wsa://org.mozilla.firefox_beta", "wsa://io.github.forkmaintainers.iceraven", "wsa://org.mozilla.firefox123"])
 
 
 Esc::ExitApp
