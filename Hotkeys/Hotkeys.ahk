@@ -735,5 +735,37 @@ RunBingRewards(name, key) {
 !b::RunBingRewards("desktop", "b")
 +!b::RunBingRewards("android", "B")
 
+;-------------------------------------------------------------------------------
+; OS Theme Switcher
+;-------------------------------------------------------------------------------
+SwitchOSTheme(theme:="toggle") {
+	If (theme = "light") {
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, 1
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, 1
+	} Else If (theme = "dark") {
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, 0
+		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, 0
+	} Else {
+		currentAppTheme := 1
+		RegRead, currentAppTheme, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme
+		If (currentAppTheme = 1) {
+			RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, 0
+			RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, 0
+		} Else {
+			RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, 1
+			RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, 1
+		}
+	}
+	SendMessage, 0x1A,, 0,, ahk_class Shell_TrayWnd	;WM_SETTINGCHANGE
+}
+#F1::SwitchOSTheme("toggle")
+#F2::SwitchOSTheme("light")
+#F3::SwitchOSTheme("dark")
+
+;
+; COntroller
+;
+
+
 ;-----------------------------------------------------------------------------------------------------------------------
 ;the reward for good work is more work!
