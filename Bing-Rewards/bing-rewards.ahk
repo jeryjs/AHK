@@ -5,6 +5,8 @@ SetWorkingDir, %A_ScriptDir%
 
 ; Y:\Dev\AutoHotkey\Compiler\Ahk2Exe.exe /in C:\Users\Jery\OneDrive\AHK\Bing-Rewards\bing-rewards.ahk
 
+#Include Y:\Dev\AutoHotkey\Lib\VD.ahk
+
 Loop
 {
     If IsConnectedToInternet()
@@ -31,6 +33,7 @@ if (A_Args[1] = "android") {
 
 
 RunBingRewards(name, paths) {
+	VD.goToDesktopNum(4)
 	SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
 	searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
 	query := "https://www.bing.com/search?q="
@@ -118,8 +121,8 @@ RunBingRewards(name, paths) {
 		}
 		
 		; Run browser and adjust its position
-		Run, %path% %query%
-		Sleep, 400 ; Give some time for the window to open
+		Run, % path . " --new-window " . query . " --disable-features=RendererCodeIntegrity,IsolateOrigins,site-per-process  --disable-popup-blocking"
+		Sleep, 300 ; Give some time for the window to open
 
 		; Find the topmost window of the executable and reposition it
 		If (InStr(path, "wsa://")) {
@@ -142,10 +145,10 @@ RunBingRewards(name, paths) {
 }
 
 edge := "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe --profile-directory="
-If (!android)
-	RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 6"""])	; RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4""", edge . """Profile 5""", edge . """Profile 6"""])
-Else
-	RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://org.mozilla.firefox_beta"])
+RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4"""])
+; If (!android)
+	; RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4"""])	; RunBingRewards("Desktop", [edge . """Profile 1""", edge . """Profile 2""", edge . """Profile 3""", edge . """Profile 4""", edge . """Profile 5""", edge . """Profile 6"""])
+; Else
 	; RunBingRewards("Mobile", ["wsa://org.mozilla.fenix", "wsa://org.mozilla.firefox", "wsa://net.waterfox.android.release", "wsa://org.mozilla.firefox_beta", "wsa://io.github.forkmaintainers.iceraven", "wsa://org.mozilla.firefox123"])
 
 

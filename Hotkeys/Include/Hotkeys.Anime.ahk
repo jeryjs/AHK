@@ -1,5 +1,4 @@
-﻿
-#If WinActive("ahk_group anime")	;----------ANIME-----------------------------
+﻿#If ( WinActive("ahk_group anime") AND is Fullscreen() )	;----------ANIME-----------------------------
 NumpadPgUp::Send {Right}
 NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
@@ -8,18 +7,16 @@ XButton1::Send {Right}
 XButton2::Send {Left}
 
 ; LAlt::
-; NumpadEnter::
 ; RCtrl::
 ; Ctrl::SwitchDesktop("{Space}", "ahk_group anime","{Space}")
 
-#If ( WinActive("ahk_group anime") AND is Fullscreen() )
 NumpadUp::
 w::Send, {Up}
+NumpadClear::
 NumpadLeft::
 a::Send, {Left}
 NumpadDown::
 s::Send, {Down}
-NumpadClear::
 NumpadRight::
 d::Send, {Right}
 c::Send {/}
@@ -27,6 +24,10 @@ c::Send {/}
 Numpad0::
 NumpadIns::
 Space::Send, {Space}
+
+NumpadEnter::
+Enter::
+f::Send, {Esc}
 
 
 #If WinActive("ahk_exe mpvnet.exe")	;---------MPV NET-------------------------------------
@@ -64,6 +65,8 @@ NumpadEnter::SwitchDesktop("{Space}","Advanced Search - Opera","{Space}")
 #If WinExist("Taiga ahk_class #32770 ahk_exe Taiga.exe")	;-----------TAIGA-------------------------
 Space::
 NumpadEnter::
+NumpadIns::
+Numpad0::
 Enter::
 	WinActivate, Taiga ahk_exe Taiga.exe
 	Send, {Enter}

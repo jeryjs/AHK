@@ -67,6 +67,8 @@ GroupAdd, game, ahk_class UnrealWindow ahk_exe b1-Win64-Shipping.exe
 GroupAdd, game, ahk_exe FragPunk.exe
 GroupAdd, game, ahk_exe re4.exe
 GroupAdd, game, Red Dead Redemption 2 ahk_class sgaWindow ahk_exe RDR2.exe
+GroupAdd, game, ahk_exe DaysGone.exe
+GroupAdd, game, Clair Obscur: Expedition 33 ahk_exe SandFall-Win64-Shipping.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
@@ -76,6 +78,8 @@ GroupAdd, anime, :: animepahe
 GroupAdd, anime, 9Anime -
 GroupAdd, anime, · Miruro
 GroupAdd, anime, anime.tv
+GroupAdd, anime, Anime
+GroupAdd, anime, Episode 
 ; GroupAdd, anime, - mpv.net
 ListLines, On
 
@@ -135,9 +139,9 @@ ExecuteFanSpeedChange:
     global currentFanSpeed, timerRunning
     ; strStdOut := StdOutStream("""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed)
     result := ""
-	fullResult := StdOutStream("""Y:\Tools\AsusFanControl\PsExec.exe"" -nobanner -s ""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speeds=" . currentFanSpeed )
+	fullResult := StdOutStream("""Y:\Tools\AsusFanControl\PsExec.exe"" -nobanner -s ""Y:\Tools\AsusFanControl\AsusFanControl.exe"" --get-fan-speeds --get-cpu-temp --set-fan-speed=0:" . currentFanSpeed . ",1:" . currentFanSpeed )
 	Loop, Parse, fullResult, `n, `r
-    if RegExMatch(A_LoopField, "i)(Current|Test mode)")
+    if RegExMatch(A_LoopField, "i)(Current|New fan|Test mode)")
         result .= A_LoopField . "`n"
     ToolTip(result, 3000)
     timerRunning := false
@@ -237,7 +241,7 @@ CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 	; IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
 	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
 	; Else
-		UltraBossKey("Discord", "Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
+		UltraBossKey("Discord", "- Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
 		; UltraBossKey("Discord", " ahk_class Chrome_WidgetWin_1 ahk_exe Legcord.exe", "shell:AppsFolder\app.legcord.Legcord", "d")
 Return
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -265,7 +269,7 @@ UltraBossKey(name, title, path, key) {
 !y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
 !c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chatgpt.com-DFCB3CE4_ch69rtgtz055j!App"		, "c")
 #If !WinActive("ahk_group game")
-!w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class ApplicationFrameWindow"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
+!w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class WinUIDesktopWin32WindowClass"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
 !t::UltraBossKey("Taiga"		, "Taiga ahk_class TaigaMainW"								, "Z:\Applications\Taiga\Taiga.exe"				, "t")
 
 ;-----------------------------------------------------------------------------------------------------------------------
@@ -276,8 +280,8 @@ UltraBossKey(name, title, path, key) {
 	MouseGetPos, posx, posy
 	; Click("-22", "640")		;-25, 740
 	; Click("32", "640")		;40, 740
-	Click("-22", "515")		;-25, 740
-	Click("32", "515")		;40, 740
+	Click("-22", "500")		;-25, 740
+	Click("32", "500")		;40, 740
 	Click(posx, posy, 0)
 Return
 ; +!1::	;------GMAIL-0------
@@ -399,6 +403,7 @@ Return
 :*O?:F\::{Home}Folder:{Space}{End}
 :*O?:P\::{Home}Photos:{Space}{End}
 :*O?:V\::{Home}Videos:{Space}{End}
+:*O?:M\::{Home}Music:{Space}{End}
 :*O?:S\::{Home}Settings:{Space}{End}
 :*O?:W\::{Home}Web:{Space}{End}
 :O:p/::paimon.moe/wish
@@ -416,6 +421,7 @@ Return
 
 :?*O:@g::@gmail.com
 :?*O:@j::@jainuniversity.ac.in
+:?*O:@d::@doctoralliance.com
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube") OR WinActive("Advanced Search - Opera") OR WinActive("| Iwara")) )	;----------YouTube is Fullscreen-----------------------------
@@ -456,6 +462,8 @@ Return
 >^>!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
 ; Get Mobile IP
 >^>!i::Run, % "curl -s https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip | clip"
+
+#q::Send, !{F4}
 
 +!1::
 +!2::
@@ -696,7 +704,8 @@ Return
 
 #c::
 IF !ProcessExist("talk.exe") {
-	Run, Y:\All-Projects\talk\talk.exe --ai gemini --se tts, Y:\All-Projects\talk,, talkPID
+	; Run, Y:\All-Projects\talk\talk.exe -t "Hey Nero~ How u doin..." --ai gemini --se espeak, Y:\All-Projects\talk,, talkPID
+	Run, Y:\All-Projects\talk\talk.exe -m 'gemini-2.5-flash', Y:\All-Projects\talk,, talkPID
 	SoundBeep(3000, 300, 5)
 }Else {
 	BossKey("ahk_pid "talkPID)
@@ -706,8 +715,9 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
-#!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
-#+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
+#+!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
+; #+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
+#!c::Send, #c
 #!n::BossKey("Sticky Notes ahk_class ApplicationFrameWindow", "Shell:AppsFolder\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App")
 ; #!c::Send, #c
 

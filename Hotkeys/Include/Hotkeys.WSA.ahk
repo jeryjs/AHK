@@ -24,11 +24,11 @@ Esc::Send, !{Left}
 ; RCtrl::
 ; Ctrl::SwitchDesktop()
 
-; WheelDown::
+WheelDown::
 ; XButton1::
 Tab::Send, {Left}
 
-; WheelUp::
+WheelUp::
 ; XButton2::
 Shift::Send, {Right}
 
