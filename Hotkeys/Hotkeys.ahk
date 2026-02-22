@@ -467,7 +467,7 @@ Return
 
 +!1::
 +!2::
-	SplashTextOn, 230, 25, MAL, Press '1' or '2' to open MAL
+	SplashTextOn, 350, 25, MAL, Press '1' or '2' to open MAL
 	Input, SplashInput, T1 L1
 	If (SplashInput = "1")
 	{
@@ -504,8 +504,8 @@ Return
 4FingerWand:
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1
-	posx := posx1 * (A_ScreenWidth / 1920.0)
-	posy := posy1 * (A_ScreenHeight / 1080.0)
+	posx := posx1 / A_ScreenWidth * 1920.0
+	posy := posy1 / (A_ScreenHeight - 20) * 1080.0
 	If ((posx > 1400) AND (posy > 200))		;Quick Settings		bottom-right-large
 	{
 		Sleep, 10
@@ -541,8 +541,8 @@ Return
 ~*WheelUp::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
-	posx := posx1 * (A_ScreenWidth / 1920.0)
-	posy := posy1 * (A_ScreenHeight / 1080.0)
+    posx := posx1 / A_ScreenWidth * 1920.0
+    posy := posy1 / (A_ScreenHeight - 60) * 1080.0
 	if (posx > 1780) AND (posy > 1030)		;Increase Vol		bottom-right-small
 		Send, {volume_Up}{volume_Up}
 	Else If (posx < 140) AND (posy > 1030)	;increase Brt		bottom-left-small
@@ -555,8 +555,8 @@ Return
 ~*WheelDown::
 	CoordMode, Mouse, Screen
 	MouseGetPos, posx1, posy1,, classnn
-	posx := posx1 * (A_ScreenWidth / 1920.0)
-	posy := posy1 * (A_ScreenHeight / 1080.0)
+    posx := posx1 / A_ScreenWidth * 1920.0
+    posy := posy1 / (A_ScreenHeight - 60) * 1080.0
 	if (posx > 1780) AND (posy > 1030)		;Decrease Vol		bottom-right-small
 		Send, {Volume_Down}{Volume_Down}
 	Else If (posx < 140) AND (posy > 1030)	;Decrease Brt		bottom-left-small
@@ -715,9 +715,9 @@ IF !ProcessExist("talk.exe") {
 	}
 }
 Return
-#+!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
+#!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
 ; #+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
-#!c::Send, #c
+#+!c::Send, #c
 #!n::BossKey("Sticky Notes ahk_class ApplicationFrameWindow", "Shell:AppsFolder\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App")
 ; #!c::Send, #c
 
