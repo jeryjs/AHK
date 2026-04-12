@@ -1,6 +1,9 @@
 GetActiveExplorerPath(hwnd:="") {
     if !hwnd
         hwnd := WinExist("A")
+    WinGetClass, class, % "ahk_id" hwnd
+    if (class != "CabinetWClass") && (class != "ExploreWClass")
+        return false
     activeTab := 0
     try ControlGet, activeTab, Hwnd,, % "ShellTabWindowClass1", % "ahk_id" hwnd
     for w in ComObjCreate("Shell.Application").Windows {

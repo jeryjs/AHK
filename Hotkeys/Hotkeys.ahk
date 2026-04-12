@@ -69,6 +69,8 @@ GroupAdd, game, ahk_exe re4.exe
 GroupAdd, game, Red Dead Redemption 2 ahk_class sgaWindow ahk_exe RDR2.exe
 GroupAdd, game, ahk_exe DaysGone.exe
 GroupAdd, game, Clair Obscur: Expedition 33 ahk_exe SandFall-Win64-Shipping.exe
+GroupAdd, game, ahk_exe cod.exe
+GroupAdd, game, ahk_exe ACShadows.exe
 
 GroupAdd, teyvat_map, Teyvat Interactive Map
 GroupAdd, teyvat_map, Enkanomiya
@@ -79,7 +81,7 @@ GroupAdd, anime, 9Anime -
 GroupAdd, anime, · Miruro
 GroupAdd, anime, anime.tv
 GroupAdd, anime, Anime
-GroupAdd, anime, Episode 
+; GroupAdd, anime, Episode 
 ; GroupAdd, anime, - mpv.net
 ListLines, On
 
@@ -148,7 +150,7 @@ ExecuteFanSpeedChange:
 return
 
 ; Create a auto hiding ToolTip at cursor location
-ToolTip(text, time:=1000, ToolTip_X:=860, ToolTip_Y:=890) {
+ToolTip(text, time:=1000, ToolTip_X:="", ToolTip_Y:="") {
 	If (ToolTip_X="") AND (ToolTip_Y="")
 		MouseGetPos, ToolTip_X, ToolTip_Y
 	ToolTip, %text%, %ToolTip_X%, %ToolTip_Y%
@@ -266,7 +268,7 @@ UltraBossKey(name, title, path, key) {
 		BossKey(title)
 }
 +NumpadDown::
-!y::UltraBossKey("YouTube Music", "ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
+!y::UltraBossKey("YouTube Music", "YouTube Music ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe"	, "shell:AppsFolder\com.github.th-ch.youtube-music"				, "y")
 !c::UltraBossKey("ChatGPT"		, "ChatGPT ahk_class Chrome_WidgetWin_1"					, "shell:AppsFolder\chatgpt.com-DFCB3CE4_ch69rtgtz055j!App"		, "c")
 #If !WinActive("ahk_group game")
 !w::UltraBossKey("WhatsApp Beta", "WhatsApp Beta ahk_class WinUIDesktopWin32WindowClass"			, "shell:AppsFolder\5319275A.51895FA4EA97F_cv1g1gvanyjgm!App"	, "w")
@@ -365,8 +367,8 @@ MButton::
 		; posy := posy * (A_ScreenHeight / 900.0)
 	; }
 
-	posx := posx * (A_ScreenWidth / 1920.0)
-	posy := posy * (A_ScreenHeight / 1080.0)
+	posx := posx / A_ScreenWidth * 1920.0
+	posy := posy / (A_ScreenHeight - 20) * 1080.0
 
 	If ((posx > 0) AND (posy > 1070))
 	{
@@ -423,6 +425,11 @@ Return
 :?*O:@j::@jainuniversity.ac.in
 :?*O:@d::@doctoralliance.com
 
+#+Up::Send, ↑
+#+Down::Send, ↓
+#+Left::Send, ←
+#+Right::Send, →
+
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube") OR WinActive("Advanced Search - Opera") OR WinActive("| Iwara")) )	;----------YouTube is Fullscreen-----------------------------
 w::Send, {Up}
@@ -438,32 +445,30 @@ NumpadIns::Send {Space}
 #o::Send, #3		;Opera
 #+o::Send, #4		;Edge
 !F11::Run, "Y:\Tools\IObit\ScreenShot.exe"	 ;Screenshot
+!PrintScreen::SendInput, {LWin down}{PrintScreen}{LWin up}
+#q::Send, !{F4}
+
+#+NumpadPgup::Reload
+#^NumpadPgup::Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 
 #b::				;Taskbar
 If WinActive("ahk_class Shell_TrayWnd")
 	Send, !{Esc}
-Else {
+Else
 	Send, #{b}
-}
 Return
 
+#F::
 #2::				;Phone Link
 	IfWinActive, Phone Link ahk_exe PhoneExperienceHost.exe
 		WinClose
 	Else
-		Send, #2
+		Run, Shell:AppsFolder\Microsoft.YourPhone_8wekyb3d8bbwe!App
 Return
 
 >^>!Left::Run, Display.exe /rotate:90 /toggle		; Rotate Screen Clockwise
 >^>!Right::Run, Display.exe /rotate:270 /toggle	; Rotate Screen Counter-Clockwise
 >^>!Up::Run, Display.exe /rotate:180 /toggle		; Rotate Screen Vertically
-
-; Unlock mobile
->^>!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
-; Get Mobile IP
->^>!i::Run, % "curl -s https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip | clip"
-
-#q::Send, !{F4}
 
 +!1::
 +!2::
@@ -482,6 +487,34 @@ Return
 	}
 	SplashTextOff
 Return
+            
+; Unlock mobile
+>^>!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
+; Get Mobile IP
+>^>!i::getMobileIp()
+; Connect to mobile with ADB and activate scrcpy       
+>^>!p::
+	ip := getMobileIp()
+	If (ip) {
+		RunWait, adb connect %ip%
+		Run, scrcpy
+	}
+Return
+getMobileIp() {
+	Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/get-local-ip
+	; 2. Listen for the UDP response (Timeout after 2 seconds so it doesn't hang)
+	psCmd := "$u=New-Object System.Net.Sockets.UdpClient(9999); $u.Client.ReceiveTimeout=3000; $r=$u.Receive([ref](New-Object System.Net.IPEndPoint([IPAddress]::Any,0))); [Text.Encoding]::ASCII.GetString($r)"
+	; Execute PowerShell and catch the output
+	rawResponse := ComObjCreate("WScript.Shell").Exec("powershell -NoProfile -Command """ psCmd """").StdOut.ReadAll()
+	; 3. Clean up and display
+	if (rawResponse) {
+		ip :=  StrSplit(rawResponse, " | ")[1]
+		Clipboard := ip
+		ToolTip("✅ Received: " . rawResponse, 2000)
+		Return ip
+	} else
+		ToolTip("❌ Timed out (Check if phone/PC are on same Wi-Fi)", 2000)
+}
 
 ; Toggle Hidden Files in Explorer.exe 
 #IfWinActive ahk_exe explorer.exe
@@ -511,7 +544,7 @@ Return
 		Sleep, 10
 		Send, #a
 	}
-	Else If ((posx > 650  AND posx < 1280) AND (posy < 1080 AND posy > 1020))
+	Else If ((posx > 650  AND posx < 1280) AND posy > 1020)
 	{
 		Sleep, 10
 		Send, ^{Esc}
@@ -576,7 +609,7 @@ Return
 ^!T::
 	path := GetActiveExplorerPath()
 	if !path || (SubStr(path, 1, 2) = "::")
-		path := A_UserProfile
+		path := A_Desktop
 	Run, wt.exe -d "%path%"
 return
 
@@ -702,18 +735,24 @@ IF !ProcessExist("radb.exe") {
 }
 Return
 
+; #c::
+; IF !ProcessExist("talk.exe") {
+	Run, Y:\All-Projects\talk\talk.exe -t "Hey Nero~ How u doin..." --ai gemini --se espeak, Y:\All-Projects\talk,, talkPID
+	; Run, Y:\All-Projects\talk\talk.exe -m 'gemini-2.5-flash', Y:\All-Projects\talk,, talkPID
+	; SoundBeep(3000, 300, 5)
+; }Else {
+	; BossKey("ahk_pid "talkPID)
+	; If !talkPID {
+		; Run, TaskKill /IM talk.exe /F,, hide
+		; SoundBeep(5000, 300, 5)
+	; }
+; }
+; Return
 #c::
-IF !ProcessExist("talk.exe") {
-	; Run, Y:\All-Projects\talk\talk.exe -t "Hey Nero~ How u doin..." --ai gemini --se espeak, Y:\All-Projects\talk,, talkPID
-	Run, Y:\All-Projects\talk\talk.exe -m 'gemini-2.5-flash', Y:\All-Projects\talk,, talkPID
-	SoundBeep(3000, 300, 5)
-}Else {
-	BossKey("ahk_pid "talkPID)
-	If !talkPID {
-		Run, TaskKill /IM talk.exe /F,, hide
-		SoundBeep(5000, 300, 5)
-	}
-}
+	path := GetActiveExplorerPath()
+	if !path || (SubStr(path, 1, 2) = "::")
+		path = %A_Desktop%
+	Run, wt new-tab -d "%path%" cmd /c pi
 Return
 #!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
 ; #+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")

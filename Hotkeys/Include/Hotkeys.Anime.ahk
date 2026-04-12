@@ -1,9 +1,17 @@
-﻿#If ( WinActive("ahk_group anime") AND is Fullscreen() )	;----------ANIME-----------------------------
+﻿#If (WinActive(" · Miruro") AND Fullscreen())
+/::
+NumpadPgDn::
+C::Send, +{Enter}
+
+
+#If ( WinActive("ahk_group anime") AND is Fullscreen() )	;----------ANIME-----------------------------
 NumpadPgUp::Send {Right}
 NumpadPgDn::Send {/}
 +NumpadPgDn::Send +{/}
 
+WheelLeft::
 XButton1::Send {Right}
+WheelRight::
 XButton2::Send {Left}
 
 ; LAlt::
