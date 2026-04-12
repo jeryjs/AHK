@@ -6,9 +6,9 @@ ListLines Off
 SoundGet, currentVolume
 If ((currentVolume = 0) AND (YTM_playing != 0))	;Pause YTM on Mute
 	{
-		WinGetTitle, YTM_title, ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe
+		WinGetTitle, YTM_title, ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe,,  Picture in picture
 
-		if (RegExMatch(YTM_title, "- YouTube Music"))
+		if (RegExMatch(YTM_title, "(-|\|) YouTube Music"))
 			YTM_state := 1
 		If (YTM_title == "YouTube Music")
 			YTM_state := 0
@@ -16,26 +16,27 @@ If ((currentVolume = 0) AND (YTM_playing != 0))	;Pause YTM on Mute
 		If (YTM_state = 1) {
 			Send, ^+!{F10}
 			YTM_playing := 0
-			ToolTip("YTM Paused", "1000", "1920", "-1080")
+			ToolTip("YTM Paused", "1000", "2560", "-1080")
 		}
 	}
 	If ( ((currentVolume > 0) AND (YTM_playing == 0)))		;Unpause YTM on Unmute
 		{	
 			Send, ^+!{F10}
 			YTM_playing := 1
-			ToolTip("YTM Playing", "1000", "1920", "-1080")
+			ToolTip("YTM Playing", "1000", "2560", "-1080")
 	}
 Return
 
 RControl & RButton::
 RControl & MButton::
 	WinGetTitle, YTM_title, ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe
-	if (RegExMatch(YTM_title, "- YouTube Music"))
-		ToolTip("YTM Paused", "1000", "1920", "-1080")
+	if (RegExMatch(YTM_title, "(-|\|) YouTube Music"))
+		ToolTip("YTM Paused", "1000", "2560", "-1080")
 	If (YTM_title == "YouTube Music")
-		ToolTip("YTM Playing", "1000", "1920", "-1080")
+		ToolTip("YTM Playing", "1000", "2560", "-1080")
 	sleep, 100
-	Send, ^+!{F10}
+	; Send, ^+!{F10}
+	Send, {Media_Play_Pause}
 Return
 
 #If

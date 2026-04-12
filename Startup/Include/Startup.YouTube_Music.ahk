@@ -15,10 +15,10 @@ path:="shell:AppsFolder\com.github.th-ch.youtube-music"
 Loop
 {
     ; Check if YouTube Music is already running
-    ; if WinExist(title)
-    ; {
-    ;     ExitApp
-    ; }
+    if WinExist(title)
+    {
+        ExitApp
+    }
 
     If IsConnectedToInternet()
     {
@@ -28,8 +28,10 @@ Loop
             WinWait, %title%,,10
 			Loop, 30
             {
-                WinHide, %title%
-                Sleep, 1000
+				If WinActive(title) {
+					WinHide, %title%
+					Sleep, 1000
+				}
             }
         }
         ExitApp
