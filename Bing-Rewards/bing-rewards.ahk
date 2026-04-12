@@ -33,6 +33,9 @@ if (A_Args[1] = "android") {
 
 
 RunBingRewards(name, paths) {
+	If (WinActive("ahk_group anime")) {
+		Send, {Space}
+	}
 	VD.goToDesktopNum(4)
 	SplashTextOn, 250, 25, Bing Rewards (%name%), Running Bing Rewards...
 	searchTerms := ["anime", "manga", "light", "novels", "hinata", "nezuko", "demon", "slayer", "naruto", "attack", "on", "titan", "sakura", "tokyo", "kyoto", "osaka", "hokkaido", "fuji", "ramen", "sushi", "samurai", "shinto", "hentai", "kanji", "katakana", "hiragana", "jpop", "kawaii", "otaku", "cosplay", "gundam", "pokemon", "ghibli", "miyazaki", "harajuku", "shibuya", "akihabara", "ikebukuro", "yokohama", "nagoya", "sapporo", "fukuoka", "kobe", "shinjuku", "asakusa", "tsukiji", "ryokan", "onsen", "kimono", "yukata"]
@@ -57,49 +60,6 @@ RunBingRewards(name, paths) {
 	posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 4 windows
 	posTemplates.Insert([[0, 0, 0.5, 0.5], [0.5, 0, 0.5, 0.5], [0.25, 0.25, 0.5, 0.5], [0, 0.5, 0.5, 0.5], [0.5, 0.5, 0.5, 0.5]])  ; 5 windows
 
-	; Open all windows and then loop through them to reposition them
-	; pids := []
-	; For index, path in paths {
-	; 	Run, %path% %query%,,,pid
-	; 	pids.Push(pid)
-	; }
-
-	; WinWaitActive, ahk_exe msedge.exe,,1
-	; Sleep, 1500
-	
-	; For index, path in paths {
-	; 	if (paths.Length() > posTemplates.Length()) {
-	; 		; Default behavior for more than 5 windows
-	; 		row := Floor((index - 1) / 3)
-	; 		col := Mod(index - 1, 3)
-	; 		x := col * screenWidth / 3
-	; 		y := row * screenHeight / 2
-	; 		w := screenWidth / 3
-	; 		h := screenHeight / 2
-	; 	} else {
-	; 		; Retrieve position from template
-	; 		template := posTemplates[paths.Length()][index]
-	; 		x := template[1] * screenWidth
-	; 		y := template[2] * screenHeight
-	; 		w := template[3] * screenWidth
-	; 		h := template[4] * screenHeight
-	; 	}
-		
-	; 	If (InStr(path, "wsa://")) {
-	; 		pkgName := StrReplace(path, "wsa://")
-	; 		; WinWaitActive, ahk_class %pkgName% ahk_exe WsaClient.exe,,30
-	; 		; WinGet, winList, List, ahk_exe WsaClient.exe
-	; 	} Else {
-	; 		SplashTextOff
-	; 		WinGet, winList, List, ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-	; 		; MsgBox, % "ahk_id ".winList%index%
-	; 		WinWait, % "ahk_id " . winList%index%,, 1
-	; 		WinRestore, % "ahk_id " . winList%index%
-	; 		WinMove, % "ahk_id " . winList%index%, , %x%, %y%, %w%, %h%
-	; 	}
-	; }
-
-
 	; Loop through the paths and open the windows
 	; MsgBox, % paths
 	for index, path in paths {
@@ -122,7 +82,7 @@ RunBingRewards(name, paths) {
 		
 		; Run browser and adjust its position
 		Run, % path . " --new-window " . query . " --disable-features=RendererCodeIntegrity,IsolateOrigins,site-per-process  --disable-popup-blocking"
-		Sleep, 300 ; Give some time for the window to open
+		Sleep, 150 ; Give some time for the window to open
 
 		; Find the topmost window of the executable and reposition it
 		If (InStr(path, "wsa://")) {
