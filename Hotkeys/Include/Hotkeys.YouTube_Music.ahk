@@ -35,8 +35,8 @@ RControl & MButton::
 	If (YTM_title == "YouTube Music")
 		ToolTip("YTM Playing", "1000", "2560", "-1080")
 	sleep, 100
-	; Send, ^+!{F10}
-	Send, {Media_Play_Pause}
+	Send, ^+!{F10}
+	; Send, {Media_Play_Pause}
 Return
 
 #If

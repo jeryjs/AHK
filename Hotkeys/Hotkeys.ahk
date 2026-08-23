@@ -229,6 +229,9 @@ ProcessExist(Name){
 	return Errorlevel
 }
 
+; Toggle Hotkeys
+!Home::Suspend
+
 
 
 #If WinExist("ahk_group teyvat_map")
@@ -240,9 +243,9 @@ CapsLock::BossKey("ahk_group teyvat_map")	;Teyvat Interactive Map
 +Numpad1::
 +NumpadEnd::
 !d_Discord:
-	; IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
-	; 	RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
-	; Else
+	IfWinNotExist, Discord ahk_class Chrome_WidgetWin_1
+		RunAsUser("C:\Users\Jery\AppData\Local\Discord\Update.exe", "--processStart Discord.exe")
+	Else
 		UltraBossKey("Discord", "- Discord ahk_class Chrome_WidgetWin_1 ahk_exe Discord.exe", "shell:AppsFolder\com.squirrel.Discord.Discord", "d")
 		; UltraBossKey("Discord", " ahk_class Chrome_WidgetWin_1 ahk_exe Legcord.exe", "shell:AppsFolder\app.legcord.Legcord", "d")
 Return
@@ -429,6 +432,7 @@ Return
 #+Down::Send, ↓
 #+Left::Send, ←
 #+Right::Send, →
+#+.::•
 
 
 #If ( (Fullscreen()) AND (WinActive("- YouTube") OR WinActive("Advanced Search - Opera") OR WinActive("| Iwara")) )	;----------YouTube is Fullscreen-----------------------------
@@ -447,6 +451,7 @@ NumpadIns::Send {Space}
 !F11::Run, "Y:\Tools\IObit\ScreenShot.exe"	 ;Screenshot
 !PrintScreen::SendInput, {LWin down}{PrintScreen}{LWin up}
 #q::Send, !{F4}
+#!s::Run, "C:\Program Files\LenovoLegionToolkit\llt.exe" qa OSD,,HIDE	;Stats overlay via LLT
 
 #+NumpadPgup::Reload
 #^NumpadPgup::Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
@@ -526,6 +531,8 @@ getMobileIp() {
 		RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, Hidden, 2 
 	WinGetClass, eh_Class,A
 	send, {F5} 
+	Sleep, 60000
+	RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, Hidden, 1
 Return
 #If
 
@@ -560,7 +567,7 @@ Return
 		BossKey("ahk_class Chrome_WidgetWin_1 ahk_exe YouTube Music.exe")
 	}
 	Else If ((posx < 80) AND (posy < 50))	;Discord			top-left-small
-	{
+	{ 
 		Sleep, 10
 		Goto, !d_Discord
 	}
@@ -737,7 +744,7 @@ Return
 
 ; #c::
 ; IF !ProcessExist("talk.exe") {
-	Run, Y:\All-Projects\talk\talk.exe -t "Hey Nero~ How u doin..." --ai gemini --se espeak, Y:\All-Projects\talk,, talkPID
+	; Run, Y:\All-Projects\talk\talk.exe -t "Hey Nero~ How u doin..." --ai gemini --se espeak, Y:\All-Projects\talk,, talkPID
 	; Run, Y:\All-Projects\talk\talk.exe -m 'gemini-2.5-flash', Y:\All-Projects\talk,, talkPID
 	; SoundBeep(3000, 300, 5)
 ; }Else {
@@ -751,10 +758,10 @@ Return
 #c::
 	path := GetActiveExplorerPath()
 	if !path || (SubStr(path, 1, 2) = "::")
-		path = %A_Desktop%
+		path = "/tmp"
 	Run, wt new-tab -d "%path%" cmd /c pi
 Return
-#!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-D0A8E439_vn3jms8s81tkg!App")
+#!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-C79F8CDF_vn3jms8s81tkg!App")
 ; #+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
 #+!c::Send, #c
 #!n::BossKey("Sticky Notes ahk_class ApplicationFrameWindow", "Shell:AppsFolder\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe!App")

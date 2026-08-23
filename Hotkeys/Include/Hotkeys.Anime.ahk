@@ -14,9 +14,11 @@ XButton1::Send {Right}
 WheelRight::
 XButton2::Send {Left}
 
-; LAlt::
-; RCtrl::
-; Ctrl::SwitchDesktop("{Space}", "ahk_group anime","{Space}")
+NumpadEnter::
+NumpadAdd::
+LAlt::
+RCtrl::
+Ctrl::SwitchDesktop("{Space}", "ahk_group anime","{Space}")
 
 NumpadUp::
 w::Send, {Up}
@@ -31,22 +33,27 @@ c::Send {/}
 +c::Send +{/}
 Numpad0::
 NumpadIns::
-Space::Send, {Space}
+	{
+		Send {Blind}{space down}
+		Sleep, 1
+		Send {space up}
+	}
+Return
 
-NumpadEnter::
+; NumpadEnter::
 Enter::
 f::Send, {Esc}
 
 
 #If WinActive("ahk_exe mpvnet.exe")	;---------MPV NET-------------------------------------
 +NumpadPgDn::	Send +{PgDn}
-; NumpadEnter::
-; LAlt::
-; RAlt::
-; RCtrl::
-; LCtrl::
-; NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "A")
-; Home::SwitchDesktop()
+NumpadEnter::
+LAlt::
+RAlt::
+RCtrl::
+LCtrl::
+NumpadAdd::SwitchDesktop("{Space}",, "{Space}", "A")
+Home::SwitchDesktop()
 
 XButton1::Send {Right}
 XButton2::Send {Left}
