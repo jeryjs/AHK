@@ -17,6 +17,7 @@ Run, imports\server_win.lnk
 Run, Include\Startup.Discord.ahk
 Run, Include\Startup.YouTube_Music.ahk
 Run, Include\Startup.Taiga.ahk
+Run, Include\Startup.Pi.ahk
 
 
 ExitApp

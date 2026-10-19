@@ -400,6 +400,7 @@ Return
 ; #Include %A_ScriptDir%\Include\Hotkeys.Spotify.ahk
 #Include %A_ScriptDir%\Include\Hotkeys.WSA.ahk
 #Include %A_ScriptDir%\Include\Hotkeys.YouTube_Music.ahk
+#Include %A_ScriptDir%\Include\Hotkeys.Pi.ahk
 
 
 #If WinActive("ahk_class Windows.UI.Core.CoreWindow ahk_exe SearchHost.exe")	;--------SEARCH HOTSTRING------------------------------------------
@@ -457,10 +458,10 @@ NumpadIns::Send {Space}
 #^NumpadPgup::Run, "Z:\Applications\Notepad++\notepad++.exe" %A_ScriptFullPath%
 
 #b::				;Taskbar
-If WinActive("ahk_class Shell_TrayWnd")
-	Send, !{Esc}
-Else
-	Send, #{b}
+	If WinActive("ahk_class Shell_TrayWnd")
+		Send, !{Esc}
+	Else
+		Send, #{b}
 Return
 
 #F::
@@ -492,7 +493,7 @@ Return
 	}
 	SplashTextOff
 Return
-            
+
 ; Unlock mobile
 >^>!l::Run, curl https://trigger.macrodroid.com/7b822357-87b6-4143-8b00-e0b51b84fa63/unlock-device
 ; Get Mobile IP
@@ -759,7 +760,7 @@ Return
 	path := GetActiveExplorerPath()
 	if !path || (SubStr(path, 1, 2) = "::")
 		path = "/tmp"
-	Run, wt new-tab -d "%path%" cmd /c pi
+	Run, wt new-tab -d "%path%" cmd /c C:\Users\Jery\.pi\agent\bin\pi.cmd
 Return
 #!c::BossKey("Gemini ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\gemini.google.com-C79F8CDF_vn3jms8s81tkg!App")
 ; #+!c::BossKey("Copilot ahk_class Chrome_WidgetWin_1", "Shell:AppsFolder\Microsoft.Copilot_8wekyb3d8bbwe!App")
